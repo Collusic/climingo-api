@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.member.api;
 
 import com.climingo.climingoApi.member.api.request.SignUpRequest;
+import com.climingo.climingoApi.member.api.response.MemberInfo;
 import com.climingo.climingoApi.member.application.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class SignUpController {
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@RequestBody final SignUpRequest signUpRequest) {
 
-        signUpService.signUp(signUpRequest);
+        MemberInfo memberInfo = signUpService.signUp(signUpRequest);
 
         return ResponseEntity.ok().build();
     }

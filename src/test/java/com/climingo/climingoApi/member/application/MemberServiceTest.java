@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.climingo.climingoApi.member.api.request.SignUpRequest;
+import com.climingo.climingoApi.member.api.response.MemberInfo;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,10 @@ class MemberServiceTest {
             .nickname(nickname)
             .build();
 
+        Member expected = mock(Member.class);
+        when(expected.getId()).thenReturn(1L);
+        when(expected.getNickname()).thenReturn(nickname);
+
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(false);
 
@@ -45,19 +50,12 @@ class MemberServiceTest {
             .thenReturn(false);
 
         when(mockedMemberRepository.save(any()))
-            .thenReturn(
-                Member.builder()
-                    .authId(authId)
-                    .providerType(providerType)
-                    .nickname(nickname)
-                    .build()
-            );
+            .thenReturn(expected);
 
-        Member member = signUpService.signUp(request);
+        MemberInfo actual = signUpService.signUp(request);
 
-        assertEquals(member.getAuthId(), authId);
-        assertEquals(member.getProviderType(), providerType);
-        assertEquals(member.getNickname(), nickname);
+        assertEquals(actual.getId(), expected.getId());
+        assertEquals(actual.getNickname(), expected.getNickname());
     }
 
     @Test
@@ -73,6 +71,10 @@ class MemberServiceTest {
             .nickname(nickname)
             .build();
 
+        Member expected = mock(Member.class);
+        when(expected.getId()).thenReturn(1L);
+        when(expected.getNickname()).thenReturn(nickname);
+
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(false);
 
@@ -80,13 +82,7 @@ class MemberServiceTest {
             .thenReturn(true);
 
         when(mockedMemberRepository.save(any()))
-            .thenReturn(
-                Member.builder()
-                    .authId(authId)
-                    .providerType(providerType)
-                    .nickname(nickname)
-                    .build()
-            );
+            .thenReturn(expected);
 
         Throwable exception = assertThrows(IllegalArgumentException.class,
             () -> signUpService.signUp(request));
@@ -106,6 +102,10 @@ class MemberServiceTest {
             .nickname(nickname)
             .build();
 
+        Member expected = mock(Member.class);
+        when(expected.getId()).thenReturn(1L);
+        when(expected.getNickname()).thenReturn(nickname);
+
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(true);
 
@@ -113,13 +113,7 @@ class MemberServiceTest {
             .thenReturn(false);
 
         when(mockedMemberRepository.save(any()))
-            .thenReturn(
-                Member.builder()
-                    .authId(authId)
-                    .providerType(providerType)
-                    .nickname(nickname)
-                    .build()
-            );
+            .thenReturn(expected);
 
         Throwable exception = assertThrows(IllegalArgumentException.class,
             () -> signUpService.signUp(request));
@@ -139,6 +133,10 @@ class MemberServiceTest {
             .nickname(nickname)
             .build();
 
+        Member expected = mock(Member.class);
+        when(expected.getId()).thenReturn(1L);
+        when(expected.getNickname()).thenReturn(nickname);
+
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(false);
 
@@ -146,13 +144,7 @@ class MemberServiceTest {
             .thenReturn(false);
 
         when(mockedMemberRepository.save(any()))
-            .thenReturn(
-                Member.builder()
-                    .authId(authId)
-                    .providerType(providerType)
-                    .nickname(nickname)
-                    .build()
-            );
+            .thenReturn(expected);
 
         signUpService.signUp(request);
     }

@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.member.application;
 
 import com.climingo.climingoApi.member.api.request.SignUpRequest;
+import com.climingo.climingoApi.member.api.response.MemberInfo;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ public class MemberService implements SignUpService {
     private final MemberRepository memberRepository;
 
     @Override
-    public Member signUp(SignUpRequest request) {
+    public MemberInfo signUp(SignUpRequest request) {
         Member member = Member.builder()
             .authId(request.getAuthId())
             .providerType(request.getProviderType())
@@ -24,7 +25,8 @@ public class MemberService implements SignUpService {
 
         validateAbleToSignUp(member);
 
-        return memberRepository.save(member);
+        member = memberRepository.save(member);
+        return new MemberInfo(member);
     }
 
     private void validateAbleToSignUp(Member member) {

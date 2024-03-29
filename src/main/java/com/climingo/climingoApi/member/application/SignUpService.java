@@ -1,10 +1,10 @@
 package com.climingo.climingoApi.member.application;
 
 import com.climingo.climingoApi.member.api.request.SignUpRequest;
-import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.api.response.MemberInfo;
 
 public interface SignUpService {
 
-    Member signUp(SignUpRequest signUpRequest);
+    MemberInfo signUp(SignUpRequest signUpRequest);
 
 }
