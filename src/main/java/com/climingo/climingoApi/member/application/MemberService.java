@@ -13,7 +13,7 @@ public class MemberService implements SignUpService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void signUp(SignUpRequest request) {
+    public Member signUp(SignUpRequest request) {
         Member member = Member.builder()
             .authId(request.getAuthId())
             .providerType(request.getProviderType())
@@ -24,7 +24,7 @@ public class MemberService implements SignUpService {
 
         validateAbleToSignUp(member);
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     private void validateAbleToSignUp(Member member) {
