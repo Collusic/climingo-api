@@ -1,6 +1,6 @@
-package com.climingo.climingoApi.security.util;
+package com.climingo.climingoApi.auth.util;
 
-import com.climingo.climingoApi.security.exception.ExpiredTokenException;
+import com.climingo.climingoApi.auth.exception.ExpiredTokenException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;

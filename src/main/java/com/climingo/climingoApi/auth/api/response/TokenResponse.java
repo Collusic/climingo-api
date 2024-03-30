@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.security.api.response;
+package com.climingo.climingoApi.auth.api.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.security.exception;
+package com.climingo.climingoApi.auth.exception;
 
 import com.climingo.climingoApi.global.exception.ExceptionResponse;
 import io.jsonwebtoken.JwtException;

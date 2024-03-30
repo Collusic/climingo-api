@@ -1,7 +1,7 @@
-package com.climingo.climingoApi.security.application;
+package com.climingo.climingoApi.auth.application;
 
-import com.climingo.climingoApi.security.api.response.TokenResponse;
-import com.climingo.climingoApi.security.util.JwtUtil;
+import com.climingo.climingoApi.auth.api.response.TokenResponse;
+import com.climingo.climingoApi.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
