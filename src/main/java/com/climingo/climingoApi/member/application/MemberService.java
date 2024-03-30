@@ -6,6 +6,7 @@ import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class MemberService implements SignUpService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     @Override
     public MemberInfo signUp(SignUpRequest request) {
         Member member = Member.builder()
