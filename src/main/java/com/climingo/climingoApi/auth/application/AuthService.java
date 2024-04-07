@@ -64,10 +64,6 @@ public class AuthService {
         if (!isEqualsToInput(signUpRequest, authId, providerType)) {
             throw new IllegalArgumentException("입력받은 정보와 provider로부터 받은 값이 일치하지 않습니다.");
         }
-
-        if (checkExistMember(authId, providerType)) {
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
-        }
     }
 
     private boolean isEqualsToInput(SignUpRequest signUpRequest, String authId,
