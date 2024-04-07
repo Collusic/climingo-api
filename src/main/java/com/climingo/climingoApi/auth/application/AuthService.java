@@ -7,6 +7,7 @@ import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class AuthService {
         String providerType = (String) attributes.get(PROVIDER_KEY);
 
         if (!checkExistMember(authId, providerType)) {
-            throw new RuntimeException("등록되지 않은 사용자. 회원가임을 먼저 진행하세요.");
+            throw new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요.");
         }
 
         return tokenService.issue((String) memberInfo.getAttributes().get("nickname"));
@@ -61,11 +62,11 @@ public class AuthService {
 
     private void validateSignUp(SignUpRequest signUpRequest, String authId, String providerType) {
         if (!isEqualsToInput(signUpRequest, authId, providerType)) {
-            throw new RuntimeException("입력받은 정보와 provider로부터 받은 값이 일치하지 않습니다.");
+            throw new IllegalArgumentException("입력받은 정보와 provider로부터 받은 값이 일치하지 않습니다.");
         }
 
         if (checkExistMember(authId, providerType)) {
-            throw new RuntimeException("이미 존재하는 회원입니다.");
+            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
     }
 
