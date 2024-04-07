@@ -23,11 +23,13 @@ public class AuthService {
 
     public CheckMemberResponse checkRegisteredMember(OAuth2UserInfoResponse memberInfo) {
         Map<String, Object> attributes = memberInfo.getAttributes();
+        String authId = attributes.get(AUTHID_KEY).toString();
+        String providerType = attributes.get(PROVIDER_KEY).toString();
         boolean registered = checkExistMember(
-            attributes.get(AUTHID_KEY).toString(),
-            attributes.get(PROVIDER_KEY).toString());
+            authId,
+            providerType);
 
-        return new CheckMemberResponse(registered, attributes.get("providerToken").toString());
+        return new CheckMemberResponse(registered, attributes);
     }
 
     public TokenResponse signIn(OAuth2UserInfoResponse memberInfo) {
