@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 spring:
   ## h2
   h2:
@@ -24,3 +28,8 @@ logging:
         type:
           descriptor:
             sql: trace
+
+oauth2:
+  kakao:
+#    client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc) // TODO 로컬용. 추후 profile 별 설정파일 분리 예정
+    client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
