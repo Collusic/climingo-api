@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.member.api.response;
+package com.climingo.climingoApi.auth.api.response;
 
 import com.climingo.climingoApi.member.domain.Member;
 import lombok.Getter;

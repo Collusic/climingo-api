@@ -10,8 +10,8 @@ import lombok.Getter;
 @JsonDeserialize(builder = SignInRequest.SignInRequestBuilder.class)
 public class SignInRequest {
 
-    @JsonProperty("provider")
-    private final String provider;
+    @JsonProperty("providerType")
+    private final String providerType;
 
     @JsonProperty("providerToken")
     private final String providerToken;

@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.member.api.request;
+package com.climingo.climingoApi.auth.api.request;
 
 import com.climingo.climingoApi.member.domain.PhysicalInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +16,9 @@ public class SignUpRequest {
 
     @JsonProperty("authId")
     private final String authId;
+
+    @JsonProperty("providerToken")
+    private final String providerToken;
 
     @JsonProperty("nickname")
     private final String nickname;
