@@ -29,9 +29,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
       - name: Run tests
         run: ./gradlew test
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -49,6 +53,8 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
       - name: Login to Docker Registry
         uses: docker/login-action@v2
@@ -64,6 +70,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: climingo-container-registry.kr.ncr.ntruss.com/climingo-api:latest
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
       - name: SSH and Deploy
         uses: appleboy/ssh-action@master
