@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsByAuthIdAndProviderType(String nickname, String providerType);
+    boolean existsByAuthIdAndProviderType(String authId, String providerType);
 
     boolean existsByNickname(String nickname);
 }

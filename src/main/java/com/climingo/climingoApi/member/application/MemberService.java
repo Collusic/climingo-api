@@ -1,7 +1,8 @@
 package com.climingo.climingoApi.member.application;
 
-import com.climingo.climingoApi.member.api.request.SignUpRequest;
-import com.climingo.climingoApi.member.api.response.MemberInfo;
+import com.climingo.climingoApi.auth.api.request.SignUpRequest;
+import com.climingo.climingoApi.auth.api.response.MemberInfo;
+import com.climingo.climingoApi.auth.application.SignUpService;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
