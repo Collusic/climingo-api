@@ -21,6 +21,10 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+    defer-datasource-initialization: true # data.sql 실행 시점을 변경(JPA 테이블 생성 후로 연기)
+  sql:
+    init:
+      mode: always
 logging:
   level:
     org:
@@ -28,6 +32,8 @@ logging:
         type:
           descriptor:
             sql: trace
+
+
 
 oauth2:
   kakao:
