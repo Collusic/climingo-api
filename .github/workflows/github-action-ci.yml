@@ -95,3 +95,5 @@ jobs:
             docker rm climingo-api || true
             docker run -d --name climingo-api -p 8080:8080 climingo-container-registry.kr.ncr.ntruss.com/climingo-api:latest
             docker image prune -f
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
