@@ -64,7 +64,7 @@ jobs:
           password: ${{ secrets.NCP_SECRET_KEY }}
 
       - name: Check JASYPT_PASSWORD environment variable
-        - run: |
+        run: |
           if [ -z "${{ secrets.JASYPT_PASSWORD }}" ]; then
             echo "JASYPT_PASSWORD is not set."
             exit 1
