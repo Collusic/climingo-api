@@ -21,7 +21,7 @@ public class JwtUtil {
 
     public static final int REFRESH_TOKEN_EXP = 60 * 60 * 24 * 7;
     public static final String KEY = "climingo-token-key";
-    private static final int ACCESS_TOKEN_EXP = 60 * 60;
+    public static final int ACCESS_TOKEN_EXP = 60 * 60;
 
     public static String createAccessToken(String nickname) {
         return Jwts.builder()
