@@ -8,6 +8,9 @@ import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.AuthService;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2ClientManager;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
+import com.climingo.climingoApi.auth.util.CookieUtils;
+import com.climingo.climingoApi.auth.util.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -29,22 +32,28 @@ public class AuthController {
     private final OAuth2ClientManager oAuth2ClientManager;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<TokenResponse> signIn(@RequestBody @Valid SignInRequest request) {
+    public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
         OAuth2UserInfoResponse userInfo = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             request.getProviderType(), request.getProviderToken());
         TokenResponse tokenResponse = authService.signIn(userInfo);
 
-        return ResponseEntity.ok(tokenResponse);
+        CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
+        CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<TokenResponse> signUp(@RequestBody @Valid final SignUpRequest request) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest request, HttpServletResponse response) {
         OAuth2UserInfoResponse userInfoFromProvider = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             request.getProviderType(), request.getProviderToken());
         MemberInfo memberInfo = authService.signUp(request, userInfoFromProvider);
         TokenResponse tokenResponse = authService.issueToken(memberInfo.getNickname());
 
-        return ResponseEntity.ok().body(tokenResponse);
+        CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
+        CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/auth/members/exist")
