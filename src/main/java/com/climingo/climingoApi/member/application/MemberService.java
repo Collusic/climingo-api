@@ -2,16 +2,18 @@ package com.climingo.climingoApi.member.application;
 
 import com.climingo.climingoApi.auth.api.request.SignUpRequest;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
+import com.climingo.climingoApi.auth.application.SignInService;
 import com.climingo.climingoApi.auth.application.SignUpService;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements SignUpService {
+public class MemberService implements SignUpService, SignInService {
 
     private final MemberRepository memberRepository;
 
@@ -49,5 +51,14 @@ public class MemberService implements SignUpService {
 
     private boolean isDuplicatedMember(String authId, String providerType) {
         return memberRepository.existsByAuthIdAndProviderType(authId, providerType);
+    }
+
+    @Override
+    public MemberInfo findEnrolledMemberInfoByAuthIdAndProviderType(String authId,
+        String providerType) {
+        Member member = memberRepository.findByAuthIdAndProviderType(authId, providerType)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요."));
+
+        return new MemberInfo(member);
     }
 }
