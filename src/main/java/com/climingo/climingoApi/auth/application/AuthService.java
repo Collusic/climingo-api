@@ -17,6 +17,7 @@ public class AuthService {
 
     private final TokenService tokenService;
     private final SignUpService signUpService;
+    private final SignInService signInService;
     private final MemberRepository memberRepository;
 
     private final static String AUTHID_KEY = "authId";
@@ -74,5 +75,13 @@ public class AuthService {
 
     public TokenResponse issueToken(String nickname) {
         return tokenService.issue(nickname);
+    }
+
+    public MemberInfo findMemberInfo(OAuth2UserInfoResponse userInfo) {
+        Map<String, Object> attributes = userInfo.getAttributes();
+        String authId = (String) attributes.get(AUTHID_KEY);
+        String providerType = (String) attributes.get(PROVIDER_KEY);
+
+        return signInService.findEnrolledMemberInfoByAuthIdAndProviderType(authId, providerType);
     }
 }

@@ -41,7 +41,7 @@ class MemberServiceTest {
             .build();
 
         Member expected = mock(Member.class);
-        when(expected.getId()).thenReturn(1L);
+        when(expected.getAuthId()).thenReturn(authId);
         when(expected.getNickname()).thenReturn(nickname);
 
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
@@ -55,7 +55,7 @@ class MemberServiceTest {
 
         MemberInfo actual = signUpService.signUp(request);
 
-        assertEquals(actual.getId(), expected.getId());
+        assertEquals(actual.getAuthId(), expected.getAuthId());
         assertEquals(actual.getNickname(), expected.getNickname());
     }
 
