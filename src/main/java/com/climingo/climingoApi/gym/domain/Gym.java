@@ -25,7 +25,6 @@ public class Gym {
 
     @Embedded
     private GeoInfo geoInfo;
-
     @OneToMany(mappedBy = "gym")
     private List<Grade> grades;
 }

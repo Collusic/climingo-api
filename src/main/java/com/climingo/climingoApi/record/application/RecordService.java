@@ -2,6 +2,8 @@ package com.climingo.climingoApi.record.application;
 
 import com.climingo.climingoApi.grade.domain.Grade;
 import com.climingo.climingoApi.grade.domain.GradeRepository;
+import com.climingo.climingoApi.gym.domain.Gym;
+import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
@@ -17,10 +19,14 @@ import org.springframework.stereotype.Service;
 public class RecordService {
 
     private final S3Service s3Service;
+    private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final RecordRepository recordRepository;
 
     public Record createRecord(RecordCreateRequest request) throws IOException {
+        Gym gym = gymRepository.findById(request.getGymId())
+                               .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
+
         Grade grade = gradeRepository.findById(request.getGradeId())
                                      .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
 
@@ -28,6 +34,7 @@ public class RecordService {
 
         Record record = Record.builder()
                               .climber(null)
+                              .gym(gym)
                               .grade(grade)
                               .content(null)
                               .videoUrl(videoUrl)
