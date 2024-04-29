@@ -12,6 +12,7 @@ import com.climingo.climingoApi.upload.S3Service;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,11 @@ public class RecordService {
         record.update(gym, grade, null);
 
         return record;
+    }
+
+    public void deleteRecord(Long recordId) {
+        Optional<Record> record = recordRepository.findById(recordId);
+        record.ifPresent(recordRepository::delete);
     }
 
 }

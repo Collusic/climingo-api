@@ -7,6 +7,7 @@ import com.climingo.climingoApi.record.domain.Record;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,12 @@ public class RecordController {
     public ResponseEntity<Long> update(@PathVariable("recordId") Long recordId, @ModelAttribute RecordUpdateRequest request) {
         Record record = recordService.updateRecord(recordId, request);
         return ResponseEntity.ok().body(record.getId());
+    }
+
+    @DeleteMapping("/records/{recordId}")
+    public ResponseEntity<Void> delete(@PathVariable("recordId") Long recordId) {
+        recordService.deleteRecord(recordId);
+        return ResponseEntity.ok(null);
     }
 
 }
