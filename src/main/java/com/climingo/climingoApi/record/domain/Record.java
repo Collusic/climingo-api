@@ -55,4 +55,14 @@ public class Record {
         this.recordDate = recordDate;
     }
 
+    public void update(Gym gym, Grade grade, String videoUrl) {
+        if (!gym.getId().equals(this.gym.getId())) {
+            this.gym = gym;
+        }
+        if (!grade.getId().equals(this.grade.getId())) {
+            this.grade = grade;
+        }
+        // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
+    }
+
 }

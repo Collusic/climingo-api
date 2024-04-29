@@ -5,6 +5,7 @@ import com.climingo.climingoApi.grade.domain.GradeRepository;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
+import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
@@ -43,6 +44,22 @@ public class RecordService {
 
         Record save = recordRepository.save(record);
         return save;
+    }
+
+    public Record updateRecord(Long recordId, RecordUpdateRequest request) {
+        Record record = recordRepository.findById(recordId)
+                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+
+        Gym gym = gymRepository.findById(request.getGymId())
+                               .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
+
+        Grade grade = gradeRepository.findById(request.getGradeId())
+                                     .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
+
+        // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
+        record.update(gym, grade, null);
+
+        return record;
     }
 
 }
