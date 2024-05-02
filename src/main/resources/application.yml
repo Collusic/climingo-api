@@ -21,6 +21,14 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+    defer-datasource-initialization: true # data.sql 실행 시점을 변경(JPA 테이블 생성 후로 연기)
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      maxFileSize: 500MB
+      maxRequestSize: 500MB
 logging:
   level:
     org:
@@ -29,7 +37,17 @@ logging:
           descriptor:
             sql: trace
 
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(qfvfYUjn/rr+RfV5V9tfMdIMFqxeS0Z/gmtwa4JoX9Q=)
+      secret-key: ENC(BHtFgKaPp16DjdWQX70LA0W4whD05PVNq6bsRrqLE4ShMZRLlwxzmasGzCaYKOFsuMkiSOcdRvk=)
+    s3:
+      region: ENC(lWFi10cCYJ+/NCWF/XCx6RHyZAaC/3lF)
+      endpoint: ENC(s+lcSXa1oCyUn7dJ2ZRHxug75I9Nw5LZIsZExHY7gTQbzmE69ESdhKOtJaoHqLJY)
+      bucket: ENC(0isTNcZc50BKd6UyAfs44Z6pFdyRlXFM)
+
 oauth2:
   kakao:
-#    client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc) # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
+    #    client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc) # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
     client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
