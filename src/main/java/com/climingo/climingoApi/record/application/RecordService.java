@@ -6,6 +6,7 @@ import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +27,7 @@ public class RecordService {
     private final GradeRepository gradeRepository;
     private final RecordRepository recordRepository;
 
+    @Transactional
     public Record createRecord(RecordCreateRequest request) throws IOException {
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
@@ -47,6 +50,7 @@ public class RecordService {
         return save;
     }
 
+    @Transactional
     public Record updateRecord(Long recordId, RecordUpdateRequest request) {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
@@ -63,9 +67,20 @@ public class RecordService {
         return record;
     }
 
+    @Transactional
     public void deleteRecord(Long recordId) {
         Optional<Record> record = recordRepository.findById(recordId);
         record.ifPresent(recordRepository::delete);
+    }
+
+    @Transactional(readOnly = true)
+    public RecordResponse findById(Long recordId) {
+        Record record = recordRepository.findById(recordId)
+                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+
+        RecordResponse recordResponse = new RecordResponse(null, record, record.getGym(), record.getGrade()); // TODO: climber 정보 연동
+
+        return recordResponse;
     }
 
 }

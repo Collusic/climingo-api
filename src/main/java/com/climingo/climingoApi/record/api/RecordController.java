@@ -2,12 +2,14 @@ package com.climingo.climingoApi.record.api;
 
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.application.RecordService;
 import com.climingo.climingoApi.record.domain.Record;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +38,12 @@ public class RecordController {
     public ResponseEntity<Void> delete(@PathVariable("recordId") Long recordId) {
         recordService.deleteRecord(recordId);
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/records/{recordId}")
+    public ResponseEntity<RecordResponse> find(@PathVariable("recordId") Long recordId) {
+        RecordResponse recordResponse = recordService.findById(recordId);
+        return ResponseEntity.ok().body(recordResponse);
     }
 
 }
