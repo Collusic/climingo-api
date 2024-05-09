@@ -13,6 +13,8 @@ import com.climingo.climingoApi.upload.S3Service;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -81,6 +83,18 @@ public class RecordService {
         RecordResponse recordResponse = new RecordResponse(null, record, record.getGym(), record.getGrade()); // TODO: climber 정보 연동
 
         return recordResponse;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecordResponse> findAll(Long gymId, Long gradeId) {
+        List<Record> records = recordRepository.findAllWithDetails(gymId, gradeId);
+
+        List<RecordResponse> recordResponses = new ArrayList<>();
+        for (Record record : records) {
+            recordResponses.add(new RecordResponse(null, record, record.getGym(), record.getGrade()));
+        }
+
+        return recordResponses;
     }
 
 }
