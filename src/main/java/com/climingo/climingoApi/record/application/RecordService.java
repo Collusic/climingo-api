@@ -86,8 +86,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecordResponse> findAll(Long gymId, Long gradeId) {
-        List<Record> records = recordRepository.findAllWithDetails(gymId, gradeId);
+    public List<RecordResponse> findAll(Long gymId, Long gradeId, Long memberId) {
+        List<Record> records = recordRepository.findAllWithDetails(gymId, gradeId, memberId);
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
