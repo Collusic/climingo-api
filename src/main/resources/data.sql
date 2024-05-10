@@ -32,3 +32,5 @@ insert into grade (id, order_num, gym_id, color_name) values (25, 7, 3, '보라'
 insert into grade (id, order_num, gym_id, color_name) values (26, 8, 3, '회색');
 insert into grade (id, order_num, gym_id, color_name) values (27, 9, 3, '갈색');
 insert into grade (id, order_num, gym_id, color_name) values (28, 10, 3, '검정');
+
+insert into member (id, auth_id, provider_type, nickname, profile_image, email, home_gym_id, arm_span, height, weight) values(1, null, null, 'test', null, null, null, null, null, null);

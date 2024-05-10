@@ -29,6 +29,7 @@ public class Record {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
     private Member climber;
 
     @ManyToOne(fetch = FetchType.LAZY)
