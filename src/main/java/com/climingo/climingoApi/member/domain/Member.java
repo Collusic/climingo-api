@@ -30,6 +30,8 @@ public class Member {
 
     private String profileImage;
 
+    private String email;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Gym homeGym;
 
@@ -38,12 +40,13 @@ public class Member {
 
     @Builder
     public Member(String authId, String providerType, String nickname, String profileImage, Gym homeGym,
-        PhysicalInfo physicalInfo) {
+        PhysicalInfo physicalInfo, String email) {
         this.authId = authId;
         this.providerType = providerType;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.homeGym = homeGym;
         this.physicalInfo = physicalInfo;
+        this.email = email;
     }
 }

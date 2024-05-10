@@ -4,6 +4,7 @@ import com.climingo.climingoApi.auth.api.request.SignInRequest;
 import com.climingo.climingoApi.auth.api.request.SignUpRequest;
 import com.climingo.climingoApi.auth.api.response.CheckMemberResponse;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
+import com.climingo.climingoApi.auth.api.response.SignInUpResponse;
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.AuthService;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2ClientManager;
@@ -32,7 +33,7 @@ public class AuthController {
     private final OAuth2ClientManager oAuth2ClientManager;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+    public ResponseEntity<SignInUpResponse> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
         OAuth2UserInfoResponse userInfo = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             request.getProviderType(), request.getProviderToken());
         TokenResponse tokenResponse = authService.signIn(userInfo);
@@ -40,11 +41,20 @@ public class AuthController {
         CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
         CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
 
-        return ResponseEntity.ok().build();
+        MemberInfo memberInfo = authService.findMemberInfo(userInfo);
+
+        return ResponseEntity.ok().body(
+            SignInUpResponse.builder()
+                .nickname(memberInfo.getNickname())
+                .authId(memberInfo.getAuthId())
+                .providerType(memberInfo.getProviderType())
+                .picture(memberInfo.getPicture())
+                .email(memberInfo.getEmail())
+                .build());
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest request, HttpServletResponse response) {
+    public ResponseEntity<SignInUpResponse> signUp(@RequestBody @Valid final SignUpRequest request, HttpServletResponse response) {
         OAuth2UserInfoResponse userInfoFromProvider = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             request.getProviderType(), request.getProviderToken());
         MemberInfo memberInfo = authService.signUp(request, userInfoFromProvider);
@@ -53,7 +63,14 @@ public class AuthController {
         CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
         CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(
+            SignInUpResponse.builder()
+                .nickname(memberInfo.getNickname())
+                .authId(memberInfo.getAuthId())
+                .providerType(memberInfo.getProviderType())
+                .picture(memberInfo.getPicture())
+                .email(memberInfo.getEmail())
+                .build());
     }
 
     @GetMapping("/auth/members/exist")
