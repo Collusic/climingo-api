@@ -4,6 +4,8 @@ import com.climingo.climingoApi.grade.domain.Grade;
 import com.climingo.climingoApi.grade.domain.GradeRepository;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
+import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.MemberRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
@@ -28,6 +30,7 @@ public class RecordService {
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final RecordRepository recordRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Record createRecord(RecordCreateRequest request) throws IOException {
@@ -40,7 +43,7 @@ public class RecordService {
         String videoUrl = s3Service.uploadVideoFile(request.getVideo());
 
         Record record = Record.builder()
-                              .climber(null)
+                              .climber(mockMember())
                               .gym(gym)
                               .grade(grade)
                               .content(null)
@@ -80,7 +83,7 @@ public class RecordService {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        RecordResponse recordResponse = new RecordResponse(null, record, record.getGym(), record.getGrade()); // TODO: climber 정보 연동
+        RecordResponse recordResponse = new RecordResponse(mockMember(), record, record.getGym(), record.getGrade()); // TODO: climber 정보 연동
 
         return recordResponse;
     }
@@ -91,10 +94,15 @@ public class RecordService {
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
-            recordResponses.add(new RecordResponse(null, record, record.getGym(), record.getGrade()));
+            recordResponses.add(new RecordResponse(record.getClimber(), record, record.getGym(), record.getGrade()));
         }
 
         return recordResponses;
+    }
+
+    private Member mockMember() {
+        return memberRepository.findById(1L)
+                               .orElseThrow(() -> new EntityNotFoundException(1L + "is not found"));
     }
 
 }
