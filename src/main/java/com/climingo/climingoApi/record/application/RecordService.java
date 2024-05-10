@@ -40,14 +40,14 @@ public class RecordService {
         Grade grade = gradeRepository.findById(request.getGradeId())
                                      .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
 
-//        String videoUrl = s3Service.uploadVideoFile(request.getVideo());
+        String videoUrl = s3Service.uploadVideoFile(request.getVideo());
 
         Record record = Record.builder()
                               .climber(mockMember())
                               .gym(gym)
                               .grade(grade)
                               .content(null)
-                              .videoUrl(null) //videoUrl
+                              .videoUrl(videoUrl)
                               .recordDate(LocalDateTime.now())
                               .build();
 
