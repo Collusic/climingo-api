@@ -38,8 +38,8 @@ public class AuthController {
             request.getProviderType(), request.getProviderToken());
         TokenResponse tokenResponse = authService.signIn(userInfo);
 
-        CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
-        CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
+        CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
+        CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
 
         MemberInfo memberInfo = authService.findMemberInfo(userInfo);
 
