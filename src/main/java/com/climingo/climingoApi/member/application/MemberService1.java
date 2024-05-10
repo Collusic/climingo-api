@@ -1,11 +1,12 @@
 package com.climingo.climingoApi.member.application;
 
-import com.climingo.climingoApi.member.application.response.MyInfo;
+import com.climingo.climingoApi.member.application.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.application.response.ProfileResponse;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository1;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.domain.Record;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,18 @@ public class MemberService1 {
         }
 
         ProfileResponse profileResponse = ProfileResponse.builder()
-                                                         .myInfo(new MyInfo(member))
+                                                         .myInfo(new MemberInfoResponse(member))
                                                          .records(recordResponses)
                                                          .build();
         return profileResponse;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse findMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(() -> new EntityNotFoundException(memberId + "is not found"));
+
+        return new MemberInfoResponse(member);
     }
 
 }

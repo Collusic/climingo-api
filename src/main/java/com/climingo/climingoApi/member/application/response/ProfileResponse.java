@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class ProfileResponse {
 
-    private MyInfo myInfo;
+    private MemberInfoResponse myInfo;
     private List<RecordResponse> records;
 
     @Builder
-    public ProfileResponse(MyInfo myInfo, List<RecordResponse> records) {
+    public ProfileResponse(MemberInfoResponse myInfo, List<RecordResponse> records) {
         this.myInfo = myInfo;
         this.records = records;
     }
