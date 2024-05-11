@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TokenService {
 
-    public TokenResponse issue(String nickname) {
-        String accessToken = JwtUtil.createAccessToken(nickname);
-        String refreshToken = JwtUtil.createRefreshToken(nickname);
+    public TokenResponse issue(String authId, String providerType, String nickname) {
+        String accessToken = JwtUtil.createAccessToken(authId, providerType, nickname);
+        String refreshToken = JwtUtil.createRefreshToken(authId, providerType, nickname);
 
         // TODO 로그아웃을 위한 토큰 영속화 기능
 
