@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +88,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             JwtUtil.verify(refreshToken);
 
-            TokenResponse tokenResponse = tokenService.issue("nickname");
+            Map<String, Object> claims = JwtUtil.getClaims(refreshToken);
+            String authId = (String) claims.get("authId");
+            String providerType = (String) claims.get("providerType");
+            String nickname = (String) claims.get("nickname");
+
+            TokenResponse tokenResponse = tokenService.issue(authId, providerType, nickname);
 
             CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME,
                 tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);

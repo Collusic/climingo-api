@@ -25,9 +25,11 @@ public class JwtUtil {
     public static final String ACCESS_TOKEN_NAME = "accessToken";
     public static final String REFRESH_TOKEN_NAME = "refreshToken";
 
-    public static String createAccessToken(String nickname) {
+    public static String createAccessToken(String authId, String providerType, String nickname) {
         return Jwts.builder()
             .setHeader(jwtHeaders())
+            .claim("authId", authId)
+            .claim("providerType", providerType)
             .claim("nickname", nickname)
             .claim("exp", Instant.now().getEpochSecond() + ACCESS_TOKEN_EXP)
             .signWith(SignatureAlgorithm.HS256, KEY)
@@ -58,9 +60,11 @@ public class JwtUtil {
         }
     }
 
-    public static String createRefreshToken(String nickname) {
+    public static String createRefreshToken(String authId, String providerType, String nickname) {
         return Jwts.builder()
             .setHeader(jwtHeaders())
+            .claim("authId", authId)
+            .claim("providerType", providerType)
             .claim("nickname", nickname)
             .claim("exp", Instant.now().getEpochSecond() + REFRESH_TOKEN_EXP)
             .signWith(SignatureAlgorithm.HS256, KEY)
@@ -81,8 +85,12 @@ public class JwtUtil {
         }
     }
 
-    public static String getNickName(String token) {
-        return (String) getClaims(token).get("email");
+    public static String getAuthId(String token) {
+        return (String) getClaims(token).get("authId");
+    }
+
+    public static String getProviderType(String token) {
+        return (String) getClaims(token).get("providerType");
     }
 
     private static Map<String, Object> jwtHeaders() {

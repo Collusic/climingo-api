@@ -38,12 +38,14 @@ public class AuthService {
         Map<String, Object> attributes = memberInfo.getAttributes();
         String authId = (String) attributes.get(AUTHID_KEY);
         String providerType = (String) attributes.get(PROVIDER_KEY);
+        String nickname = (String) memberInfo.getAttributes().get("nickname");
 
         if (!checkExistMember(authId, providerType)) {
             throw new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요.");
         }
 
-        return tokenService.issue((String) memberInfo.getAttributes().get("nickname"));
+
+        return tokenService.issue(authId, providerType, nickname);
     }
 
     private boolean checkExistMember(String authId, String providerType) {
@@ -73,8 +75,8 @@ public class AuthService {
             signUpRequest.getAuthId().equals(authId);
     }
 
-    public TokenResponse issueToken(String nickname) {
-        return tokenService.issue(nickname);
+    public TokenResponse issueToken(String authId, String providerType, String nickname) {
+        return tokenService.issue(authId, providerType, nickname);
     }
 
     public MemberInfo findMemberInfo(OAuth2UserInfoResponse userInfo) {

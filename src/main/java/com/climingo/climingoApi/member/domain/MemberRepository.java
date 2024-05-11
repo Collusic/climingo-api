@@ -1,6 +1,5 @@
 package com.climingo.climingoApi.member.domain;
 
-import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
