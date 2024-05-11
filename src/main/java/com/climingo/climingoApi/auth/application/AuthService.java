@@ -5,6 +5,7 @@ import com.climingo.climingoApi.auth.api.response.CheckMemberResponse;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
+import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -85,5 +86,9 @@ public class AuthService {
         String providerType = (String) attributes.get(PROVIDER_KEY);
 
         return signInService.findEnrolledMemberInfoByAuthIdAndProviderType(authId, providerType);
+    }
+
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 }
