@@ -11,6 +11,8 @@ import com.climingo.climingoApi.auth.application.oauth.OAuth2ClientManager;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
 import com.climingo.climingoApi.auth.util.CookieUtils;
 import com.climingo.climingoApi.auth.util.JwtUtil;
+import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.member.domain.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -100,6 +102,18 @@ public class AuthController {
 
     @DeleteMapping("/sign-out")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtils.deleteCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME);
+        CookieUtils.deleteCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete-member")
+    public ResponseEntity<Void> deleteMember(
+        @LoginMember Member member, HttpServletRequest request, HttpServletResponse response) {
+
+        authService.deleteMember(member.getId());
+
         CookieUtils.deleteCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME);
         CookieUtils.deleteCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME);
 
