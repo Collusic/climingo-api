@@ -18,5 +18,5 @@ else
 fi
 
 echo "> $JAR_PATH 배포"
-nohup java -jar \
+nohup java -Dspring.profiles.active=dev -DJASYPT_PASSWORD='climingo-will-be-nice' -jar \
         build/libs/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
