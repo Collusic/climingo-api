@@ -51,16 +51,6 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Gradle Caching
-        uses: actions/cache@v3
-        with:
-        path: |
-          ./../gradle/caches
-          ./../gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Check JASYPT_PASSWORD environment variable
         run: |
           if [ -z "${{ secrets.JASYPT_PASSWORD }}" ]; then
