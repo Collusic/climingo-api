@@ -3,6 +3,7 @@ cd $REPOSITORY
 
 APP_NAME=climingo-api
 JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
+echo ">JAR_NAME=$JAR_NAME"
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
 CURRENT_PID=$(pgrep -f $APP_NAME)
