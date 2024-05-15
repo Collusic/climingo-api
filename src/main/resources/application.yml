@@ -45,7 +45,6 @@ cloud:
     s3:
       region: ENC(jDuIuablfFiMQmNTirWoMA==)
       bucket: ENC(wF8k2Cv+wYkO3ITB8k1k/A==)
-#      endpoint: ENC(s+lcSXa1oCyUn7dJ2ZRHxug75I9Nw5LZIsZExHY7gTQbzmE69ESdhKOtJaoHqLJY)
 
 oauth2:
   kakao:
