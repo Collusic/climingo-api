@@ -6,6 +6,10 @@ files:
     destination: /home/ubuntu/app # 인스턴스에서 파일이 저장될 위치
 
 hooks:
+  BeforeInstall:
+    - location: scripts/chmod_script.sh
+      timeout: 60
+      runas: root
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 60
