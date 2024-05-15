@@ -62,13 +62,13 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Check JASYPT_PASSWORD environment variable
-          run: |
-            if [ -z "${{ secrets.JASYPT_PASSWORD }}" ]; then
-              echo "JASYPT_PASSWORD is not set."
-              exit 1
-            else
-              echo "JASYPT_PASSWORD is set."
-            fi
+        run: |
+          if [ -z "${{ secrets.JASYPT_PASSWORD }}" ]; then
+            echo "JASYPT_PASSWORD is not set."
+            exit 1
+          else
+            echo "JASYPT_PASSWORD is set."
+          fi
 
       - name: Build with Gradle
         run: ./gradlew build
