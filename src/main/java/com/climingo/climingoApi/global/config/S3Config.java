@@ -1,5 +1,6 @@
 package com.climingo.climingoApi.global.config;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -21,17 +22,15 @@ public class S3Config {
     @Value("${cloud.aws.s3.region}")
     private String region;
 
-    @Value("${cloud.aws.s3.endpoint}")
-    private String endPoint;
-
     @Bean
-    public AmazonS3 s3client() {
-        BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-        return AmazonS3ClientBuilder.standard()
-                                    .withEndpointConfiguration(
-                                            new AwsClientBuilder.EndpointConfiguration(endPoint, region))
-                                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                                    .build();
+    public AmazonS3 s3Client() {
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+        return AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(region)
+                .build();
     }
 
 }
