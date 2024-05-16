@@ -31,8 +31,8 @@ public class SignUpRequest {
     @Size(min = 2, max = 8)
     private final String nickname;
 
-    @JsonProperty("profileImage")
-    private final String profileImage;
+    @JsonProperty("profileUrl")
+    private final String profileUrl;
 
     @JsonProperty("homeGymId")
     private final Long homeGymId;

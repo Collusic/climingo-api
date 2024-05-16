@@ -31,7 +31,7 @@ public class KakaoMemberInfoUserInfoResponse implements OAuth2UserInfoResponse {
         this.attributes.put("authId", sub);
         this.attributes.put("providerType", "kakao");
         this.attributes.put("email", email);
-        this.attributes.put("picture", picture); // 기본값: 앱 연결 시의 카카오계정 썸네일 프로필 사진 URL, 110px*110px 크기
+        this.attributes.put("profileUrl", picture); // 기본값: 앱 연결 시의 카카오계정 썸네일 프로필 사진 URL, 110px*110px 크기
         this.attributes.put("nickname", nickname);
 
         return this.attributes;
