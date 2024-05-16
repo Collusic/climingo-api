@@ -22,7 +22,7 @@ public class RecordResponse {
         this.memberInfo = new ShortMemberResponse(null, null, null); // // TODO: climber 정보 연동
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl());
         this.gym = new ShortGymResponse(gym.getId(), gym.getName());
-        this.level = new ShortLevelResponse(level.getId(), level.getColorName());
+        this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
     }
 
 }
