@@ -19,7 +19,7 @@ public class RecordResponse {
 
     public RecordResponse(Member member, Record record, Gym gym,
                           Level level) {
-        this.memberInfo = new ShortMemberResponse(null, null, null); // // TODO: climber 정보 연동
+        this.memberInfo = new ShortMemberResponse(member.getId(), member.getProfileUrl(), member.getNickname());
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl());
         this.gym = new ShortGymResponse(gym.getId(), gym.getName());
         this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
