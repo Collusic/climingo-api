@@ -37,3 +37,6 @@ out/
 .vscode/
 
 !**/.gitkeep
+
+### query dsl ###
+!**/src/main/generated/

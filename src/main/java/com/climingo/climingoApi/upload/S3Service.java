@@ -10,12 +10,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class S3Service {
 
@@ -25,6 +29,7 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public String uploadVideoFile(MultipartFile videoFile) throws IOException {
         StringBuilder fileName = new StringBuilder();
         fileName.append("비디오_")
@@ -57,4 +62,17 @@ public class S3Service {
         return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
     }
 
+    public String uploadImageFile(File image) {
+        StringBuilder fileName = new StringBuilder();
+        fileName.append("썸네일_")
+            .append(LocalDateTime.now())
+            .append(".")
+            .append(StringUtils.getFilenameExtension(image.getName()));
+
+        s3Client.putObject(new PutObjectRequest(bucket, fileName.toString(), image).withCannedAcl(
+            CannedAccessControlList.PublicRead));
+        image.delete();
+
+        return generatePermanentPresignedUrl(fileName.toString()).toString();
+    }
 }

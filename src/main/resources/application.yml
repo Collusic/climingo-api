@@ -40,13 +40,19 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: ENC(7ptSuaaDJaTz3MrE5q0rMg==)
-      secret-key: ENC(6KR7SiqRHC0YQtw58HiiAg==)
+      access-key: ENC(LP+gaYfshtZGVuhqjpe6mxGpxHertlAAl2I9okfDO1k=)
+      secret-key: ENC(A+yYpH/2R8ZnKeYICqeGCokb2ZBxvPyqcvrytCJIG36l7Cpd6/ymT4V2R8VqZ5cLzgFZbXzeYrM=)
     s3:
-      region: ENC(jDuIuablfFiMQmNTirWoMA==)
-      bucket: ENC(wF8k2Cv+wYkO3ITB8k1k/A==)
+      region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
+      bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
 
 oauth2:
   kakao:
     #    client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc) # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
     client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
+
+ffmpeg:
+#  ffmpeg-path: /usr/local/bin/ffmpeg # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
+#  ffprobe-path: /usr/local/bin/ffprobe # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
+  ffmpeg-path: /usr/bin/ffmpeg
+  ffprobe-path: /usr/bin/ffprobe

@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.701'
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.7.0'
+
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"

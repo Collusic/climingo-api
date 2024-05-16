@@ -12,6 +12,7 @@ import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
+import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecordService {
 
     private final S3Service s3Service;
+    private final ThumbnailExtractor thumbnailExtractor;
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final RecordRepository recordRepository;
@@ -41,15 +43,17 @@ public class RecordService {
                                      .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
 
         String videoUrl = s3Service.uploadVideoFile(request.getVideo());
+        String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
-                              .climber(mockMember())
-                              .gym(gym)
-                              .grade(grade)
-                              .content(null)
-                              .videoUrl(videoUrl)
-                              .recordDate(LocalDateTime.now())
-                              .build();
+            .climber(mockMember())
+            .gym(gym)
+            .grade(grade)
+            .content(null)
+            .videoUrl(videoUrl)
+            .thumbnailImage(thumbnailImageUrl)
+            .recordDate(LocalDateTime.now())
+            .build();
 
         Record save = recordRepository.save(record);
         return save;
@@ -101,8 +105,7 @@ public class RecordService {
     }
 
     private Member mockMember() {
-        return memberRepository.findById(1L)
-                               .orElseThrow(() -> new EntityNotFoundException(1L + "is not found"));
+        return memberRepository.findById(9999L).orElseThrow(() -> new EntityNotFoundException(9999L + "is not found"));
     }
 
 }
