@@ -40,11 +40,11 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: ENC(7ptSuaaDJaTz3MrE5q0rMg==)
-      secret-key: ENC(6KR7SiqRHC0YQtw58HiiAg==)
+      access-key: ENC(LP+gaYfshtZGVuhqjpe6mxGpxHertlAAl2I9okfDO1k=)
+      secret-key: ENC(A+yYpH/2R8ZnKeYICqeGCokb2ZBxvPyqcvrytCJIG36l7Cpd6/ymT4V2R8VqZ5cLzgFZbXzeYrM=)
     s3:
-      region: ENC(jDuIuablfFiMQmNTirWoMA==)
-      bucket: ENC(wF8k2Cv+wYkO3ITB8k1k/A==)
+      region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
+      bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
 
 oauth2:
   kakao:
