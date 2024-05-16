@@ -22,7 +22,9 @@ public class Level {
     @JoinColumn(name = "GYM_ID")
     private Gym gym;
 
-    private String colorName;
+    private String colorNameKo;
+
+    private String colorNameEn;
 
     private Integer orderNum;
 }

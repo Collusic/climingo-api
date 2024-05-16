@@ -7,11 +7,14 @@ public class ShortLevelResponse {
 
     private Long levelId;
 
-    private String colorName;
+    private String colorNameKo;
 
-    public ShortLevelResponse(Long levelId, String colorName) {
+    private String colorNameEn;
+
+    public ShortLevelResponse(Long levelId, String colorNameKo, String colorNameEn) {
         this.levelId = levelId;
-        this.colorName = colorName;
+        this.colorNameKo = colorNameKo;
+        this.colorNameEn = colorNameEn;
     }
 
 }

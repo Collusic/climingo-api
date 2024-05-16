@@ -6,11 +6,13 @@ import lombok.Getter;
 public class LevelResponse {
 
     private Long id;
-    private String colorName;
+    private String colorNameKo;
+    private String colorNameEn;
 
-    public LevelResponse(Long id, String colorName) {
+    public LevelResponse(Long id, String colorNameKo, String colorNameEn) {
         this.id = id;
-        this.colorName = colorName;
+        this.colorNameKo = colorNameKo;
+        this.colorNameEn = colorNameEn;
     }
 
 }
