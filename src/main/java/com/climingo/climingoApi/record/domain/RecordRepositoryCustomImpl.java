@@ -18,27 +18,27 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Record> findAllWithDetails(Long gymId, Long gradeId, Long memberId) {
+    public List<Record> findAllWithDetails(Long gymId, Long levelId, Long memberId) {
         return queryFactory.select(record)
                            .from(record)
                            .innerJoin(record.member, member).fetchJoin()
                            .innerJoin(record.gym, QGym.gym).fetchJoin()
                            .where(gymIdEq(gymId),
-                                  gradeIdEq(gradeId),
-                                  climberIdEq(memberId))
+                                  levelIdEq(levelId),
+                                  memberIdEq(memberId))
                            .fetch();
     }
 
-    private BooleanExpression climberIdEq(Long climberId) {
-        return climberId == null ? null : record.member.id.eq(climberId);
+    private BooleanExpression memberIdEq(Long memberId) {
+        return memberId == null ? null : record.member.id.eq(memberId);
     }
 
     private BooleanExpression gymIdEq(Long gymId) {
         return gymId == null ? null : record.gym.id.eq(gymId);
     }
 
-    private BooleanExpression gradeIdEq(Long gradeId) {
-        return gradeId == null ? null : record.grade.id.eq(gradeId);
+    private BooleanExpression levelIdEq(Long levelId) {
+        return levelId == null ? null : record.level.id.eq(levelId);
     }
 
 }

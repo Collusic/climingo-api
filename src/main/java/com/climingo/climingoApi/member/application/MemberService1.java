@@ -25,7 +25,7 @@ public class MemberService1 {
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : member.getRecords()) {
-            recordResponses.add(new RecordResponse(member, record, record.getGym(), record.getGrade()));
+            recordResponses.add(new RecordResponse(member, record, record.getGym(), record.getLevel()));
         }
 
         ProfileResponse profileResponse = ProfileResponse.builder()

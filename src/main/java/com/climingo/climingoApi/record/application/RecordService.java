@@ -1,7 +1,7 @@
 package com.climingo.climingoApi.record.application;
 
-import com.climingo.climingoApi.grade.domain.Grade;
-import com.climingo.climingoApi.grade.domain.GradeRepository;
+import com.climingo.climingoApi.level.domain.Level;
+import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.member.domain.Member;
@@ -30,7 +30,7 @@ public class RecordService {
     private final S3Service s3Service;
     private final ThumbnailExtractor thumbnailExtractor;
     private final GymRepository gymRepository;
-    private final GradeRepository gradeRepository;
+    private final LevelRepository levelRepository;
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
 
@@ -39,8 +39,8 @@ public class RecordService {
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
-        Grade grade = gradeRepository.findById(request.getGradeId())
-                                     .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
+        Level level = levelRepository.findById(request.getLevelId())
+                                     .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
         String videoUrl = s3Service.uploadVideoFile(request.getVideo());
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
@@ -48,7 +48,7 @@ public class RecordService {
         Record record = Record.builder()
             .member(mockMember())
             .gym(gym)
-            .grade(grade)
+            .level(level)
             .content(null)
             .videoUrl(videoUrl)
             .thumbnailUrl(thumbnailImageUrl)
@@ -67,11 +67,11 @@ public class RecordService {
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
-        Grade grade = gradeRepository.findById(request.getGradeId())
-                                     .orElseThrow(() -> new EntityNotFoundException(request.getGradeId() + "is not found"));
+        Level level = levelRepository.findById(request.getLevelId())
+                                     .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
-        record.update(gym, grade, null);
+        record.update(gym, level, null);
 
         return record;
     }
@@ -87,18 +87,18 @@ public class RecordService {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        RecordResponse recordResponse = new RecordResponse(mockMember(), record, record.getGym(), record.getGrade()); // TODO: climber 정보 연동
+        RecordResponse recordResponse = new RecordResponse(mockMember(), record, record.getGym(), record.getLevel()); // TODO: climber 정보 연동
 
         return recordResponse;
     }
 
     @Transactional(readOnly = true)
-    public List<RecordResponse> findAll(Long gymId, Long gradeId, Long memberId) {
-        List<Record> records = recordRepository.findAllWithDetails(gymId, gradeId, memberId);
+    public List<RecordResponse> findAll(Long gymId, Long levelId, Long memberId) {
+        List<Record> records = recordRepository.findAllWithDetails(gymId, levelId, memberId);
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
-            recordResponses.add(new RecordResponse(record.getMember(), record, record.getGym(), record.getGrade()));
+            recordResponses.add(new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
         }
 
         return recordResponses;

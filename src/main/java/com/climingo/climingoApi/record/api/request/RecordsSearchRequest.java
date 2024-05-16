@@ -11,6 +11,6 @@ public class RecordsSearchRequest {
 
     private Long gymId;
 
-    private Long gradeId;
+    private Long levelId;
 
 }

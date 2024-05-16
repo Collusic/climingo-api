@@ -1,6 +1,6 @@
 package com.climingo.climingoApi.gym.api;
 
-import com.climingo.climingoApi.gym.api.response.GradeResponse;
+import com.climingo.climingoApi.gym.api.response.LevelResponse;
 import com.climingo.climingoApi.gym.api.response.GymSearchResponse;
 import com.climingo.climingoApi.gym.application.GymService;
 import java.util.List;
@@ -23,9 +23,9 @@ public class GymController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/gyms/{gymId}/grades")
-    public ResponseEntity<List<GradeResponse>> findGradeList(@PathVariable Long gymId) {
-        List<GradeResponse> response = gymService.findGradeList(gymId);
+    @GetMapping("/gyms/{gymId}/levels")
+    public ResponseEntity<List<LevelResponse>> findLevelList(@PathVariable Long gymId) {
+        List<LevelResponse> response = gymService.findLevelList(gymId);
         return ResponseEntity.ok().body(response);
     }
 

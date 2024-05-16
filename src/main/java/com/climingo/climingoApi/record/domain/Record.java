@@ -1,6 +1,6 @@
 package com.climingo.climingoApi.record.domain;
 
-import com.climingo.climingoApi.grade.domain.Grade;
+import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.member.domain.Member;
 import jakarta.persistence.Column;
@@ -33,8 +33,8 @@ public class Record {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GRADE_ID")
-    private Grade grade;
+    @JoinColumn(name = "LEVEL_ID")
+    private Level level;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GYM_ID")
@@ -51,10 +51,10 @@ public class Record {
     private LocalDateTime recordDate;
 
     @Builder
-    public Record(Long id, Member member, Grade grade, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDateTime recordDate) {
+    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDateTime recordDate) {
         this.id = id;
         this.member = member;
-        this.grade = grade;
+        this.level = level;
         this.gym = gym;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
@@ -62,12 +62,12 @@ public class Record {
         this.recordDate = recordDate;
     }
 
-    public void update(Gym gym, Grade grade, String videoUrl) {
+    public void update(Gym gym, Level level, String videoUrl) {
         if (!gym.getId().equals(this.gym.getId())) {
             this.gym = gym;
         }
-        if (!grade.getId().equals(this.grade.getId())) {
-            this.grade = grade;
+        if (!level.getId().equals(this.level.getId())) {
+            this.level = level;
         }
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
     }
