@@ -46,12 +46,12 @@ public class RecordService {
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
-            .climber(mockMember())
+            .member(mockMember())
             .gym(gym)
             .grade(grade)
             .content(null)
             .videoUrl(videoUrl)
-            .thumbnailImage(thumbnailImageUrl)
+            .thumbnailUrl(thumbnailImageUrl)
             .recordDate(LocalDateTime.now())
             .build();
 
@@ -98,7 +98,7 @@ public class RecordService {
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
-            recordResponses.add(new RecordResponse(record.getClimber(), record, record.getGym(), record.getGrade()));
+            recordResponses.add(new RecordResponse(record.getMember(), record, record.getGym(), record.getGrade()));
         }
 
         return recordResponses;

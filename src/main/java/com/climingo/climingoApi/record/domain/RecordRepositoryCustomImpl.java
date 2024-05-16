@@ -21,7 +21,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
     public List<Record> findAllWithDetails(Long gymId, Long gradeId, Long memberId) {
         return queryFactory.select(record)
                            .from(record)
-                           .innerJoin(record.climber, member).fetchJoin()
+                           .innerJoin(record.member, member).fetchJoin()
                            .innerJoin(record.gym, QGym.gym).fetchJoin()
                            .where(gymIdEq(gymId),
                                   gradeIdEq(gradeId),
@@ -30,7 +30,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
     }
 
     private BooleanExpression climberIdEq(Long climberId) {
-        return climberId == null ? null : record.climber.id.eq(climberId);
+        return climberId == null ? null : record.member.id.eq(climberId);
     }
 
     private BooleanExpression gymIdEq(Long gymId) {

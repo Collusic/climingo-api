@@ -30,7 +30,7 @@ public class Record {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
-    private Member climber;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GRADE_ID")
@@ -44,20 +44,20 @@ public class Record {
     private String videoUrl;
 
     @Column(length = 400)
-    private String thumbnailImage;
+    private String thumbnailUrl;
 
     private String content;
 
     private LocalDateTime recordDate;
 
     @Builder
-    public Record(Long id, Member climber, Grade grade, Gym gym, String videoUrl, String thumbnailImage, String content, LocalDateTime recordDate) {
+    public Record(Long id, Member member, Grade grade, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDateTime recordDate) {
         this.id = id;
-        this.climber = climber;
+        this.member = member;
         this.grade = grade;
         this.gym = gym;
         this.videoUrl = videoUrl;
-        this.thumbnailImage = thumbnailImage;
+        this.thumbnailUrl = thumbnailUrl;
         this.content = content;
         this.recordDate = recordDate;
     }

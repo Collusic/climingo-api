@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class RecordResponse {
 
-    private ShortMemberResponse climber;
+    private ShortMemberResponse memberInfo;
 
     private ShortRecordResponse record;
 
@@ -17,10 +17,10 @@ public class RecordResponse {
 
     private ShortGradeResponse grade;
 
-    public RecordResponse(Member climber, Record record, Gym gym,
+    public RecordResponse(Member member, Record record, Gym gym,
                           Grade grade) {
-        this.climber = new ShortMemberResponse(null, null, null); // // TODO: climber 정보 연동
-        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl());
+        this.memberInfo = new ShortMemberResponse(null, null, null); // // TODO: climber 정보 연동
+        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl());
         this.gym = new ShortGymResponse(gym.getId(), gym.getName());
         this.grade = new ShortGradeResponse(grade.getId(), grade.getColorName());
     }

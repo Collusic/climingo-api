@@ -13,7 +13,7 @@ public class MemberInfoResponse {
     public MemberInfoResponse(Member member) {
         this.memberId = member.getId();
         this.nickname = member.getNickname();
-        this.profileImage = member.getProfileImage();
+        this.profileImage = member.getProfileUrl();
     }
 
 }

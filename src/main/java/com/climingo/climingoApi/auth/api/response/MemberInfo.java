@@ -17,6 +17,6 @@ public class MemberInfo {
         this.authId = member.getAuthId();
         this.providerType = member.getProviderType();
         this.email = member.getEmail();
-        this.picture= member.getProfileImage();
+        this.picture= member.getProfileUrl();
     }
 }

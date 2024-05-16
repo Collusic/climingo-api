@@ -32,7 +32,7 @@ public class Member {
 
     private String nickname;
 
-    private String profileImage;
+    private String profileUrl;
 
     private String email;
 
@@ -42,17 +42,17 @@ public class Member {
     @Embedded
     private PhysicalInfo physicalInfo;
 
-    @OneToMany(mappedBy = "climber")
+    @OneToMany(mappedBy = "member")
     private List<Record> records = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String authId, String providerType, String nickname, String profileImage, String email,
+    public Member(Long id, String authId, String providerType, String nickname, String profileUrl, String email,
                   Gym homeGym, PhysicalInfo physicalInfo, List<Record> records) {
         this.id = id;
         this.authId = authId;
         this.providerType = providerType;
         this.nickname = nickname;
-        this.profileImage = profileImage;
+        this.profileUrl = profileUrl;
         this.email = email;
         this.homeGym = homeGym;
         this.physicalInfo = physicalInfo;
