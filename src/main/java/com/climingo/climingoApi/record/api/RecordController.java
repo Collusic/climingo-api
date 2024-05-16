@@ -51,8 +51,8 @@ public class RecordController {
 
     @GetMapping("/records")
     public ResponseEntity<List<RecordResponse>> findAll(@RequestParam(value = "gymId", required = false) Long gymId,
-                                                        @RequestParam(value = "gradeId", required = false) Long gradeId, @RequestParam(value = "memberId", required = false) Long memberId) {
-        List<RecordResponse> recordResponses = recordService.findAll(gymId, gradeId, memberId);
+                                                        @RequestParam(value = "levelId", required = false) Long levelId, @RequestParam(value = "memberId", required = false) Long memberId) {
+        List<RecordResponse> recordResponses = recordService.findAll(gymId, levelId, memberId);
         return ResponseEntity.ok().body(recordResponses);
     }
 

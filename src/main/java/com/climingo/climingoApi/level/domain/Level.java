@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.grade.domain;
+package com.climingo.climingoApi.level.domain;
 
 import com.climingo.climingoApi.gym.domain.Gym;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class Grade {
+public class Level {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

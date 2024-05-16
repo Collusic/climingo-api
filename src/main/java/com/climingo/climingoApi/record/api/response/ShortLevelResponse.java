@@ -3,14 +3,14 @@ package com.climingo.climingoApi.record.api.response;
 import lombok.Getter;
 
 @Getter
-public class ShortGradeResponse {
+public class ShortLevelResponse {
 
-    private Long gradeId;
+    private Long levelId;
 
     private String colorName;
 
-    public ShortGradeResponse(Long gradeId, String colorName) {
-        this.gradeId = gradeId;
+    public ShortLevelResponse(Long levelId, String colorName) {
+        this.levelId = levelId;
         this.colorName = colorName;
     }
 

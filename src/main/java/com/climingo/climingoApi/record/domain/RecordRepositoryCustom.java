@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface RecordRepositoryCustom {
 
-    List<Record> findAllWithDetails(Long gymId, Long gradeId, Long memberId);
+    List<Record> findAllWithDetails(Long gymId, Long levelId, Long memberId);
 
 }

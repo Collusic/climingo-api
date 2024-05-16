@@ -9,9 +9,12 @@ public class ShortRecordResponse {
 
     private String videoUrl;
 
-    public ShortRecordResponse(Long recordId, String videoUrl) {
+    private String thumbnailUrl;
+
+    public ShortRecordResponse(Long recordId, String videoUrl, String thumbnailUrl) {
         this.recordId = recordId;
         this.videoUrl = videoUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
 }

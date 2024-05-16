@@ -7,13 +7,13 @@ public class ShortMemberResponse {
 
     private Long memberId;
 
-    private String profileImage;
+    private String profileUrl;
 
     private String nickname;
 
-    public ShortMemberResponse(Long memberId, String profileImage, String nickname) {
+    public ShortMemberResponse(Long memberId, String profileUrl, String nickname) {
         this.memberId = memberId;
-        this.profileImage = profileImage;
+        this.profileUrl = profileUrl;
         this.nickname = nickname;
     }
 

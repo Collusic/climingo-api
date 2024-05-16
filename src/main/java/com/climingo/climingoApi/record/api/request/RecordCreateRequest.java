@@ -11,12 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecordCreateRequest {
 
     private Long gymId;
-    private Long gradeId;
+    private Long levelId;
     private MultipartFile video;
 
-    public RecordCreateRequest(Long gymId, Long gradeId, MultipartFile video) {
+    public RecordCreateRequest(Long gymId, Long levelId, MultipartFile video) {
         this.gymId = gymId;
-        this.gradeId = gradeId;
+        this.levelId = levelId;
         this.video = video;
     }
 

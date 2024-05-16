@@ -24,7 +24,7 @@ public class MemberService implements SignUpService, SignInService {
             .authId(request.getAuthId())
             .providerType(request.getProviderType())
             .nickname(request.getNickname())
-            .profileImage(request.getProfileImage())
+            .profileUrl(request.getProfileImage())
             .physicalInfo(request.getPhysicalInfo())
             .build();
 
