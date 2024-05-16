@@ -10,15 +10,15 @@ public class SignInUpResponse {
     private final String authId;
     private final String providerType;
     private final String email;
-    private final String picture;
+    private final String profileUrl;
 
     @Builder
     public SignInUpResponse(String nickname, String authId, String providerType, String email,
-        String picture) {
+        String profileUrl) {
         this.nickname = nickname;
         this.authId = authId;
         this.providerType = providerType;
         this.email = email;
-        this.picture = picture;
+        this.profileUrl = profileUrl;
     }
 }

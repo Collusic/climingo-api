@@ -10,13 +10,13 @@ public class MemberInfo {
     private final String authId;
     private final String providerType;
     private final String email;
-    private final String picture;
+    private final String profileUrl;
 
     public MemberInfo(Member member) {
         this.nickname = member.getNickname();
         this.authId = member.getAuthId();
         this.providerType = member.getProviderType();
         this.email = member.getEmail();
-        this.picture= member.getProfileUrl();
+        this.profileUrl = member.getProfileUrl();
     }
 }

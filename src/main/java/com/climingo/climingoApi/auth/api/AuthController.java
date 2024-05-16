@@ -55,7 +55,7 @@ public class AuthController {
                 .nickname(memberInfo.getNickname())
                 .authId(memberInfo.getAuthId())
                 .providerType(memberInfo.getProviderType())
-                .picture(memberInfo.getPicture())
+                .profileUrl(memberInfo.getProfileUrl())
                 .email(memberInfo.getEmail())
                 .build());
     }
@@ -79,7 +79,7 @@ public class AuthController {
                 .nickname(memberInfo.getNickname())
                 .authId(memberInfo.getAuthId())
                 .providerType(memberInfo.getProviderType())
-                .picture(memberInfo.getPicture())
+                .profileUrl(memberInfo.getProfileUrl())
                 .email(memberInfo.getEmail())
                 .build());
     }

@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowCredentials(true)
-            .allowedOrigins("http://localhost:3000", "https://climingo.vercel.app", "https://stg-climingo.vercel.app", "https://dev-climingo.vercel.app")
+            .allowedOrigins("http://localhost:3000", "https://localhost:3000", "https://climingo.vercel.app", "https://stg-climingo.vercel.app", "https://dev-climingo.vercel.app")
             .allowedMethods("*");
     }
 
