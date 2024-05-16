@@ -34,6 +34,8 @@ public class QRecord extends EntityPathBase<Record> {
 
     public final DateTimePath<java.time.LocalDateTime> recordDate = createDateTime("recordDate", java.time.LocalDateTime.class);
 
+    public final StringPath thumbnailImage = createString("thumbnailImage");
+
     public final StringPath videoUrl = createString("videoUrl");
 
     public QRecord(String variable) {

@@ -48,9 +48,13 @@ public class SecurityConfig {
                     authorizeRequests
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in", "/auth/members/exist")
-                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
+                        .requestMatchers(HttpMethod.POST, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
+                        .requestMatchers(HttpMethod.PATCH, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
+                        .requestMatchers(HttpMethod.PUT, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
+                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
+//                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in", "/auth/members/exist")
+//                        .permitAll()
                         .anyRequest().authenticated()
                 )
             )

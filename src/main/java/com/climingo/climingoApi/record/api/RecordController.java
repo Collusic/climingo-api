@@ -25,7 +25,8 @@ public class RecordController {
     private final RecordService recordService;
 
     @PostMapping("/records")
-    public ResponseEntity<Long> create(@ModelAttribute RecordCreateRequest request) throws IOException {
+    public ResponseEntity<Long> create(@ModelAttribute RecordCreateRequest request)
+        throws IOException, InterruptedException {
         Record record = recordService.createRecord(request);
         return ResponseEntity.ok().body(record.getId());
     }

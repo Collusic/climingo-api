@@ -43,17 +43,21 @@ public class Record {
     @Column(length = 400)
     private String videoUrl;
 
+    @Column(length = 400)
+    private String thumbnailImage;
+
     private String content;
 
     private LocalDateTime recordDate;
 
     @Builder
-    public Record(Long id, Member climber, Grade grade, Gym gym, String videoUrl, String content, LocalDateTime recordDate) {
+    public Record(Long id, Member climber, Grade grade, Gym gym, String videoUrl, String thumbnailImage, String content, LocalDateTime recordDate) {
         this.id = id;
         this.climber = climber;
         this.grade = grade;
         this.gym = gym;
         this.videoUrl = videoUrl;
+        this.thumbnailImage = thumbnailImage;
         this.content = content;
         this.recordDate = recordDate;
     }
