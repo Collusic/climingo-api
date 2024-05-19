@@ -20,7 +20,7 @@ public class RecordResponse {
     public RecordResponse(Member member, Record record, Gym gym,
                           Level level) {
         this.memberInfo = new ShortMemberResponse(member.getId(), member.getProfileUrl(), member.getNickname());
-        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl());
+        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
         this.gym = new ShortGymResponse(gym.getId(), gym.getName());
         this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
     }
