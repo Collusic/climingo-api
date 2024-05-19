@@ -1,7 +1,7 @@
 package com.climingo.climingoApi.record.domain;
 
-import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.gym.domain.Gym;
+import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,12 +17,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Record {
+public class Record extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,10 +49,8 @@ public class Record {
 
     private String content;
 
-    private LocalDateTime recordDate;
-
     @Builder
-    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDateTime recordDate) {
+    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content) {
         this.id = id;
         this.member = member;
         this.level = level;
@@ -59,7 +58,6 @@ public class Record {
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.content = content;
-        this.recordDate = recordDate;
     }
 
     public void update(Gym gym, Level level, String videoUrl) {

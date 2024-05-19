@@ -52,7 +52,6 @@ public class RecordService {
             .content(null)
             .videoUrl(videoUrl)
             .thumbnailUrl(thumbnailImageUrl)
-            .recordDate(LocalDateTime.now())
             .build();
 
         Record save = recordRepository.save(record);
