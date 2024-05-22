@@ -17,6 +17,8 @@ public class PageDto<T> {
 
     private Integer resultCount;
 
+    private Integer pageNumber;
+
     private Boolean isEnd;
 
     private List<T> contents;
