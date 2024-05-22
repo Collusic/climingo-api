@@ -29,3 +29,8 @@ oauth2:
 ffmpeg:
     ffmpeg-path: /usr/local/bin/ffmpeg
     ffprobe-path: /usr/local/bin/ffprobe
+
+app:
+  version: local_temp_version
+  build:
+    time: local_temp_build_time
