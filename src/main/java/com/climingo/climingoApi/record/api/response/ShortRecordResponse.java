@@ -1,6 +1,5 @@
 package com.climingo.climingoApi.record.api.response;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
