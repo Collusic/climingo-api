@@ -22,7 +22,12 @@ public class QRecord extends EntityPathBase<Record> {
 
     public static final QRecord record = new QRecord("record");
 
+    public final QBaseTimeEntity _super = new QBaseTimeEntity(this);
+
     public final StringPath content = createString("content");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final com.climingo.climingoApi.gym.domain.QGym gym;
 
@@ -32,7 +37,8 @@ public class QRecord extends EntityPathBase<Record> {
 
     public final com.climingo.climingoApi.member.domain.QMember member;
 
-    public final DateTimePath<java.time.LocalDateTime> recordDate = createDateTime("recordDate", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath thumbnailUrl = createString("thumbnailUrl");
 

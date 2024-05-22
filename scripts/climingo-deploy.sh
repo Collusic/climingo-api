@@ -19,4 +19,6 @@ fi
 
 echo "> $JAR_PATH 배포"
 chmod +x build/libs/$JAR_NAME
-nohup java -DJASYPT_PASSWORD='climingo-will-be-nice' -jar build/libs/$JAR_NAME > application.log 2>&1 &
+
+today=$(date)
+nohup java -DJASYPT_PASSWORD='climingo-will-be-nice' -Dversion="$JAR_NAME" -DbuildTime="$today" -jar "build/libs/$JAR_NAME" > application.log 2>&1 &
