@@ -1,13 +1,14 @@
 package com.climingo.climingoApi.record.application;
 
-import com.climingo.climingoApi.level.domain.Level;
-import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
+import com.climingo.climingoApi.level.domain.Level;
+import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.PageDto;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
@@ -15,11 +16,12 @@ import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,13 +48,13 @@ public class RecordService {
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
-            .member(mockMember())
-            .gym(gym)
-            .level(level)
-            .content(null)
-            .videoUrl(videoUrl)
-            .thumbnailUrl(thumbnailImageUrl)
-            .build();
+                              .member(mockMember())
+                              .gym(gym)
+                              .level(level)
+                              .content(null)
+                              .videoUrl(videoUrl)
+                              .thumbnailUrl(thumbnailImageUrl)
+                              .build();
 
         Record save = recordRepository.save(record);
         return save;
@@ -101,6 +103,24 @@ public class RecordService {
         }
 
         return recordResponses;
+    }
+
+    @Transactional(readOnly = true)
+    public PageDto<RecordResponse> findPage(Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
+        Page<Record> recordPage = recordRepository.findRecordPage(gymId, levelId, memberId, page, size);
+
+        return PageDto.<RecordResponse>builder()
+                      .totalCount(recordPage.getTotalElements())
+                      .resultCount(recordPage.getNumberOfElements())
+                      .isEnd(recordPage.isLast())
+                      .contents(toRecordResponses(recordPage.getContent()))
+                      .build();
+    }
+
+    private List<RecordResponse> toRecordResponses(List<Record> records) {
+        return records.stream()
+                      .map(record -> new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()))
+                      .collect(Collectors.toList());
     }
 
     private Member mockMember() {

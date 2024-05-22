@@ -2,9 +2,11 @@ package com.climingo.climingoApi.record.api;
 
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.PageDto;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.application.RecordService;
 import com.climingo.climingoApi.record.domain.Record;
+import jakarta.validation.constraints.Min;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class RecordController {
 
     @PostMapping("/records")
     public ResponseEntity<Long> create(@ModelAttribute RecordCreateRequest request)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         Record record = recordService.createRecord(request);
         return ResponseEntity.ok().body(record.getId());
     }
@@ -51,9 +53,22 @@ public class RecordController {
 
     @GetMapping("/records")
     public ResponseEntity<List<RecordResponse>> findAll(@RequestParam(value = "gymId", required = false) Long gymId,
-                                                        @RequestParam(value = "levelId", required = false) Long levelId, @RequestParam(value = "memberId", required = false) Long memberId) {
+                                                        @RequestParam(value = "levelId", required = false) Long levelId,
+                                                        @RequestParam(value = "memberId", required = false) Long memberId) {
         List<RecordResponse> recordResponses = recordService.findAll(gymId, levelId, memberId);
         return ResponseEntity.ok().body(recordResponses);
+    }
+
+    @GetMapping("/records/paged")
+    public ResponseEntity<PageDto<RecordResponse>> findPage(@RequestParam(value = "gymId", required = false) Long gymId,
+                                         @RequestParam(value = "levelId", required = false) Long levelId,
+                                         @RequestParam(value = "memberId", required = false) Long memberId,
+                                         @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
+                                         @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
+
+        PageDto<RecordResponse> pageDto = recordService.findPage(gymId, levelId, memberId, page, size);// TODO: 예외 global 하게 처리 필요
+
+        return ResponseEntity.ok().body(pageDto);
     }
 
 }
