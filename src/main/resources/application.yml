@@ -1,34 +1,20 @@
-jasypt:
-  encryptor:
-    password: ${JASYPT_PASSWORD}
-
 spring:
-  ## h2
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:mem:test
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-    defer-datasource-initialization: true # data.sql 실행 시점을 변경(JPA 테이블 생성 후로 연기)
-  sql:
-    init:
-      mode: always
+  profiles:
+    group:
+      local: local
+      dev: dev
+      prod: prod
+    active: prod
+
   servlet:
     multipart:
       maxFileSize: 500MB
       maxRequestSize: 500MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 logging:
   level:
     org:
@@ -45,14 +31,3 @@ cloud:
     s3:
       region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
       bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
-
-oauth2:
-  kakao:
-    #    client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc) # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
-    client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
-
-ffmpeg:
-#  ffmpeg-path: /usr/local/bin/ffmpeg # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
-#  ffprobe-path: /usr/local/bin/ffprobe # TODO 로컬용. 추후 profile 별 설정파일 분리 예정
-  ffmpeg-path: /usr/bin/ffmpeg
-  ffprobe-path: /usr/bin/ffprobe
