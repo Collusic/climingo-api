@@ -9,6 +9,7 @@ import com.climingo.climingoApi.record.domain.Record;
 import jakarta.validation.constraints.Min;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,10 +28,10 @@ public class RecordController {
     private final RecordService recordService;
 
     @PostMapping("/records")
-    public ResponseEntity<Long> create(@ModelAttribute RecordCreateRequest request)
+    public ResponseEntity<Map<String,Long>> create(@ModelAttribute RecordCreateRequest request)
             throws IOException, InterruptedException {
         Record record = recordService.createRecord(request);
-        return ResponseEntity.ok().body(record.getId());
+        return ResponseEntity.ok().body(Map.of("recordId", record.getId()));
     }
 
     @PatchMapping("/records/{recordId}")
