@@ -51,15 +51,15 @@ public class RecordController {
         return ResponseEntity.ok().body(recordResponse);
     }
 
-    @GetMapping("/records")
-    public ResponseEntity<List<RecordResponse>> findAll(@RequestParam(value = "gymId", required = false) Long gymId,
-                                                        @RequestParam(value = "levelId", required = false) Long levelId,
-                                                        @RequestParam(value = "memberId", required = false) Long memberId) {
-        List<RecordResponse> recordResponses = recordService.findAll(gymId, levelId, memberId);
-        return ResponseEntity.ok().body(recordResponses);
-    }
+//    @GetMapping("/records")
+//    public ResponseEntity<List<RecordResponse>> findAll(@RequestParam(value = "gymId", required = false) Long gymId,
+//                                                        @RequestParam(value = "levelId", required = false) Long levelId,
+//                                                        @RequestParam(value = "memberId", required = false) Long memberId) {
+//        List<RecordResponse> recordResponses = recordService.findAll(gymId, levelId, memberId);
+//        return ResponseEntity.ok().body(recordResponses);
+//    }
 
-    @GetMapping("/records/paged")
+    @GetMapping("/records")
     public ResponseEntity<PageDto<RecordResponse>> findPage(@RequestParam(value = "gymId", required = false) Long gymId,
                                          @RequestParam(value = "levelId", required = false) Long levelId,
                                          @RequestParam(value = "memberId", required = false) Long memberId,
