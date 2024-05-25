@@ -112,7 +112,8 @@ public class RecordService {
         return PageDto.<RecordResponse>builder()
                       .totalCount(recordPage.getTotalElements())
                       .resultCount(recordPage.getNumberOfElements())
-                      .pageNumber(page)
+                      .totalPage((int) Math.ceil((double) recordPage.getTotalElements() / size))
+                      .page(page)
                       .isEnd(recordPage.isLast())
                       .contents(toRecordResponses(recordPage.getContent()))
                       .build();
