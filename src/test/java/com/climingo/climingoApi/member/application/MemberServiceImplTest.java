@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("MemberService Unit Tests")
-class MemberServiceTest {
+class MemberServiceImplTest {
 
     private SignUpService signUpService;
     private MemberRepository mockedMemberRepository;
@@ -24,7 +24,7 @@ class MemberServiceTest {
     @BeforeEach
     void setUp() {
         mockedMemberRepository = mock(MemberRepository.class);
-        signUpService = new MemberService(mockedMemberRepository);
+        signUpService = new MemberServiceImpl(mockedMemberRepository);
     }
 
     @Test

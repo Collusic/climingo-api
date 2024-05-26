@@ -1,6 +1,7 @@
-package com.climingo.climingoApi.member.application;
+package com.climingo.climingoApi.member.api;
 
 import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.member.application.MemberService;
 import com.climingo.climingoApi.member.application.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.application.response.ProfileResponse;
 import com.climingo.climingoApi.member.domain.Member;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MemberController {
 
-    private final MemberService1 memberService;
+    private final MemberService memberService;
 
     @GetMapping("/members")
     public ResponseEntity<ProfileResponse> findMyInfo() {
@@ -31,7 +32,6 @@ public class MemberController {
     }
 
     @PatchMapping("/members/{memberId}/nickname")
-    // TODO
     public ResponseEntity<Void> updateNickname(@LoginMember Member member, @PathVariable(value = "memberId") Long memberId, @RequestBody String nickname) {
         memberService.updateNickname(member, memberId, nickname);
         return ResponseEntity.ok().build();
