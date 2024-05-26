@@ -44,7 +44,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             authId = JwtUtil.getAuthId(token);
             providerType = JwtUtil.getProviderType(token);
 
-            return memberRepository.findByAuthIdAndProviderType(authId, providerType).orElseThrow(NoSuchElementException::new);
+            return memberRepository.findByAuthIdAndProviderType(authId, providerType).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원: " + authId + " " + providerType));
         }
 
         Optional<Cookie> refreshTokenCookie = CookieUtils.getCookie(request, JwtUtil.REFRESH_TOKEN_NAME);
@@ -52,6 +52,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         authId = JwtUtil.getAuthId(token);
         providerType = JwtUtil.getProviderType(token);
 
-        return memberRepository.findByAuthIdAndProviderType(authId, providerType).orElseThrow(NoSuchElementException::new);
+        return memberRepository.findByAuthIdAndProviderType(authId, providerType).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원: " + authId + " " + providerType));
     }
 }

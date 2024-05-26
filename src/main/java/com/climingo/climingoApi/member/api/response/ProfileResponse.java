@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.member.application.response;
+package com.climingo.climingoApi.member.api.response;
 
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import java.util.List;

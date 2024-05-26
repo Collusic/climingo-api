@@ -59,4 +59,11 @@ public class Member {
         this.records = records;
     }
 
+    public boolean isSameMember(Long memberId) {
+        return this.id.equals(memberId);
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
