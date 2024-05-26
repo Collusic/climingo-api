@@ -1,3 +1,7 @@
+ALTER TABLE Record ALTER COLUMN id RESTART WITH 50;
+ALTER TABLE Level ALTER COLUMN id RESTART WITH 50;
+ALTER TABLE Member ALTER COLUMN id RESTART WITH 50;
+
 insert into gym (id, latitude, longitude, address, name, zip_code) values (1, 37.50416, 127.025142, '서울 강남구 강남대로 468', '클라이밍파크 신논현', null);
 insert into gym (id, latitude, longitude, address, name, zip_code) values (2, 37.506311, 127.024755, '서울 강남구 강남대로118길 12', '락트리 클라이밍 강남', null);
 insert into gym (id, latitude, longitude, address, name, zip_code) values (3, 37.485184, 127.035883, '서울 강남구 남부순환로 2615', '더클라임 양재점', null);
@@ -33,7 +37,9 @@ insert into level (id, order_num, gym_id, color_name_ko, color_name_en) values (
 insert into level (id, order_num, gym_id, color_name_ko, color_name_en) values (27, 9, 3, '갈색', 'brown');
 insert into level (id, order_num, gym_id, color_name_ko, color_name_en) values (28, 10, 3, '검정', 'black');
 
+
 insert into member (id, auth_id, provider_type, nickname, profile_url, email, home_gym_id, arm_span, height, weight) values(9999, 'test_auth_id_9999', 'kakao', 'test_nickname', 'http://k.kakaocdn.net/dn/dTDso6/btsECljbpYi/JqJl8DHkrVbuwYlBlVGEkK/img_110x110.jpg', null, null, null, null, null);
+
 
 insert into record(id, member_id, level_id, gym_id, video_url, thumbnail_url, content, created_date, modified_date) values(1, 9999, 1, 1, 'https://climingo-api.s3.ap-northeast-2.amazonaws.com/%EB%B9%84%EB%94%94%EC%98%A4_2024-05-16T12%3A40%3A26.647632061.MOV', 'https://climingo-api.s3.ap-northeast-2.amazonaws.com/%EC%8D%B8%EB%84%A4%EC%9D%BC_2024-05-16T21%3A35%3A57.247394.jpg', 'test_content', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 insert into record(id, member_id, level_id, gym_id, video_url, thumbnail_url, content, created_date, modified_date) values(2, 9999, 1, 1, 'https://climingo-api.s3.ap-northeast-2.amazonaws.com/%EB%B9%84%EB%94%94%EC%98%A4_2024-05-16T12%3A40%3A26.647632061.MOV', 'https://climingo-api.s3.ap-northeast-2.amazonaws.com/%EC%8D%B8%EB%84%A4%EC%9D%BC_2024-05-16T21%3A35%3A57.247394.jpg', 'test_content', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
