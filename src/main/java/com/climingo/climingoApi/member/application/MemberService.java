@@ -1,7 +1,7 @@
 package com.climingo.climingoApi.member.application;
 
-import com.climingo.climingoApi.member.application.response.MemberInfoResponse;
-import com.climingo.climingoApi.member.application.response.ProfileResponse;
+import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
+import com.climingo.climingoApi.member.api.response.ProfileResponse;
 import com.climingo.climingoApi.member.domain.Member;
 
 public interface MemberService {

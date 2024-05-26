@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -54,5 +55,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ExceptionResponse handleAccessDeniedException(AccessDeniedException e) {
         return ExceptionResponse.of(HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return ExceptionResponse.of(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
     }
 }

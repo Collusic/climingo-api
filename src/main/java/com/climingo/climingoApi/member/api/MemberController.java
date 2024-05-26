@@ -1,10 +1,12 @@
 package com.climingo.climingoApi.member.api;
 
 import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.member.api.request.UpdateNicknameRequest;
 import com.climingo.climingoApi.member.application.MemberService;
-import com.climingo.climingoApi.member.application.response.MemberInfoResponse;
-import com.climingo.climingoApi.member.application.response.ProfileResponse;
+import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
+import com.climingo.climingoApi.member.api.response.ProfileResponse;
 import com.climingo.climingoApi.member.domain.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +34,8 @@ public class MemberController {
     }
 
     @PatchMapping("/members/{memberId}/nickname")
-    public ResponseEntity<Void> updateNickname(@LoginMember Member member, @PathVariable(value = "memberId") Long memberId, @RequestBody String nickname) {
-        memberService.updateNickname(member, memberId, nickname);
+    public ResponseEntity<Void> updateNickname(@LoginMember Member member, @PathVariable(value = "memberId") Long memberId, @RequestBody @Valid UpdateNicknameRequest request) {
+        memberService.updateNickname(member, memberId, request.getNickname());
         return ResponseEntity.ok().build();
     }
 }
