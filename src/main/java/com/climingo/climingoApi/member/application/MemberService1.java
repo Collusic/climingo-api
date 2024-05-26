@@ -10,6 +10,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,4 +45,21 @@ public class MemberService1 {
         return new MemberInfoResponse(member);
     }
 
+    public void updateNickname(Member member, Long memberId, String nickname) {
+        if (!member.isSameMember(memberId)) {
+            throw new AccessDeniedException("다른 사용자의 닉네임은 변경할 수 없음");
+        }
+
+        if (isDuplicated(nickname)) {
+            throw new DataIntegrityViolationException("Nickname already exists: " + nickname);
+        }
+
+
+        member.updateNickname(nickname);
+        memberRepository.save(member);
+    }
+
+    private boolean isDuplicated(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }
