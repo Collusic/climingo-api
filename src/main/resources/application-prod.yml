@@ -34,3 +34,6 @@ app:
   version: ${version}
   build:
     time: ${buildTime}
+
+discord:
+  webhook-url: https://discord.com/api/webhooks/1246451017654997014/cn3094Fmv7VSNvBnZmMoht5M5Z6ufM9Q-fF7j7d_WRkGemJ2vszV-yAhvd065MT-NzfC
