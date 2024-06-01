@@ -1,7 +1,10 @@
 package com.climingo.climingoApi.global.exception;
 
+import com.climingo.climingoApi.message.error.ErrorAlertMessageProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -12,10 +15,14 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final ErrorAlertMessageProvider messageProvider;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({NoSuchElementException.class, IllegalArgumentException.class})
@@ -60,5 +67,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return ExceptionResponse.of(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ExceptionResponse handleNoResourceFoundException(Exception e) {
+        return ExceptionResponse.of(HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ExceptionResponse handleRuntimeException(Exception e, HttpServletRequest request) {
+        try {
+            messageProvider.sendMessage(e, request);
+        } catch (Exception ex) {
+            log.error("[ERROR] 디스코드 웹훅 에러");
+            ex.printStackTrace();
+        }
+        return ExceptionResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
     }
 }

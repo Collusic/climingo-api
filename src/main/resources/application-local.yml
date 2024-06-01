@@ -34,3 +34,6 @@ app:
   version: local_temp_version
   build:
     time: local_temp_build_time
+
+discord:
+  webhook-url: https://discord.com/api/webhooks/1246453066535014442/JTLPOUfk-LDtVVYGR6AhWEc3AdEbOIwtxyX2YxTidtC4368SMh_hOeI5v_EU80szroZb
