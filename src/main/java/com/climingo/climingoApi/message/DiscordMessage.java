@@ -1,7 +1,6 @@
 package com.climingo.climingoApi.message;
 
 import java.awt.Color;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
+
+// Reference: https://gist.github.com/k3kdude/fba6f6b37594eae3d6f9475330733bdb#file-discordwebhook-java
 
 public class DiscordMessage {
 
