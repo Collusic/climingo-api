@@ -43,7 +43,7 @@ public class S3Service {
 
         URL videoUrl = generatePermanentPresignedUrl(fileName.toString());
 
-        return videoUrl.toString();
+        return videoUrl.toString().substring(0, videoUrl.toString().indexOf("?"));
     }
 
     private File convertMultipartFileToFile(MultipartFile file) throws IOException {
@@ -73,6 +73,8 @@ public class S3Service {
             CannedAccessControlList.PublicRead));
         image.delete();
 
-        return generatePermanentPresignedUrl(fileName.toString()).toString();
+        URL url = generatePermanentPresignedUrl(fileName.toString());
+
+        return url.toString().substring(0, url.toString().indexOf("?"));
     }
 }
