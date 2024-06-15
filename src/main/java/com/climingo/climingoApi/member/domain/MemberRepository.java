@@ -15,6 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByAuthIdAndProviderType(String authId, String providerType);
 
-    @Query("SELECT m FROM Member m JOIN FETCH m.records WHERE m.id = :memberId")
-    Member findMemberWithRecords(@Param("memberId") Long memberId);
+    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.records WHERE m.id = :memberId")
+    Optional<Member> findByIdWithRecords(@Param("memberId") Long memberId);
 }

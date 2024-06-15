@@ -1,5 +1,7 @@
 package com.climingo.climingoApi.record.api;
 
+import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.api.response.PageDto;
@@ -8,7 +10,6 @@ import com.climingo.climingoApi.record.application.RecordService;
 import com.climingo.climingoApi.record.domain.Record;
 import jakarta.validation.constraints.Min;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +29,29 @@ public class RecordController {
     private final RecordService recordService;
 
     @PostMapping("/records")
-    public ResponseEntity<Map<String,Long>> create(@ModelAttribute RecordCreateRequest request)
-            throws IOException, InterruptedException {
-        Record record = recordService.createRecord(request);
+    public ResponseEntity<Map<String, Long>> create(
+        @LoginMember Member loginMember,
+        @ModelAttribute RecordCreateRequest request) throws IOException {
+
+        Record record = recordService.createRecord(loginMember, request);
         return ResponseEntity.ok().body(Map.of("recordId", record.getId()));
     }
 
     @PatchMapping("/records/{recordId}")
-    public ResponseEntity<Long> update(@PathVariable("recordId") Long recordId, @ModelAttribute RecordUpdateRequest request) {
-        Record record = recordService.updateRecord(recordId, request);
+    public ResponseEntity<Long> update(
+        @LoginMember Member loginMember,
+        @PathVariable("recordId") Long recordId,
+        @ModelAttribute RecordUpdateRequest request) {
+
+        Record record = recordService.updateRecord(loginMember, recordId, request);
         return ResponseEntity.ok().body(record.getId());
     }
 
     @DeleteMapping("/records/{recordId}")
-    public ResponseEntity<Void> delete(@PathVariable("recordId") Long recordId) {
-        recordService.deleteRecord(recordId);
+    public ResponseEntity<Void> delete(
+        @LoginMember Member loginMember,
+        @PathVariable("recordId") Long recordId) {
+        recordService.deleteRecord(loginMember, recordId);
         return ResponseEntity.ok(null);
     }
 

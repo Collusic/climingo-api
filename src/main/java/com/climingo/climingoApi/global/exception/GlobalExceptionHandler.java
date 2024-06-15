@@ -1,9 +1,11 @@
 package com.climingo.climingoApi.global.exception;
 
 import com.climingo.climingoApi.message.error.ErrorAlertMessageProvider;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
+import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,16 +27,23 @@ public class GlobalExceptionHandler {
     private final ErrorAlertMessageProvider messageProvider;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NoSuchElementException.class, IllegalArgumentException.class})
+    @ExceptionHandler({IllegalArgumentException.class})
     public ExceptionResponse badRequestExceptionHandler(Exception e) {
-        log.error("[error]", e);
+        log.error("[BAD_REQUEST]", e);
         return ExceptionResponse.of(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({AuthenticationException.class})
+    public ExceptionResponse unAuthorizedExceptionHandler(AuthenticationException e) {
+        log.error("[BAD_REQUEST]", e);
+        return ExceptionResponse.of(HttpStatus.UNAUTHORIZED.getReasonPhrase(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse validationExceptionHandler(MethodArgumentNotValidException e) {
-        log.error("[error]", e);
+        log.error("[BAD_REQUEST]", e);
         return ExceptionResponse.of(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage(), e.getBindingResult());
     }
 
@@ -48,8 +57,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ExceptionResponse constraintViolationExceptionHandler(ConstraintViolationException e) {
-        log.error("[error]", e);
+        log.error("[BAD_REQUEST]", e);
         return ExceptionResponse.of(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NoSuchElementException.class, EntityNotFoundException.class})
+    public ExceptionResponse notFoundExceptionHandler(Exception e) {
+        log.error("[NOT_FOUND]", e);
+        return ExceptionResponse.of(HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -59,8 +75,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ExceptionResponse handleAccessDeniedException(AccessDeniedException e) {
+    @ExceptionHandler(value = {AccessDeniedException.class, ForbiddenException.class})
+    public ExceptionResponse handleAccessDeniedException(RuntimeException e) {
         return ExceptionResponse.of(HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage());
     }
 

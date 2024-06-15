@@ -1,11 +1,11 @@
 package com.climingo.climingoApi.record.application;
 
+import com.climingo.climingoApi.global.exception.ForbiddenException;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.member.domain.Member;
-import com.climingo.climingoApi.member.domain.MemberRepository;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.api.response.PageDto;
@@ -18,7 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,10 +34,9 @@ public class RecordService {
     private final GymRepository gymRepository;
     private final LevelRepository levelRepository;
     private final RecordRepository recordRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
-    public Record createRecord(RecordCreateRequest request) throws IOException {
+    public Record createRecord(Member loginMember, RecordCreateRequest request) throws IOException {
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
@@ -48,22 +47,26 @@ public class RecordService {
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
-                              .member(mockMember())
-                              .gym(gym)
-                              .level(level)
-                              .content(null)
-                              .videoUrl(videoUrl)
-                              .thumbnailUrl(thumbnailImageUrl)
-                              .build();
+            .member(loginMember)
+            .gym(gym)
+            .level(level)
+            .content(null)
+            .videoUrl(videoUrl)
+            .thumbnailUrl(thumbnailImageUrl)
+            .build();
 
         Record save = recordRepository.save(record);
         return save;
     }
 
     @Transactional
-    public Record updateRecord(Long recordId, RecordUpdateRequest request) {
+    public Record updateRecord(Member loginMember, Long recordId, RecordUpdateRequest request) {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+
+        if (!record.isSameMember(loginMember)) {
+            throw new ForbiddenException("다른 사용자가 업로드한 record는 수정할 수 없음");
+        }
 
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
@@ -78,17 +81,25 @@ public class RecordService {
     }
 
     @Transactional
-    public void deleteRecord(Long recordId) {
-        Optional<Record> record = recordRepository.findById(recordId);
-        record.ifPresent(recordRepository::delete);
+    public void deleteRecord(Member loginMember, Long recordId) {
+        Record record = recordRepository.findById(recordId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
+
+        if (!record.isSameMember(loginMember)) {
+            throw new ForbiddenException("다른 사용자가 업로드한 record는 삭제할 수 없음");
+        }
+
+        recordRepository.delete(record);
     }
 
     @Transactional(readOnly = true)
     public RecordResponse findById(Long recordId) {
         Record record = recordRepository.findById(recordId)
-                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+            .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        RecordResponse recordResponse = new RecordResponse(mockMember(), record, record.getGym(), record.getLevel()); // TODO: climber 정보 연동
+        RecordResponse recordResponse = new RecordResponse(record.getMember(), record,
+            record.getGym(),
+            record.getLevel()); // TODO: climber 정보 연동
 
         return recordResponse;
     }
@@ -99,7 +110,8 @@ public class RecordService {
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
-            recordResponses.add(new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
+            recordResponses.add(
+                new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
         }
 
         return recordResponses;
@@ -124,9 +136,4 @@ public class RecordService {
                       .map(record -> new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()))
                       .collect(Collectors.toList());
     }
-
-    private Member mockMember() {
-        return memberRepository.findById(9999L).orElseThrow(() -> new EntityNotFoundException(9999L + "is not found"));
-    }
-
 }

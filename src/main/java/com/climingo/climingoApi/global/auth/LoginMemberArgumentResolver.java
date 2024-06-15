@@ -48,7 +48,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         Optional<Cookie> refreshTokenCookie = CookieUtils.getCookie(request, JwtUtil.REFRESH_TOKEN_NAME);
-        token = refreshTokenCookie.orElseThrow(AuthenticationException::new).getValue();
+        token = refreshTokenCookie.orElseThrow(() -> new AuthenticationException("로그인을 다시 진행해주세요")).getValue();
         authId = JwtUtil.getAuthId(token);
         providerType = JwtUtil.getProviderType(token);
 

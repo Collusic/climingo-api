@@ -45,6 +45,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             authentication = authenticateWithRefreshToken(request, response);
         }
 
+        if (!authentication.isAuthenticated()) {
+            SecurityContextHolder.clearContext();
+            return;
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

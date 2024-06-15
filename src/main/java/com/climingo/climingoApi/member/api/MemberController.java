@@ -22,8 +22,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/members")
-    public ResponseEntity<ProfileResponse> findMyInfo() {
-        ProfileResponse profileResponse = memberService.findMyInfo(1L);
+    public ResponseEntity<ProfileResponse> findMyInfo(@LoginMember Member loginMember) {
+        ProfileResponse profileResponse = memberService.findMyInfo(loginMember.getId());
         return ResponseEntity.ok().body(profileResponse);
     }
 
