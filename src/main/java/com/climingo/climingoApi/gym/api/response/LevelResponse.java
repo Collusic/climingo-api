@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class LevelResponse {
 
-    private Long id;
+    private Long levelId;
     private String colorNameKo;
     private String colorNameEn;
 
-    public LevelResponse(Long id, String colorNameKo, String colorNameEn) {
-        this.id = id;
+    public LevelResponse(Long levelId, String colorNameKo, String colorNameEn) {
+        this.levelId = levelId;
         this.colorNameKo = colorNameKo;
         this.colorNameEn = colorNameEn;
     }
