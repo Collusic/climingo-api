@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Optional;
+import org.apache.tomcat.util.descriptor.web.Constants;
 
 // [reference] https://velog.io/@cutepassions/spring-security-%EC%84%A4%EC%A0%95-3-cookie
 public class CookieUtils {
@@ -39,9 +40,11 @@ public class CookieUtils {
             cookie.setDomain(domain);
         }
 
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
+        cookie.setAttribute(Constants.COOKIE_SAME_SITE_ATTR, "None");
         response.addCookie(cookie);
     }
 
