@@ -18,8 +18,9 @@ public class CookieUtils {
         return Arrays.stream(cookies).filter(cookie -> cookie.getName().equals(name)).findAny();
     }
 
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    public static void addCookie(HttpServletRequest request, HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
+        cookie.setDomain(request.getHeader("Origin"));
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);

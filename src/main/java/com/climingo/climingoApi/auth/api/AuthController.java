@@ -37,15 +37,17 @@ public class AuthController {
     private final OAuth2ClientManager oAuth2ClientManager;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInUpResponse> signIn(@RequestBody @Valid SignInRequest request,
+    public ResponseEntity<SignInUpResponse> signIn(
+        @RequestBody @Valid SignInRequest requestBody,
+        HttpServletRequest request,
         HttpServletResponse response) {
         OAuth2UserInfoResponse userInfo = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
-            request.getProviderType(), request.getProviderToken());
+            requestBody.getProviderType(), requestBody.getProviderToken());
         TokenResponse tokenResponse = authService.signIn(userInfo);
 
-        CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(),
+        CookieUtils.addCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(),
             JwtUtil.ACCESS_TOKEN_EXP);
-        CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(),
+        CookieUtils.addCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(),
             JwtUtil.REFRESH_TOKEN_EXP);
 
         MemberInfo memberInfo = authService.findMemberInfo(userInfo);
@@ -61,17 +63,19 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<SignInUpResponse> signUp(@RequestBody @Valid final SignUpRequest request,
+    public ResponseEntity<SignInUpResponse> signUp(
+        @RequestBody @Valid final SignUpRequest requestBody,
+        HttpServletRequest request,
         HttpServletResponse response) {
         OAuth2UserInfoResponse userInfoFromProvider = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
-            request.getProviderType(), request.getProviderToken());
-        MemberInfo memberInfo = authService.signUp(request, userInfoFromProvider);
+            requestBody.getProviderType(), requestBody.getProviderToken());
+        MemberInfo memberInfo = authService.signUp(requestBody, userInfoFromProvider);
         TokenResponse tokenResponse = authService.issueToken(memberInfo.getAuthId(),
             memberInfo.getProviderType(), memberInfo.getNickname());
 
-        CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(),
+        CookieUtils.addCookie(request, response, "accessToken", tokenResponse.getAccessToken(),
             JwtUtil.ACCESS_TOKEN_EXP);
-        CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(),
+        CookieUtils.addCookie(request, response, "refreshToken", tokenResponse.getRefreshToken(),
             JwtUtil.REFRESH_TOKEN_EXP);
 
         return ResponseEntity.ok().body(
