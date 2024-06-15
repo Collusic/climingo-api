@@ -72,10 +72,10 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
     }
 
     @Override
-
     @Transactional(readOnly = true)
     public ProfileResponse findMyInfo(Long memberId) {
-        Member member = memberRepository.findMemberWithRecords(memberId);
+        Member member = memberRepository.findByIdWithRecords(memberId)
+            .orElseThrow(() -> new EntityNotFoundException("id가 " + memberId + "인 회원은 존재하지 않습니다"));
 
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : member.getRecords()) {
@@ -93,7 +93,7 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new EntityNotFoundException(memberId + "is not found"));
+            .orElseThrow(() -> new EntityNotFoundException("id가 " + memberId + "인 회원은 존재하지 않습니다"));
 
         return new MemberInfoResponse(member);
     }

@@ -44,17 +44,12 @@ public class SecurityConfig {
             .headers((headerConfig) -> headerConfig.frameOptions(FrameOptionsConfig::disable))
             .authenticationManager(authenticationManager)
             .authorizeHttpRequests((authorizeRequests ->
-                    // TODO 어떤 API에 인증/인가 처리를 둘 것인지 논의 필요
                     authorizeRequests
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
-                        .requestMatchers(HttpMethod.PATCH, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
-                        .requestMatchers(HttpMethod.PUT, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
-                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll() // TODO 프론트 쪽 로그인 테스트 후 변경 예정
-//                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in", "/auth/members/exist")
-//                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/members", "/auth/members/exist").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in").permitAll()
                         .anyRequest().authenticated()
                 )
             )
