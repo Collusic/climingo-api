@@ -47,9 +47,9 @@ public class SecurityConfig {
                     authorizeRequests
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/members", "/auth/members/exist").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/members").authenticated()
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in").permitAll()
+                        .requestMatchers("/healthCheck", "/sign-up", "/sign-in", "/auth/members/exist").permitAll()
                         .anyRequest().authenticated()
                 )
             )
