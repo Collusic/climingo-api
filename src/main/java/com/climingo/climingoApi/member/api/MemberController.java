@@ -22,7 +22,7 @@ public class MemberController {
 
     @GetMapping("/members")
     public ResponseEntity<MemberInfoResponse> findMyInfo(@LoginMember Member loginMember) {
-        MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(9999L);
+        MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(loginMember.getId());
         return ResponseEntity.ok().body(memberInfoResponse);
     }
 
