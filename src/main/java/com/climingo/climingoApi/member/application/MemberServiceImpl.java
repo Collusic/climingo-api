@@ -5,14 +5,9 @@ import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import com.climingo.climingoApi.auth.application.SignInService;
 import com.climingo.climingoApi.auth.application.SignUpService;
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
-import com.climingo.climingoApi.member.api.response.ProfileResponse;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
-import com.climingo.climingoApi.record.api.response.RecordResponse;
-import com.climingo.climingoApi.record.domain.Record;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,12 +25,12 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
     @Override
     public MemberInfo signUp(SignUpRequest request) {
         Member member = Member.builder()
-            .authId(request.getAuthId())
-            .providerType(request.getProviderType())
-            .nickname(request.getNickname())
-            .profileUrl(request.getProfileUrl())
-            .physicalInfo(request.getPhysicalInfo())
-            .build();
+                              .authId(request.getAuthId())
+                              .providerType(request.getProviderType())
+                              .nickname(request.getNickname())
+                              .profileUrl(request.getProfileUrl())
+                              .physicalInfo(request.getPhysicalInfo())
+                              .build();
 
         validateAbleToSignUp(member);
 
@@ -64,36 +59,18 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
 
     @Override
     public MemberInfo findEnrolledMemberInfoByAuthIdAndProviderType(String authId,
-        String providerType) {
+                                                                    String providerType) {
         Member member = memberRepository.findByAuthIdAndProviderType(authId, providerType)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요."));
+                                        .orElseThrow(() -> new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요."));
 
         return new MemberInfo(member);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProfileResponse findMyInfo(Long memberId) {
-        Member member = memberRepository.findByIdWithRecords(memberId)
-            .orElseThrow(() -> new EntityNotFoundException("id가 " + memberId + "인 회원은 존재하지 않습니다"));
-
-        List<RecordResponse> recordResponses = new ArrayList<>();
-        for (Record record : member.getRecords()) {
-            recordResponses.add(new RecordResponse(member, record, record.getGym(), record.getLevel()));
-        }
-
-        ProfileResponse profileResponse = ProfileResponse.builder()
-            .myInfo(new MemberInfoResponse(member))
-            .records(recordResponses)
-            .build();
-        return profileResponse;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new EntityNotFoundException("id가 " + memberId + "인 회원은 존재하지 않습니다"));
+                                        .orElseThrow(() -> new EntityNotFoundException("id가 " + memberId + "인 회원은 존재하지 않습니다"));
 
         return new MemberInfoResponse(member);
     }
@@ -108,7 +85,6 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
             throw new DataIntegrityViolationException("Nickname already exists: " + nickname);
         }
 
-
         member.updateNickname(nickname);
         memberRepository.save(member);
     }
@@ -116,4 +92,5 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
     private boolean isDuplicated(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
+
 }

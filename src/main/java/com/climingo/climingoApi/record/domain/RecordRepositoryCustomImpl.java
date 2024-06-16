@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.record.domain;
 
 import static com.climingo.climingoApi.gym.domain.QGym.gym;
+import static com.climingo.climingoApi.level.domain.QLevel.level;
 import static com.climingo.climingoApi.member.domain.QMember.member;
 import static com.climingo.climingoApi.record.domain.QRecord.record;
 
@@ -30,6 +31,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                            .from(record)
                            .innerJoin(record.member, member).fetchJoin()
                            .innerJoin(record.gym, gym).fetchJoin()
+                           .innerJoin(record.level, level).fetchJoin()
                            .where(gymIdEq(gymId),
                                   levelIdEq(levelId),
                                   memberIdEq(memberId))
@@ -42,6 +44,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                                             .distinct()
                                             .innerJoin(record.member, member).fetchJoin()
                                             .innerJoin(record.gym, gym).fetchJoin()
+                                            .innerJoin(record.level, level).fetchJoin()
                                             .where(gymIdEq(gymId),
                                                    levelIdEq(levelId),
                                                    memberIdEq(memberId))
@@ -55,6 +58,26 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                                                 .where(gymIdEq(gymId),
                                                        levelIdEq(levelId),
                                                        memberIdEq(memberId));
+
+        Pageable pageable = PageRequest.of(page, size);
+        return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<Record> findMyRecordPage(Long memberId, Integer page, Integer size) {
+        List<Record> contents = queryFactory.selectFrom(record)
+                                            .innerJoin(record.member, member).fetchJoin()
+                                            .innerJoin(record.gym, gym).fetchJoin()
+                                            .innerJoin(record.level, level).fetchJoin()
+                                            .where(memberIdEq(memberId))
+                                            .orderBy(new OrderSpecifier<>(Order.DESC, record.createdDate))
+                                            .offset((long) page * size)
+                                            .limit(size)
+                                            .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(record.count())
+                                                .from(record)
+                                                .where(memberIdEq(memberId));
 
         Pageable pageable = PageRequest.of(page, size);
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
