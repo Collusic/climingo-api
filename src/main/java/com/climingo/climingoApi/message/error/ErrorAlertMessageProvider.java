@@ -49,7 +49,7 @@ public class ErrorAlertMessageProvider {
             .requestTime(requestTime)
             .requestIp(originalDomain)
             .requestUrl("[" + request.getMethod() + "] " + request.getRequestURL())
-            .requestQuery(request.getQueryString() == null ? "" : request.getQueryString())
+            .requestQuery(request.getQueryString() == null ? "null" : request.getQueryString())
             .requestData(requestBody.toString())
             .errorMessage(e.getMessage())
             .build();

@@ -100,9 +100,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             TokenResponse tokenResponse = tokenService.issue(authId, providerType, nickname);
 
-            CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME,
+            CookieUtils.addCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME,
                 tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
-            CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME,
+            CookieUtils.addCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME,
                 tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
 
             // TODO authentication 절차 추후 리팩토링 예정
