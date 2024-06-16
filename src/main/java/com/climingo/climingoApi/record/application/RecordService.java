@@ -8,6 +8,7 @@ import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.MyRecordResponse;
 import com.climingo.climingoApi.record.api.response.PageDto;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.domain.Record;
@@ -47,13 +48,13 @@ public class RecordService {
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
-            .member(loginMember)
-            .gym(gym)
-            .level(level)
-            .content(null)
-            .videoUrl(videoUrl)
-            .thumbnailUrl(thumbnailImageUrl)
-            .build();
+                              .member(loginMember)
+                              .gym(gym)
+                              .level(level)
+                              .content(null)
+                              .videoUrl(videoUrl)
+                              .thumbnailUrl(thumbnailImageUrl)
+                              .build();
 
         Record save = recordRepository.save(record);
         return save;
@@ -83,7 +84,7 @@ public class RecordService {
     @Transactional
     public void deleteRecord(Member loginMember, Long recordId) {
         Record record = recordRepository.findById(recordId)
-            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
+                                        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
 
         if (!record.isSameMember(loginMember)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 삭제할 수 없음");
@@ -95,11 +96,11 @@ public class RecordService {
     @Transactional(readOnly = true)
     public RecordResponse findById(Long recordId) {
         Record record = recordRepository.findById(recordId)
-            .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
         RecordResponse recordResponse = new RecordResponse(record.getMember(), record,
-            record.getGym(),
-            record.getLevel()); // TODO: climber 정보 연동
+                                                           record.getGym(),
+                                                           record.getLevel()); // TODO: climber 정보 연동
 
         return recordResponse;
     }
@@ -111,7 +112,7 @@ public class RecordService {
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
             recordResponses.add(
-                new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
+                    new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
         }
 
         return recordResponses;
@@ -131,9 +132,30 @@ public class RecordService {
                       .build();
     }
 
+    @Transactional(readOnly = true)
+    public PageDto<MyRecordResponse> findPageMy(Long memberId, Integer page, Integer size) {
+        Page<Record> myRecordPage = recordRepository.findMyRecordPage(memberId, page, size);
+
+        return PageDto.<MyRecordResponse>builder()
+                      .totalCount(myRecordPage.getTotalElements())
+                      .resultCount(myRecordPage.getNumberOfElements())
+                      .totalPage((int) Math.ceil((double) myRecordPage.getTotalElements() / size))
+                      .page(page)
+                      .isEnd(myRecordPage.isLast())
+                      .contents(toMyRecordResponses(myRecordPage.getContent()))
+                      .build();
+    }
+
     private List<RecordResponse> toRecordResponses(List<Record> records) {
         return records.stream()
                       .map(record -> new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()))
                       .collect(Collectors.toList());
     }
+
+    private List<MyRecordResponse> toMyRecordResponses(List<Record> records) {
+        return records.stream()
+                      .map(record -> new MyRecordResponse(record, record.getGym(), record.getLevel()))
+                      .collect(Collectors.toList());
+    }
+
 }

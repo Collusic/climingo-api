@@ -9,4 +9,6 @@ public interface RecordRepositoryCustom {
 
     Page<Record> findRecordPage(Long gymId, Long levelId, Long memberId, Integer page, Integer size);
 
+    Page<Record> findMyRecordPage(Long memberId, Integer page, Integer size);
+
 }

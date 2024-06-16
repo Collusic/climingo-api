@@ -4,6 +4,7 @@ import com.climingo.climingoApi.global.auth.LoginMember;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
+import com.climingo.climingoApi.record.api.response.MyRecordResponse;
 import com.climingo.climingoApi.record.api.response.PageDto;
 import com.climingo.climingoApi.record.api.response.RecordResponse;
 import com.climingo.climingoApi.record.application.RecordService;
@@ -30,8 +31,8 @@ public class RecordController {
 
     @PostMapping("/records")
     public ResponseEntity<Map<String, Long>> create(
-        @LoginMember Member loginMember,
-        @ModelAttribute RecordCreateRequest request) throws IOException {
+            @LoginMember Member loginMember,
+            @ModelAttribute RecordCreateRequest request) throws IOException {
 
         Record record = recordService.createRecord(loginMember, request);
         return ResponseEntity.ok().body(Map.of("recordId", record.getId()));
@@ -39,9 +40,9 @@ public class RecordController {
 
     @PatchMapping("/records/{recordId}")
     public ResponseEntity<Long> update(
-        @LoginMember Member loginMember,
-        @PathVariable("recordId") Long recordId,
-        @ModelAttribute RecordUpdateRequest request) {
+            @LoginMember Member loginMember,
+            @PathVariable("recordId") Long recordId,
+            @ModelAttribute RecordUpdateRequest request) {
 
         Record record = recordService.updateRecord(loginMember, recordId, request);
         return ResponseEntity.ok().body(record.getId());
@@ -49,8 +50,8 @@ public class RecordController {
 
     @DeleteMapping("/records/{recordId}")
     public ResponseEntity<Void> delete(
-        @LoginMember Member loginMember,
-        @PathVariable("recordId") Long recordId) {
+            @LoginMember Member loginMember,
+            @PathVariable("recordId") Long recordId) {
         recordService.deleteRecord(loginMember, recordId);
         return ResponseEntity.ok(null);
     }
@@ -71,13 +72,21 @@ public class RecordController {
 
     @GetMapping("/records")
     public ResponseEntity<PageDto<RecordResponse>> findPage(@RequestParam(value = "gymId", required = false) Long gymId,
-                                         @RequestParam(value = "levelId", required = false) Long levelId,
-                                         @RequestParam(value = "memberId", required = false) Long memberId,
-                                         @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
-                                         @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
+                                                            @RequestParam(value = "levelId", required = false) Long levelId,
+                                                            @RequestParam(value = "memberId", required = false) Long memberId,
+                                                            @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
+                                                            @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
         PageDto<RecordResponse> pageDto = recordService.findPage(gymId, levelId, memberId, page, size);// TODO: 예외 global 하게 처리 필요
 
+        return ResponseEntity.ok().body(pageDto);
+    }
+
+    @GetMapping("/myRecords")
+    public ResponseEntity<PageDto<MyRecordResponse>> findPageMy(@LoginMember Member loginMember,
+                                                                @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
+                                                                @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
+        PageDto<MyRecordResponse> pageDto = recordService.findPageMy(loginMember.getId(), page, size);
         return ResponseEntity.ok().body(pageDto);
     }
 
