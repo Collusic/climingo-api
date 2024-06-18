@@ -87,4 +87,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull sunghyuki/climingo-api
+            ls -la
             docker-compose up -d
