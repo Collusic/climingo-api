@@ -88,4 +88,5 @@ jobs:
           script: |
             docker pull sunghyuki/climingo-api
             cd app
+            ls -al
             docker-compose up -d
