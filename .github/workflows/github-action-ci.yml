@@ -87,6 +87,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull sunghyuki/climingo-api
-            cd app
-            ls -al
+            rm -rf docker-compose.yml
+            touch ./docker-compose.yml
+            echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
             docker-compose up -d
