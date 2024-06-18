@@ -71,22 +71,20 @@ jobs:
           version: ${{ secrets.VERSION }}
           buildTime: ${{ secrets.BUILDTIME }}
 
-      - name: Make zip file
-        run: zip -r ./$GITHUB_SHA.zip .
-        shell: bash
+      - name: Build Docker image
+        run: docker build -t sunghyuki/climingo-api .
 
-      - name: Access to AWS
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Push Docker image to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u sunghyuki --password-stdin
+          docker push sunghyuki/climingo-api
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip
-
-      - name: Code Deploy
-        run: aws deploy create-deployment --application-name climingo-api
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name climingo-api-codeDeploy
-          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull sunghyuki/climingo-api
+            docker-compose up -d
