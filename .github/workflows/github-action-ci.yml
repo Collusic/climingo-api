@@ -86,6 +86,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo docker rm -f $(docker ps -aq)
+            sudo docker rmi `docker images -a -q`
             docker pull sunghyuki/climingo-api
             cd app
             rm -rf docker-compose.yml
