@@ -24,32 +24,33 @@ public class CookieUtils {
     }
 
     public static void addCookie(HttpServletRequest request, HttpServletResponse response, String name, String value, int maxAge) {
-        Cookie cookie = new Cookie(name, value);
+        // TODO 쿠키 이슈 해결 후 복구 또는 삭제 예정
+//        Cookie cookie = new Cookie(name, value);
 
-        String origin = request.getHeader("Origin");
-        String domain = null;
+//        String origin = request.getHeader("Origin");
+//        String domain = null;
+//
+//        if (origin != null) {
+//            try {
+//                URI originUri = new URI(origin);
+//                domain = originUri.getHost();
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if (domain != null && !domain.equals("localhost")) {
+//            cookie.setDomain(domain);
+//        }
+//
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(true);
+//        cookie.setMaxAge(maxAge);
+//        cookie.setAttribute(Constants.COOKIE_SAME_SITE_ATTR, "None");
 
-        if (origin != null) {
-            try {
-                URI originUri = new URI(origin);
-                domain = originUri.getHost();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (domain != null && !domain.equals("localhost")) {
-            cookie.setDomain(domain);
-        }
-
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(maxAge);
-        cookie.setAttribute(Constants.COOKIE_SAME_SITE_ATTR, "None");
-
-        ResponseCookie cookie1 = ResponseCookie.from(name, value)
-            .domain(".climingo.xyz")
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+            .domain("climingo.xyz")
             .maxAge(maxAge)
             .sameSite("None")
             .path("/")
@@ -58,7 +59,7 @@ public class CookieUtils {
             .build();
 
 //        response.addCookie(cookie);
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
