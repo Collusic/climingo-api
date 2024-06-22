@@ -21,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
             .allowedOrigins(
                 "http://localhost:3000",
                 "https://localhost:3000",
+                "https://climingo.xyz",
                 "https://app.climingo.xyz",
                 "https://stg-app.climingo.xyz",
                 "https://dev-app.climingo.xyz",
