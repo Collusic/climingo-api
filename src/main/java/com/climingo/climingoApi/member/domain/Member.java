@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "Member", uniqueConstraints = {@UniqueConstraint(columnNames = {"authId", "providerType"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"auth_id", "provider_type"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -41,10 +41,10 @@ public class Member {
     @Size(min = 2, max = 10)
     private String nickname;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = true, length = 255)
     private String profileUrl;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)

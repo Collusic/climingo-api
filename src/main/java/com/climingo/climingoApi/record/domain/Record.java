@@ -28,21 +28,21 @@ public class Record extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LEVEL_ID")
+    @JoinColumn(name = "LEVEL_ID", nullable = false)
     private Level level;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GYM_ID")
+    @JoinColumn(name = "GYM_ID", nullable = false)
     private Gym gym;
 
-    @Column(length = 400)
+    @Column(nullable = false, length = 400)
     private String videoUrl;
 
-    @Column(length = 400)
+    @Column(nullable = false, length = 400)
     private String thumbnailUrl;
 
     private String content;
