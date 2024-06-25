@@ -28,6 +28,7 @@ public class MemberServiceImpl implements SignUpService, SignInService, MemberSe
                               .authId(request.getAuthId())
                               .providerType(request.getProviderType())
                               .nickname(request.getNickname())
+                              .email(request.getEmail())
                               .profileUrl(request.getProfileUrl())
                               .physicalInfo(request.getPhysicalInfo())
                               .build();
