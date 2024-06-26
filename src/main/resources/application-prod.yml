@@ -1,26 +1,19 @@
 
 spring:
-  datasource:  # TODO MySQL로 변경
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:mem:test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://15.165.3.216:3306/climingo
+    username: climingo
+    password: climingoclimingo!
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: false
   jpa:
-    hibernate:
-      ddl-auto: create # TODO 운영 환경시 변경 필요
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-    defer-datasource-initialization: true # data.sql 실행 시점을 변경(JPA 테이블 생성 후로 연기)
-  sql: # TODO 운영 환경시 init 쿼리 제외 필요
-    init:
-      mode: always
 
 oauth2:
   kakao:
