@@ -2,6 +2,7 @@ package com.climingo.climingoApi.member.domain;
 
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.record.domain.Record;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -19,6 +23,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"auth_id", "provider_type"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -26,14 +31,20 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String authId;
 
+    @Column(nullable = false, length = 10)
     private String providerType;
 
+    @Column(nullable = false, length = 8)
+    @Size(min = 2, max = 10)
     private String nickname;
 
+    @Column(nullable = true, length = 255)
     private String profileUrl;
 
+    @Column(nullable = true, length = 50)
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)

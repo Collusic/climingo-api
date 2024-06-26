@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.level.domain;
 
 import com.climingo.climingoApi.gym.domain.Gym;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +20,15 @@ public class Level {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GYM_ID")
+    @JoinColumn(name = "GYM_ID", nullable = false)
     private Gym gym;
 
+    @Column(nullable = false, length = 10)
     private String colorNameKo;
 
+    @Column(nullable = false, length = 10)
     private String colorNameEn;
 
+    @Column(nullable = false)
     private Integer orderNum;
 }

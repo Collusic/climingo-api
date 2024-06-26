@@ -34,6 +34,9 @@ public class SignUpRequest {
     @JsonProperty("profileUrl")
     private final String profileUrl;
 
+    @JsonProperty("email")
+    private final String email;
+
     @JsonProperty("homeGymId")
     private final Long homeGymId;
 

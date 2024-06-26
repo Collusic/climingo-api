@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.gym.domain;
 
 import com.climingo.climingoApi.level.domain.Level;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class Gym {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Embedded

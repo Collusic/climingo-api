@@ -5,7 +5,6 @@ import com.climingo.climingoApi.auth.api.response.CheckMemberResponse;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
-import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -44,7 +43,6 @@ public class AuthService {
         if (!checkExistMember(authId, providerType)) {
             throw new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요.");
         }
-
 
         return tokenService.issue(authId, providerType, nickname);
     }
