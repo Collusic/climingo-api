@@ -1,10 +1,9 @@
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://15.165.3.216:3306/climingo
-    username: climingo
-    password: climingoclimingo!
+    url: ENC(JC3oNwU2JSyKxNYy8Dqrs92EOhvFX+spMRZICKwAn4gN+MSehEI5ouS2oQd1SxPp)
+    username: ENC(/hDIlwiiOpd1p7Coppl9L4xHYDjkf9cj)
+    password: ENC(Toy+1i51hX5nGADpusirW4loTpskgy4o)
   h2:
     console:
       enabled: false
@@ -14,6 +13,12 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    com.your.package: debug
 
 oauth2:
   kakao:
