@@ -45,7 +45,7 @@ public class SecurityConfig {
             .authenticationManager(authenticationManager)
             .authorizeHttpRequests((authorizeRequests ->
                     authorizeRequests
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/members", "/myRecords").authenticated()
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()

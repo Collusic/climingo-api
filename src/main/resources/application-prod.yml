@@ -1,26 +1,24 @@
-
 spring:
-  datasource:  # TODO MySQL로 변경
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:mem:test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(JC3oNwU2JSyKxNYy8Dqrs92EOhvFX+spMRZICKwAn4gN+MSehEI5ouS2oQd1SxPp)
+    username: ENC(/hDIlwiiOpd1p7Coppl9L4xHYDjkf9cj)
+    password: ENC(Toy+1i51hX5nGADpusirW4loTpskgy4o)
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: false
   jpa:
-    hibernate:
-      ddl-auto: create # TODO 운영 환경시 변경 필요
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-    defer-datasource-initialization: true # data.sql 실행 시점을 변경(JPA 테이블 생성 후로 연기)
-  sql: # TODO 운영 환경시 init 쿼리 제외 필요
-    init:
-      mode: always
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    com.your.package: debug
 
 oauth2:
   kakao:
