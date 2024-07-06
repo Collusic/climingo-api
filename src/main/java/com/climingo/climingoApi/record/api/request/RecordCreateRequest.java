@@ -18,12 +18,12 @@ public class RecordCreateRequest {
     private Long levelId;
 
     @NotNull
-    private MultipartFile video;
+    private String videoUrl;
 
-    public RecordCreateRequest(Long gymId, Long levelId, MultipartFile video) {
+    public RecordCreateRequest(Long gymId, Long levelId, String videoUrl) {
         this.gymId = gymId;
         this.levelId = levelId;
-        this.video = video;
+        this.videoUrl = videoUrl;
     }
 
 }

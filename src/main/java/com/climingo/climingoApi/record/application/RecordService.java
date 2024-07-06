@@ -44,7 +44,7 @@ public class RecordService {
         Level level = levelRepository.findById(request.getLevelId())
                                      .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
-        String videoUrl = s3Service.uploadVideoFile(request.getVideo());
+        String videoUrl = request.getVideoUrl();
         String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
 
         Record record = Record.builder()
@@ -56,8 +56,7 @@ public class RecordService {
                               .thumbnailUrl(thumbnailImageUrl)
                               .build();
 
-        Record save = recordRepository.save(record);
-        return save;
+        return recordRepository.save(record);
     }
 
     @Transactional
