@@ -5,19 +5,16 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.climingo.climingoApi.upload.api.request.PresignedUrlCreateRequest;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -29,52 +26,53 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public String uploadVideoFile(MultipartFile videoFile) throws IOException {
-        StringBuilder fileName = new StringBuilder();
-        fileName.append("비디오_")
-                .append(LocalDateTime.now())
-                .append(".")
-                .append(StringUtils.getFilenameExtension(videoFile.getOriginalFilename()));
-
-        File file = convertMultipartFileToFile(videoFile);
-        s3Client.putObject(new PutObjectRequest(bucket, fileName.toString(), file).withCannedAcl(CannedAccessControlList.PublicRead));
-        file.delete();
-
-        URL videoUrl = generatePermanentPresignedUrl(fileName.toString());
-
-        return videoUrl.toString().substring(0, videoUrl.toString().indexOf("?"));
-    }
-
-    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
-        File convertedFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convertedFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convertedFile;
-    }
-
-    public URL generatePermanentPresignedUrl(String objectKey) {
-        GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucket, objectKey)
-                        .withMethod(HttpMethod.GET);
-
-        return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
-    }
-
-    public String uploadImageFile(File image) {
-        StringBuilder fileName = new StringBuilder();
-        fileName.append("썸네일_")
+    public String uploadThumbnailImageFile(File image) {
+        String fileName = new StringBuilder().append("썸네일_")
             .append(LocalDateTime.now())
             .append(".")
-            .append(StringUtils.getFilenameExtension(image.getName()));
+            .append(StringUtils.getFilenameExtension(image.getName()))
+            .toString();
 
-        s3Client.putObject(new PutObjectRequest(bucket, fileName.toString(), image).withCannedAcl(
+        s3Client.putObject(new PutObjectRequest(bucket, fileName, image).withCannedAcl(
             CannedAccessControlList.PublicRead));
+
         image.delete();
 
-        URL url = generatePermanentPresignedUrl(fileName.toString());
+        URL url = s3Client.getUrl(bucket, fileName);
 
-        return url.toString().substring(0, url.toString().indexOf("?"));
+        return url.toString();
+    }
+
+    public URL generatePresignedUrl(PresignedUrlCreateRequest request) {
+        String fileName = parseFileName("비디오_", request.getFileName(), request.getExtension());
+        return s3Client.generatePresignedUrl(getGeneratePreSignedUrlRequest(bucket, fileName));
+    }
+
+    private String parseFileName(String prefix, String fileName, String extension) {
+        return prefix
+            + fileName
+            + "_"
+            + LocalDateTime.now()
+            + "."
+            + extension;
+    }
+
+    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String bucket, String fileName) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(
+            bucket, fileName)
+            .withMethod(HttpMethod.PUT)
+            .withExpiration(getPreSignedUrlExpiration());
+        generatePresignedUrlRequest.addRequestParameter("x-amz-acl", "public-read");
+
+        return generatePresignedUrlRequest;
+    }
+
+    private Date getPreSignedUrlExpiration() {
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 3; // 3분
+        expiration.setTime(expTimeMillis);
+
+        return expiration;
     }
 }
