@@ -10,6 +10,8 @@ spring:
     multipart:
       maxFileSize: 500MB
       maxRequestSize: 500MB
+  jackson:
+    time-zone: Asia/Seoul
 
 jasypt:
   encryptor:
