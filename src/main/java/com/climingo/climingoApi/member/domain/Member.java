@@ -2,6 +2,7 @@ package com.climingo.climingoApi.member.domain;
 
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.record.domain.Record;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -53,7 +54,7 @@ public class Member {
     @Embedded
     private PhysicalInfo physicalInfo;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Record> records = new ArrayList<>();
 
     @Builder
