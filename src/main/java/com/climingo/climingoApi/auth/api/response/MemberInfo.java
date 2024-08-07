@@ -7,6 +7,7 @@ import lombok.Getter;
 public class MemberInfo {
 
     private final String nickname;
+    private final Long memberId;
     private final String authId;
     private final String providerType;
     private final String email;
@@ -14,6 +15,7 @@ public class MemberInfo {
 
     public MemberInfo(Member member) {
         this.nickname = member.getNickname();
+        this.memberId = member.getId();
         this.authId = member.getAuthId();
         this.providerType = member.getProviderType();
         this.email = member.getEmail();

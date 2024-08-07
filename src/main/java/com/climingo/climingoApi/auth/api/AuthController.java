@@ -52,14 +52,7 @@ public class AuthController {
 
         MemberInfo memberInfo = authService.findMemberInfo(userInfo);
 
-        return ResponseEntity.ok().body(
-            SignInUpResponse.builder()
-                .nickname(memberInfo.getNickname())
-                .authId(memberInfo.getAuthId())
-                .providerType(memberInfo.getProviderType())
-                .profileUrl(memberInfo.getProfileUrl())
-                .email(memberInfo.getEmail())
-                .build());
+        return ResponseEntity.ok().body(SignInUpResponse.from(memberInfo));
     }
 
     @PostMapping("/sign-up")
@@ -78,14 +71,7 @@ public class AuthController {
         CookieUtils.addCookie(request, response, "refreshToken", tokenResponse.getRefreshToken(),
             JwtUtil.REFRESH_TOKEN_EXP);
 
-        return ResponseEntity.ok().body(
-            SignInUpResponse.builder()
-                .nickname(memberInfo.getNickname())
-                .authId(memberInfo.getAuthId())
-                .providerType(memberInfo.getProviderType())
-                .profileUrl(memberInfo.getProfileUrl())
-                .email(memberInfo.getEmail())
-                .build());
+        return ResponseEntity.ok().body(SignInUpResponse.from(memberInfo));
     }
 
     @GetMapping("/auth/members/exist")

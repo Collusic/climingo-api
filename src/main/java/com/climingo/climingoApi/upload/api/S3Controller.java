@@ -3,7 +3,6 @@ package com.climingo.climingoApi.upload.api;
 import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.api.request.PresignedUrlCreateRequest;
 import com.climingo.climingoApi.upload.api.response.PresignedUrlResponse;
-import java.net.URL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +19,18 @@ public class S3Controller {
     public ResponseEntity<PresignedUrlResponse> generatePresignedUrl(
         @RequestBody PresignedUrlCreateRequest request) {
         String presignedUrl = s3Service.generatePresignedUrl(request).toString();
-        String videoUrl = presignedUrl.substring(0, presignedUrl.contains("?") ? presignedUrl.charAt('?') : presignedUrl.length());
+        String videoUrl = parseUrlWithoutQuery(presignedUrl);
 
         return ResponseEntity.ok(new PresignedUrlResponse(presignedUrl, videoUrl));
+    }
+
+    private String parseUrlWithoutQuery(String url) {
+        int queryIndex = url.indexOf("?");
+
+        if (queryIndex != -1) {
+            return url.substring(0, queryIndex);
+        }
+
+        return url;
     }
 }
