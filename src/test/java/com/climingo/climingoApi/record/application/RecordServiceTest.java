@@ -46,8 +46,7 @@ public class RecordServiceTest {
         levelRepository = mock(LevelRepository.class);
         recordRepository = mock(RecordRepository.class);
 
-        when(s3Service.uploadVideoFile(any())).thenReturn("http://mock-video-url");
-        when(s3Service.uploadImageFile(any())).thenReturn("http://mock-thumbnail-url");
+        when(s3Service.uploadThumbnailImageFile(any())).thenReturn("http://mock-thumbnail-url");
         when(thumbnailExtractor.extractImage(any())).thenReturn(mock(File.class));
 
         recordService = new RecordService(
@@ -59,12 +58,12 @@ public class RecordServiceTest {
     void create_test() throws IOException {
         Long mockGymId = 1L;
         Long mockLevelId = 1L;
-        MultipartFile mockVideo = mock(MultipartFile.class);
+        String mockVideoUrl = "http://mock-video-url";
 
         Member loginMember = Member.builder()
             .id(99999L)
             .build();
-        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideo);
+        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl);
 
         Record expected = Record.builder()
             .member(loginMember)

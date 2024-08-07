@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -37,7 +38,9 @@ public class ThumbnailExtractor {
     }
 
     public File extractImage(String videoPath) throws IOException {
-        File thumbnail = File.createTempFile("temp" + LocalDateTime.now(), ".jpg");
+        File thumbnail = new File("thumbnail_"
+            + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
+            + ".jpg");
 
         try {
             FFmpegBuilder builder = new FFmpegBuilder()
@@ -46,11 +49,12 @@ public class ThumbnailExtractor {
                 .addExtraArgs("-ss", "00:00:02")
                 .addOutput(thumbnail.getAbsolutePath())
                 .setFrames(100)
+                .addExtraArgs("-update", "1")
                 .done();
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
             executor.createJob(builder).run();
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.error("Error extracting thumbnail from " + videoPath, e);
         }
         return thumbnail;
     }

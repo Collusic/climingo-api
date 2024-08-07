@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RecordService {
@@ -44,8 +46,14 @@ public class RecordService {
         Level level = levelRepository.findById(request.getLevelId())
                                      .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
-        String videoUrl = s3Service.uploadVideoFile(request.getVideo());
-        String thumbnailImageUrl = s3Service.uploadImageFile(thumbnailExtractor.extractImage(videoUrl));
+        String videoUrl = request.getVideoUrl();
+        String thumbnailImageUrl = "";
+        try {
+            thumbnailImageUrl = s3Service.uploadThumbnailImageFile(thumbnailExtractor.extractImage(videoUrl));
+        } catch (Exception e) {
+            log.error("error: ", e);
+            // TODO 썸네일 이미지 저장 안되었을 때 처리
+        }
 
         Record record = Record.builder()
                               .member(loginMember)
@@ -56,8 +64,7 @@ public class RecordService {
                               .thumbnailUrl(thumbnailImageUrl)
                               .build();
 
-        Record save = recordRepository.save(record);
-        return save;
+        return recordRepository.save(record);
     }
 
     @Transactional
