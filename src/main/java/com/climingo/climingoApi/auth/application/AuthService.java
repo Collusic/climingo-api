@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthTokenService authTokenService;
-    private final SignUpService signUpService;
-    private final SignInService signInService;
+    private final MemberEnrollService memberEnrollService;
     private final MemberRepository memberRepository;
 
     private final static String AUTHID_KEY = "authId";
@@ -64,7 +63,7 @@ public class AuthService {
 
         validateSignUp(signUpRequest, authId, providerType);
 
-        return signUpService.signUp(signUpRequest);
+        return memberEnrollService.enroll(signUpRequest);
     }
 
     private void validateSignUp(SignUpRequest signUpRequest, String authId, String providerType) {
@@ -88,7 +87,7 @@ public class AuthService {
         String authId = (String) attributes.get(AUTHID_KEY);
         String providerType = (String) attributes.get(PROVIDER_KEY);
 
-        return signInService.findEnrolledMemberInfoByAuthIdAndProviderType(authId, providerType);
+        return memberEnrollService.findEnrolledMemberInfoByAuthIdAndProviderType(authId, providerType);
     }
 
     public void deleteMember(Long memberId) {

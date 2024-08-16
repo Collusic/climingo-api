@@ -2,8 +2,7 @@ package com.climingo.climingoApi.member.application;
 
 import com.climingo.climingoApi.auth.api.request.SignUpRequest;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
-import com.climingo.climingoApi.auth.application.SignInService;
-import com.climingo.climingoApi.auth.application.SignUpService;
+import com.climingo.climingoApi.auth.application.MemberEnrollService;
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
@@ -17,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements SignUpService, SignInService, MemberService {
+public class MemberServiceImpl implements MemberEnrollService, MemberService {
 
     private final MemberRepository memberRepository;
 
     @Transactional
     @Override
-    public MemberInfo signUp(SignUpRequest request) {
+    public MemberInfo enroll(SignUpRequest request) {
         Member member = Member.builder()
                               .authId(request.getAuthId())
                               .providerType(request.getProviderType())

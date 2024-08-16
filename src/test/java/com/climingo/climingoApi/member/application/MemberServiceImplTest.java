@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.climingo.climingoApi.auth.api.request.SignUpRequest;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
-import com.climingo.climingoApi.auth.application.SignUpService;
+import com.climingo.climingoApi.auth.application.MemberEnrollService;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +18,13 @@ import org.junit.jupiter.api.Test;
 @DisplayName("MemberService Unit Tests")
 class MemberServiceImplTest {
 
-    private SignUpService signUpService;
+    private MemberEnrollService memberEnrollService;
     private MemberRepository mockedMemberRepository;
 
     @BeforeEach
     void setUp() {
         mockedMemberRepository = mock(MemberRepository.class);
-        signUpService = new MemberServiceImpl(mockedMemberRepository);
+        memberEnrollService = new MemberServiceImpl(mockedMemberRepository);
     }
 
     @Test
@@ -53,7 +53,7 @@ class MemberServiceImplTest {
         when(mockedMemberRepository.save(any()))
             .thenReturn(expected);
 
-        MemberInfo actual = signUpService.signUp(request);
+        MemberInfo actual = memberEnrollService.enroll(request);
 
         assertEquals(actual.getAuthId(), expected.getAuthId());
         assertEquals(actual.getNickname(), expected.getNickname());
@@ -86,7 +86,7 @@ class MemberServiceImplTest {
             .thenReturn(expected);
 
         Throwable exception = assertThrows(IllegalArgumentException.class,
-            () -> signUpService.signUp(request));
+            () -> memberEnrollService.enroll(request));
         assertEquals("이미 존재하는 닉네임입니다.", exception.getMessage());
     }
 
@@ -117,7 +117,7 @@ class MemberServiceImplTest {
             .thenReturn(expected);
 
         Throwable exception = assertThrows(IllegalArgumentException.class,
-            () -> signUpService.signUp(request));
+            () -> memberEnrollService.enroll(request));
         assertEquals("이미 존재하는 회원입니다.", exception.getMessage());
     }
 
@@ -147,6 +147,6 @@ class MemberServiceImplTest {
         when(mockedMemberRepository.save(any()))
             .thenReturn(expected);
 
-        signUpService.signUp(request);
+        memberEnrollService.enroll(request);
     }
 }

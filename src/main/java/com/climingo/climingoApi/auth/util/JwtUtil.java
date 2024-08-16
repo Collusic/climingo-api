@@ -10,7 +10,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import jakarta.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
