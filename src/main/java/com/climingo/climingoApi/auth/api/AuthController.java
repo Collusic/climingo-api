@@ -63,7 +63,7 @@ public class AuthController {
         OAuth2UserInfoResponse userInfoFromProvider = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             requestBody.getProviderType(), requestBody.getProviderToken());
         MemberInfo memberInfo = authService.signUp(requestBody, userInfoFromProvider);
-        TokenResponse tokenResponse = authService.issueToken(memberInfo.getAuthId(),
+        TokenResponse tokenResponse = authService.issueToken(memberInfo.getMemberId(), memberInfo.getAuthId(),
             memberInfo.getProviderType(), memberInfo.getNickname());
 
         CookieUtils.addCookie(request, response, "accessToken", tokenResponse.getAccessToken(),

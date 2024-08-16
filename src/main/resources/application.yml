@@ -33,3 +33,6 @@ cloud:
     s3:
       region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
       bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
+
+auth:
+  jwt-key: ENC(WOI2z7L6DbSzJX8Fu8sMJKXqcvxQ7drQOnlHp6OM9CE=)

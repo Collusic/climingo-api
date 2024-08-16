@@ -5,6 +5,7 @@ import com.climingo.climingoApi.auth.api.response.CheckMemberResponse;
 import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
+import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final TokenService tokenService;
+    private final AuthTokenService authTokenService;
     private final SignUpService signUpService;
     private final SignInService signInService;
     private final MemberRepository memberRepository;
@@ -40,11 +41,15 @@ public class AuthService {
         String providerType = (String) attributes.get(PROVIDER_KEY);
         String nickname = (String) memberInfo.getAttributes().get("nickname");
 
-        if (!checkExistMember(authId, providerType)) {
-            throw new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요.");
-        }
+        Member member = findRegisteredMember(authId, providerType);
 
-        return tokenService.issue(authId, providerType, nickname);
+        return authTokenService.issue(member.getId(), authId, providerType, nickname);
+    }
+
+    private Member findRegisteredMember(String authId, String providerType) {
+        return memberRepository
+            .findByAuthIdAndProviderType(authId, providerType)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 사용자. 회원가입을 먼저 진행하세요."));
     }
 
     private boolean checkExistMember(String authId, String providerType) {
@@ -74,8 +79,8 @@ public class AuthService {
             signUpRequest.getAuthId().equals(authId);
     }
 
-    public TokenResponse issueToken(String authId, String providerType, String nickname) {
-        return tokenService.issue(authId, providerType, nickname);
+    public TokenResponse issueToken(Long memberId, String authId, String providerType, String nickname) {
+        return authTokenService.issue(memberId, authId, providerType, nickname);
     }
 
     public MemberInfo findMemberInfo(OAuth2UserInfoResponse userInfo) {
