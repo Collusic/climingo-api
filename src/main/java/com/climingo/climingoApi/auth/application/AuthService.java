@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +91,9 @@ public class AuthService {
         return memberEnrollService.findEnrolledMemberInfoByAuthIdAndProviderType(authId, providerType);
     }
 
+    @Transactional
     public void deleteMember(Long memberId) {
+        authTokenService.deleteByMemberId(memberId);
         memberRepository.deleteById(memberId);
     }
 }

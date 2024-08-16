@@ -130,7 +130,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 .getValue();
 
             if (refreshToken != null) {
-                authTokenService.delete(refreshToken);
+                authTokenService.deleteByRefreshToken(refreshToken);
             }
 
             // TODO authentication 절차 추후 리팩토링 예정

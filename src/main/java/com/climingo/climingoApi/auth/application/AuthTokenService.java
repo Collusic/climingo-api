@@ -54,7 +54,7 @@ public class AuthTokenService {
         authTokenRepository.save(token);
     }
 
-    public void delete(String refreshToken) {
+    public void deleteByRefreshToken(String refreshToken) {
         authTokenRepository.deleteByRefreshToken(refreshToken);
     }
 
@@ -66,5 +66,9 @@ public class AuthTokenService {
 
     private boolean isExistByRefreshToken(String refreshToken) {
         return authTokenRepository.existsByRefreshToken(refreshToken);
+    }
+
+    public void deleteByMemberId(Long memberId) {
+        authTokenRepository.deleteById(memberId);
     }
 }
