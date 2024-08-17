@@ -38,8 +38,8 @@ public class Member {
     @Column(nullable = false, length = 10)
     private String providerType;
 
-    @Column(nullable = false, length = 8)
-    @Size(min = 2, max = 10)
+    @Column(nullable = false, length = 16)
+    @Size(min = 2, max = 16)
     private String nickname;
 
     @Column(nullable = true, length = 255)
