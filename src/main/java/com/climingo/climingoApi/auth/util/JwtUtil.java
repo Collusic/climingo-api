@@ -15,19 +15,30 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class JwtUtil {
 
     public static final int REFRESH_TOKEN_EXP = 60 * 60 * 24 * 7;
-    public static final String KEY = "climingo-token-key";
+
+    @Value("${auth.jwt-key}")
+    private static String KEY;
+
     public static final int ACCESS_TOKEN_EXP = 60 * 60;
     public static final String ACCESS_TOKEN_NAME = "accessToken";
     public static final String REFRESH_TOKEN_NAME = "refreshToken";
 
-    public static String createAccessToken(String authId, String providerType, String nickname) {
+    public JwtUtil(@Value("${auth.jwt-key}") String key) {
+        KEY = key;
+    }
+
+    public static String createAccessToken(Long memberId, String authId, String providerType, String nickname) {
         return Jwts.builder()
             .setHeader(jwtHeaders())
+            .claim("memberId", memberId)
             .claim("authId", authId)
             .claim("providerType", providerType)
             .claim("nickname", nickname)
@@ -60,9 +71,10 @@ public class JwtUtil {
         }
     }
 
-    public static String createRefreshToken(String authId, String providerType, String nickname) {
+    public static String createRefreshToken(Long memberId, String authId, String providerType, String nickname) {
         return Jwts.builder()
             .setHeader(jwtHeaders())
+            .claim("memberId", memberId)
             .claim("authId", authId)
             .claim("providerType", providerType)
             .claim("nickname", nickname)

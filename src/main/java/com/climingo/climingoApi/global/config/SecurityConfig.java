@@ -1,12 +1,12 @@
 package com.climingo.climingoApi.global.config;
 
 
-import com.climingo.climingoApi.auth.application.TokenService;
+import com.climingo.climingoApi.auth.application.AuthTokenService;
 import com.climingo.climingoApi.global.auth.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.PrintWriter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,12 +23,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final TokenService tokenService;
+    private final AuthTokenService authTokenService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,7 +60,7 @@ public class SecurityConfig {
                     .accessDeniedHandler(accessDeniedHandler)
             )
             .addFilterAt(
-                new JwtAuthenticationFilter(authenticationManager, tokenService),
+                new JwtAuthenticationFilter(authenticationManager, authTokenService),
                 BasicAuthenticationFilter.class);
 
         return http.build();
@@ -67,6 +68,7 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPoint unauthorizedEntryPoint =
         (request, response, authException) -> {
+            log.debug("[unauthorized]: {}", authException.getMessage());
             ErrorResponse fail = new ErrorResponse(HttpStatus.UNAUTHORIZED,
                 "Spring security unauthorized...");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -80,6 +82,7 @@ public class SecurityConfig {
 
     private final AccessDeniedHandler accessDeniedHandler =
         (request, response, accessDeniedException) -> {
+            log.debug("[accessDenied]: {}", accessDeniedException.getMessage());
             ErrorResponse fail = new ErrorResponse(HttpStatus.FORBIDDEN,
                 "Spring security forbidden...");
             response.setStatus(HttpStatus.FORBIDDEN.value());

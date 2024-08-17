@@ -1,9 +1,10 @@
 package com.climingo.climingoApi.global.auth;
 
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
-import com.climingo.climingoApi.auth.application.TokenService;
+import com.climingo.climingoApi.auth.application.AuthTokenService;
 import com.climingo.climingoApi.auth.util.CookieUtils;
 import com.climingo.climingoApi.auth.util.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -23,12 +24,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private final TokenService tokenService;
+    private final AuthTokenService authTokenService;
 
     public JwtAuthenticationFilter(
-        AuthenticationManager authenticationManager, TokenService tokenService) {
+        AuthenticationManager authenticationManager, AuthTokenService authTokenService) {
         super(authenticationManager);
-        this.tokenService = tokenService;
+        this.authTokenService = authTokenService;
     }
 
     @Override
@@ -60,9 +61,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             Optional<Cookie> accessTokenCookie = CookieUtils.getCookie(request,
                 JwtUtil.ACCESS_TOKEN_NAME);
 
-            String accessToken = accessTokenCookie.orElseThrow(NullPointerException::new).getValue();
-            JwtUtil.verify(accessToken);
+            String accessToken = accessTokenCookie
+                .orElse(CookieUtils.genreateEmptyCookie("accessToken"))
+                .getValue();
 
+            authTokenService.checkLoginedAccessToken(accessToken);
+            JwtUtil.verify(accessToken);
 
             // TODO authentication 절차 추후 리팩토링 예정
             authenticationToken = new JWTAuthenticationToken(accessToken,
@@ -88,17 +92,21 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             Optional<Cookie> refreshTokenCookie = CookieUtils.getCookie(request,
                 JwtUtil.REFRESH_TOKEN_NAME);
 
-            String refreshToken = refreshTokenCookie.orElseThrow(NullPointerException::new)
+            String refreshToken = refreshTokenCookie
+                .orElse(CookieUtils.genreateEmptyCookie("refreshToken"))
                 .getValue();
 
+            authTokenService.checkLoginedRefreshToken(refreshToken);
             JwtUtil.verify(refreshToken);
 
             Map<String, Object> claims = JwtUtil.getClaims(refreshToken);
+            Long memberId = ((Integer) claims.get("memberId")).longValue();
             String authId = (String) claims.get("authId");
             String providerType = (String) claims.get("providerType");
             String nickname = (String) claims.get("nickname");
 
-            TokenResponse tokenResponse = tokenService.issue(authId, providerType, nickname);
+            TokenResponse tokenResponse = authTokenService.issue(memberId, authId, providerType, nickname);
+            authTokenService.update(memberId, tokenResponse);
 
             CookieUtils.addCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME,
                 tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
@@ -111,6 +119,25 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 //        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
             authenticationToken.setAuthenticated(true);
 
+        } catch (JwtException e) {
+            log.debug("while authenticate refreshToken: ", e);
+
+            Optional<Cookie> refreshTokenCookie = CookieUtils.getCookie(request,
+                JwtUtil.REFRESH_TOKEN_NAME);
+
+            String refreshToken = refreshTokenCookie
+                .orElse(CookieUtils.genreateEmptyCookie("refreshToken"))
+                .getValue();
+
+            if (refreshToken != null) {
+                authTokenService.deleteByRefreshToken(refreshToken);
+            }
+
+            // TODO authentication 절차 추후 리팩토링 예정
+            authenticationToken = new JWTAuthenticationToken(
+                null, Set.of(new SimpleGrantedAuthority("ROLE_USER")));
+//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+            authenticationToken.setAuthenticated(false);
         } catch (RuntimeException e) {
             log.debug("while authenticate refreshToken: ", e);
 
