@@ -28,7 +28,7 @@ public class SignUpRequest {
     private final String providerToken;
 
     @JsonProperty("nickname")
-    @Size(min = 2, max = 8)
+    @Size(min = 2, max = 16)
     private final String nickname;
 
     @JsonProperty("profileUrl")

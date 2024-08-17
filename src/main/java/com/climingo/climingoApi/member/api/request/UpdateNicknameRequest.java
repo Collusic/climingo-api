@@ -12,6 +12,6 @@ import lombok.Getter;
 public class UpdateNicknameRequest {
 
     @JsonProperty("nickname")
-    @Size(min = 2, max = 8)
+    @Size(min = 2, max = 16)
     private final String nickname;
 }
