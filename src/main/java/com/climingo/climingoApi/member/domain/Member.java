@@ -39,7 +39,7 @@ public class Member {
     private String providerType;
 
     @Column(nullable = false, length = 16)
-    @Size(min = 2, max = 10)
+    @Size(min = 2, max = 16)
     private String nickname;
 
     @Column(nullable = true, length = 255)
