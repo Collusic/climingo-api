@@ -89,4 +89,22 @@ jobs:
           docker build -t climingo/climingo:$TAG .
           docker push climingo/climingo:$TAG
 
+      - name: Set up SSH Key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_HOST }} "
+            docker pull climingo/climingo:latest
+            docker stop climingo || true
+            docker rm climingo || true
+            docker run -d --name climingo -p 80:80 climingo/climingo:latest
+          "
