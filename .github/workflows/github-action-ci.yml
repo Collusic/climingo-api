@@ -86,6 +86,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           TAG=${{ github.sha }}
+          echo "The value of TAG is $TAG"
           docker build -t climingo/climingo:$TAG .
           docker push climingo/climingo:$TAG
 
