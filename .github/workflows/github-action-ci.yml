@@ -83,14 +83,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set TAG
+        run: echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Print TAG
+        run: echo "The value of TAG is $TAG"
+
       - name: Build and push Docker image
         run: |
-          TAG=${{ github.sha }}
-          echo "The value of TAG is $TAG"
+          echo "Building and pushing Docker image with TAG: $TAG"
           docker build -t climingo/climingo:$TAG .
           docker push climingo/climingo:$TAG
 
-      - name: Executing remote ssh commands using password
+      - name: Executing remote SSH commands
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -98,6 +103,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            echo "Deploying Docker image with TAG: $TAG"
             docker pull climingo/climingo:$TAG
             docker stop climingo || true
             docker rm climingo || true
