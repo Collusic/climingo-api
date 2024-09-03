@@ -95,16 +95,18 @@ jobs:
           docker build -t climingo/climingo:$TAG .
           docker push climingo/climingo:$TAG
 
-      - name: Executing remote SSH commands
-        uses: appleboy/ssh-action@master
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            echo "Deploying Docker image with TAG: $TAG"
-            docker pull climingo/climingo:$TAG
-            docker stop climingo || true
-            docker rm climingo || true
-            docker run -d --name climingo -p 8080:8080 climingo/climingo:$TAG
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+
+      - name: Executing remote SSH commands using ssh-agent
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
+          echo "Deploying Docker image with TAG: $TAG"
+          docker pull climingo/climingo:$TAG
+          docker stop climingo || true
+          docker rm climingo || true
+          docker run -d --name climingo -p 8080:8080 climingo/climingo:$TAG
+          EOF
