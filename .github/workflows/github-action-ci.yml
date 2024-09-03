@@ -90,14 +90,14 @@ jobs:
           docker push climingo/climingo:$TAG
 
       - name: Executing remote ssh commands using password
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.HOST }}
-            username: ubuntu
-            key: ${{ secrets.SSH_KEY }}
-            port: 22
-            script: |
-              docker pull climingo/climingo:latest
-              docker stop climingo || true
-              docker rm climingo || true
-              docker run -d --name climingo -p 8080:8080 climingo/climingo:latest
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            docker pull climingo/climingo:latest
+            docker stop climingo || true
+            docker rm climingo || true
+            docker run -d --name climingo -p 8080:8080 climingo/climingo:latest
