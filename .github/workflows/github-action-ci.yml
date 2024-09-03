@@ -97,7 +97,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            docker pull climingo/climingo:latest
+            docker pull climingo/climingo:$TAG
             docker stop climingo || true
             docker rm climingo || true
-            docker run -d --name climingo -p 8080:8080 climingo/climingo:latest
+            docker run -d --name climingo -p 8080:8080 climingo/climingo:$TAG
