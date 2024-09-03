@@ -6,4 +6,4 @@ COPY build/libs/climingo-api-0.0.1-SNAPSHOT.jar app.jar
 
 ENV JASYPT_PASSWORD climingo-will-be-nice
 # 컨테이너가 시작될 때 실행될 명령어
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod","/app.jar"]
