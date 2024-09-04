@@ -108,5 +108,5 @@ jobs:
           docker pull climingo/climingo:$TAG
           docker stop climingo || true
           docker rm climingo || true
-          docker run -d --name climingo -p 8080:8080 climingo/climingo:$TAG
+          docker run -d --name climingo -p 8080:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e VERSION='$TAG' -e BUILDTIME="$(date)" climingo/climingo:$TAG
           EOF
