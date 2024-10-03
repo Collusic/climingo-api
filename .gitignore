@@ -37,3 +37,9 @@ out/
 .vscode/
 
 !**/.gitkeep
+
+### query dsl ###
+!**/src/main/generated/
+
+### macOS
+**/.DS_Store

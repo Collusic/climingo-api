@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(JC3oNwU2JSyKxNYy8Dqrs92EOhvFX+spMRZICKwAn4gN+MSehEI5ouS2oQd1SxPp)
+    username: ENC(/hDIlwiiOpd1p7Coppl9L4xHYDjkf9cj)
+    password: ENC(Toy+1i51hX5nGADpusirW4loTpskgy4o)
+  h2:
+    console:
+      enabled: false
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    com.your.package: debug
+
+oauth2:
+  kakao:
+    client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
+
+ffmpeg:
+  ffmpeg-path: /usr/bin/ffmpeg
+  ffprobe-path: /usr/bin/ffprobe
+
+app:
+  version: ${version}
+  build:
+    time: ${buildTime}
+
+discord:
+  webhook-url: https://discord.com/api/webhooks/1246451017654997014/cn3094Fmv7VSNvBnZmMoht5M5Z6ufM9Q-fF7j7d_WRkGemJ2vszV-yAhvd065MT-NzfC
+
+auth:
+  cookie:
+    domain: climingo.xyz
