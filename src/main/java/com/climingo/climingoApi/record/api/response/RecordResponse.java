@@ -10,21 +10,27 @@ import lombok.Getter;
 @Getter
 public class RecordResponse {
 
-    private ShortMemberResponse memberInfo;
+    private final ShortMemberResponse memberInfo;
 
-    private ShortRecordResponse record;
+    private final ShortRecordResponse record;
 
-    private ShortGymResponse gym;
+    private final ShortGymResponse gym;
 
-    private ShortLevelResponse level;
+    private final ShortLevelResponse level;
+
+    private final boolean isEditable;
+
+    private final boolean isDeletable;
 
     @Builder
-    public RecordResponse(Member member, Record record, Gym gym,
-                          Level level) {
-        this.memberInfo = new ShortMemberResponse(member.getId(), member.getProfileUrl(), member.getNickname());
+    public RecordResponse(Member requestMember, Record record) {
+        Member recordMember = record.getMember();
+        this.memberInfo = new ShortMemberResponse(recordMember.getId(), recordMember.getProfileUrl(), recordMember.getNickname());
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
-        this.gym = new ShortGymResponse(gym.getId(), gym.getName());
-        this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
+        this.gym = new ShortGymResponse(record.getGym());
+        this.level = new ShortLevelResponse(record.getLevel());
+        this.isEditable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
+        this.isDeletable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
     }
 
 }

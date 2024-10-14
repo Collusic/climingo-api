@@ -11,7 +11,7 @@ import com.climingo.climingoApi.auth.application.oauth.OAuth2ClientManager;
 import com.climingo.climingoApi.auth.application.oauth.OAuth2UserInfoResponse;
 import com.climingo.climingoApi.auth.util.CookieUtils;
 import com.climingo.climingoApi.auth.util.JwtUtil;
-import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.member.domain.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,15 +39,14 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<SignInUpResponse> signIn(
         @RequestBody @Valid SignInRequest requestBody,
-        HttpServletRequest request,
         HttpServletResponse response) {
         OAuth2UserInfoResponse userInfo = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             requestBody.getProviderType(), requestBody.getProviderToken());
         TokenResponse tokenResponse = authService.signIn(userInfo);
 
-        CookieUtils.addCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(),
+        CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME, tokenResponse.getAccessToken(),
             JwtUtil.ACCESS_TOKEN_EXP);
-        CookieUtils.addCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(),
+        CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME, tokenResponse.getRefreshToken(),
             JwtUtil.REFRESH_TOKEN_EXP);
 
         MemberInfo memberInfo = authService.findMemberInfo(userInfo);
@@ -58,17 +57,16 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ResponseEntity<SignInUpResponse> signUp(
         @RequestBody @Valid final SignUpRequest requestBody,
-        HttpServletRequest request,
         HttpServletResponse response) {
         OAuth2UserInfoResponse userInfoFromProvider = oAuth2ClientManager.requestUserInfoFromOAuth2Client(
             requestBody.getProviderType(), requestBody.getProviderToken());
         MemberInfo memberInfo = authService.signUp(requestBody, userInfoFromProvider);
         TokenResponse tokenResponse = authService.issueToken(memberInfo.getMemberId(), memberInfo.getAuthId(),
-            memberInfo.getProviderType(), memberInfo.getNickname());
+            memberInfo.getProviderType(), memberInfo.getNickname(), memberInfo.getRole());
 
-        CookieUtils.addCookie(request, response, "accessToken", tokenResponse.getAccessToken(),
+        CookieUtils.addCookie(response, "accessToken", tokenResponse.getAccessToken(),
             JwtUtil.ACCESS_TOKEN_EXP);
-        CookieUtils.addCookie(request, response, "refreshToken", tokenResponse.getRefreshToken(),
+        CookieUtils.addCookie(response, "refreshToken", tokenResponse.getRefreshToken(),
             JwtUtil.REFRESH_TOKEN_EXP);
 
         return ResponseEntity.ok().body(SignInUpResponse.from(memberInfo));
@@ -100,7 +98,7 @@ public class AuthController {
 
     @DeleteMapping("/delete-member")
     public ResponseEntity<Void> deleteMember(
-        @LoginMember Member member, HttpServletRequest request, HttpServletResponse response) {
+        @RequestMember Member member, HttpServletRequest request, HttpServletResponse response) {
 
         authService.deleteMember(member.getId());
 
