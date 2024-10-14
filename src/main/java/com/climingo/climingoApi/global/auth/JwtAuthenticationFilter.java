@@ -66,22 +66,33 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 .getValue();
 
             authTokenService.checkLoginedAccessToken(accessToken);
-            JwtUtil.verify(accessToken);
 
-            // TODO authentication 절차 추후 리팩토링 예정
-            authenticationToken = new JWTAuthenticationToken(accessToken,
-                Set.of(new SimpleGrantedAuthority("ROLE_USER")));
-//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+            CustomUserDetails userDetails = verify(accessToken);
+
+            authenticationToken = new JWTAuthenticationToken(userDetails,
+                Set.of(new SimpleGrantedAuthority("USER")));
             authenticationToken.setAuthenticated(true);
         } catch (RuntimeException e) {
             log.debug("while authenticate accessToken: ", e);
 
-            authenticationToken = new JWTAuthenticationToken(null, Set.of(new SimpleGrantedAuthority("ROLE_USER")));
-//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+            authenticationToken = new JWTAuthenticationToken(null, Set.of(new SimpleGrantedAuthority("GUEST")));
             authenticationToken.setAuthenticated(false);
         }
 
         return authenticationToken;
+    }
+
+    private CustomUserDetails verify(String token) {
+        JwtUtil.verify(token);
+
+        Map<String, Object> claims = JwtUtil.getClaims(token);
+        Long memberId = ((Integer) claims.get("memberId")).longValue();
+        String authId = (String) claims.get("authId");
+        String providerType = (String) claims.get("providerType");
+        String nickname = (String) claims.get("nickname");
+        String role = (String) claims.get("role");
+
+        return new CustomUserDetails(memberId, authId, providerType, nickname, role);
     }
 
     private Authentication authenticateWithRefreshToken(HttpServletRequest request,
@@ -97,26 +108,23 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 .getValue();
 
             authTokenService.checkLoginedRefreshToken(refreshToken);
-            JwtUtil.verify(refreshToken);
+            CustomUserDetails userDetails = verify(refreshToken);
 
-            Map<String, Object> claims = JwtUtil.getClaims(refreshToken);
-            Long memberId = ((Integer) claims.get("memberId")).longValue();
-            String authId = (String) claims.get("authId");
-            String providerType = (String) claims.get("providerType");
-            String nickname = (String) claims.get("nickname");
+            TokenResponse tokenResponse = authTokenService.issue(
+                userDetails.getMemberId(),
+                userDetails.getAuthId(),
+                userDetails.getProviderType(),
+                userDetails.getNickname(), userDetails.getRole());
 
-            TokenResponse tokenResponse = authTokenService.issue(memberId, authId, providerType, nickname);
-            authTokenService.update(memberId, tokenResponse);
+            authTokenService.update(userDetails.getMemberId(), tokenResponse);
 
-            CookieUtils.addCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME,
+            CookieUtils.addCookie(response, JwtUtil.ACCESS_TOKEN_NAME,
                 tokenResponse.getAccessToken(), JwtUtil.ACCESS_TOKEN_EXP);
-            CookieUtils.addCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME,
+            CookieUtils.addCookie(response, JwtUtil.REFRESH_TOKEN_NAME,
                 tokenResponse.getRefreshToken(), JwtUtil.REFRESH_TOKEN_EXP);
 
-            // TODO authentication 절차 추후 리팩토링 예정
             authenticationToken = new JWTAuthenticationToken(
-                tokenResponse.getAccessToken(), Set.of(new SimpleGrantedAuthority("ROLE_USER")));
-//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+                userDetails, Set.of(new SimpleGrantedAuthority(userDetails.getRole())));
             authenticationToken.setAuthenticated(true);
 
         } catch (JwtException e) {
@@ -133,18 +141,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 authTokenService.deleteByRefreshToken(refreshToken);
             }
 
-            // TODO authentication 절차 추후 리팩토링 예정
             authenticationToken = new JWTAuthenticationToken(
-                null, Set.of(new SimpleGrantedAuthority("ROLE_USER")));
-//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+                CustomUserDetails.createGuest(), Set.of(new SimpleGrantedAuthority("GUEST")));
             authenticationToken.setAuthenticated(false);
         } catch (RuntimeException e) {
             log.debug("while authenticate refreshToken: ", e);
 
-            // TODO authentication 절차 추후 리팩토링 예정
             authenticationToken = new JWTAuthenticationToken(
-                null, Set.of(new SimpleGrantedAuthority("ROLE_USER")));
-//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+                CustomUserDetails.createGuest(), Set.of(new SimpleGrantedAuthority("GUEST")));
             authenticationToken.setAuthenticated(false);
         }
 

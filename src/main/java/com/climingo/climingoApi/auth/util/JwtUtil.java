@@ -35,14 +35,26 @@ public class JwtUtil {
         KEY = key;
     }
 
-    public static String createAccessToken(Long memberId, String authId, String providerType, String nickname) {
+    public static String createToken(Long memberId,
+                                     String authId,
+                                     String providerType,
+                                     String nickname,
+                                     String role,
+                                     boolean forRefresh) {
+
+        long exp = Instant.now().getEpochSecond() + ACCESS_TOKEN_EXP;
+        if (forRefresh) {
+            exp = Instant.now().getEpochSecond() + REFRESH_TOKEN_EXP;
+        }
+
         return Jwts.builder()
             .setHeader(jwtHeaders())
             .claim("memberId", memberId)
             .claim("authId", authId)
             .claim("providerType", providerType)
             .claim("nickname", nickname)
-            .claim("exp", Instant.now().getEpochSecond() + ACCESS_TOKEN_EXP)
+            .claim("role", role)
+            .claim("exp", exp)
             .signWith(SignatureAlgorithm.HS256, KEY)
             .compact();
     }
@@ -69,18 +81,6 @@ public class JwtUtil {
             log.info("부적합한 인수");
             throw new IllegalArgumentException("부적합한 인수");
         }
-    }
-
-    public static String createRefreshToken(Long memberId, String authId, String providerType, String nickname) {
-        return Jwts.builder()
-            .setHeader(jwtHeaders())
-            .claim("memberId", memberId)
-            .claim("authId", authId)
-            .claim("providerType", providerType)
-            .claim("nickname", nickname)
-            .claim("exp", Instant.now().getEpochSecond() + REFRESH_TOKEN_EXP)
-            .signWith(SignatureAlgorithm.HS256, KEY)
-            .compact();
     }
 
     public static Map<String, Object> getClaims(String token) {

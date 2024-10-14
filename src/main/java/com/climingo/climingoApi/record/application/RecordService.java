@@ -16,7 +16,6 @@ import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import jakarta.persistence.EntityNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,7 +38,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
 
     @Transactional
-    public Record createRecord(Member loginMember, RecordCreateRequest request) throws IOException {
+    public Record createRecord(Member loginMember, RecordCreateRequest request) {
         Gym gym = gymRepository.findById(request.getGymId())
                                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
@@ -68,11 +67,11 @@ public class RecordService {
     }
 
     @Transactional
-    public Record updateRecord(Member loginMember, Long recordId, RecordUpdateRequest request) {
+    public Record updateRecord(Member member, Long recordId, RecordUpdateRequest request) {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        if (!record.isSameMember(loginMember)) {
+        if (record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 수정할 수 없음");
         }
 
@@ -89,11 +88,11 @@ public class RecordService {
     }
 
     @Transactional
-    public void deleteRecord(Member loginMember, Long recordId) {
+    public void deleteRecord(Member member, Long recordId) {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
 
-        if (!record.isSameMember(loginMember)) {
+        if (record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 삭제할 수 없음");
         }
 
@@ -101,13 +100,11 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public RecordResponse findById(Long recordId) {
-        Record record = recordRepository.findById(recordId)
+    public RecordResponse readRecord(Member member, Long recordId) {
+        Record record = recordRepository.findByIdWithMember(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        RecordResponse recordResponse = new RecordResponse(record.getMember(), record,
-                                                           record.getGym(),
-                                                           record.getLevel()); // TODO: climber 정보 연동
+        RecordResponse recordResponse = new RecordResponse(member, record);
 
         return recordResponse;
     }
@@ -119,7 +116,7 @@ public class RecordService {
         List<RecordResponse> recordResponses = new ArrayList<>();
         for (Record record : records) {
             recordResponses.add(
-                    new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()));
+                    new RecordResponse(record.getMember(), record));
         }
 
         return recordResponses;
@@ -155,7 +152,7 @@ public class RecordService {
 
     private List<RecordResponse> toRecordResponses(List<Record> records) {
         return records.stream()
-                      .map(record -> new RecordResponse(record.getMember(), record, record.getGym(), record.getLevel()))
+                      .map(record -> new RecordResponse(record.getMember(), record))
                       .collect(Collectors.toList());
     }
 
