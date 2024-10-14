@@ -71,7 +71,7 @@ public class RecordService {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        if (record.isEditable(member)) {
+        if (!record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 수정할 수 없음");
         }
 
@@ -92,7 +92,7 @@ public class RecordService {
         Record record = recordRepository.findById(recordId)
                                         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
 
-        if (record.isEditable(member)) {
+        if (!record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 삭제할 수 없음");
         }
 

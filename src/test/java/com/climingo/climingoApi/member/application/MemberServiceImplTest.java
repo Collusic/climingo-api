@@ -11,6 +11,7 @@ import com.climingo.climingoApi.auth.api.response.MemberInfo;
 import com.climingo.climingoApi.auth.application.MemberEnrollService;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
+import com.climingo.climingoApi.member.domain.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ class MemberServiceImplTest {
         Member expected = mock(Member.class);
         when(expected.getAuthId()).thenReturn(authId);
         when(expected.getNickname()).thenReturn(nickname);
+        when(expected.getRole()).thenReturn(UserRole.USER);
 
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(false);
@@ -137,6 +139,7 @@ class MemberServiceImplTest {
         Member expected = mock(Member.class);
         when(expected.getId()).thenReturn(1L);
         when(expected.getNickname()).thenReturn(nickname);
+        when(expected.getRole()).thenReturn(UserRole.USER);
 
         when(mockedMemberRepository.existsByAuthIdAndProviderType(any(), any()))
             .thenReturn(false);
