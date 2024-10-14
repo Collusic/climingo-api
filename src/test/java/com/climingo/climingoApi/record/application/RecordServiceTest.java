@@ -14,6 +14,7 @@ import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.UserRole;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.domain.Record;
@@ -62,6 +63,7 @@ public class RecordServiceTest {
 
         Member loginMember = Member.builder()
             .id(99999L)
+            .role(UserRole.USER)
             .build();
         RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl);
 
@@ -87,6 +89,7 @@ public class RecordServiceTest {
     void update_test() {
         Member loginMember = Member.builder()
             .id(99999L)
+            .role(UserRole.USER)
             .build();
 
         Gym gym1 = mock(Gym.class);
@@ -141,6 +144,7 @@ public class RecordServiceTest {
     void update_test_when_not_same_member_then_throw_exception() {
         Member loginMember = Member.builder()
             .id(99999L)
+            .role(UserRole.USER)
             .build();
 
         Gym gym1 = mock(Gym.class);
@@ -156,7 +160,7 @@ public class RecordServiceTest {
         when(level2.getId()).thenReturn(2L);
 
         Record before = Record.builder()
-            .member(Member.builder().id(100000L).build())
+            .member(Member.builder().id(100000L).role(UserRole.USER).build())
             .gym(gym1)
             .level(level1)
             .videoUrl("http://mock-video-url")
@@ -185,6 +189,7 @@ public class RecordServiceTest {
     void delete_test() {
         Member loginMember = Member.builder()
             .id(99999L)
+            .role(UserRole.USER)
             .build();
 
         Record before = Record.builder()
@@ -207,10 +212,11 @@ public class RecordServiceTest {
     void delete_test_when_not_same_member_then_throw_exception() {
         Member loginMember = Member.builder()
             .id(99999L)
+            .role(UserRole.USER)
             .build();
 
         Record before = Record.builder()
-            .member(Member.builder().id(100000L).build())
+            .member(Member.builder().role(UserRole.USER).id(100000L).build())
             .build();
 
         when(recordRepository.findById(1L)).thenReturn(Optional.of(before));
