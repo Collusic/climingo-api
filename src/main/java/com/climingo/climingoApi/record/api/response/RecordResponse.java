@@ -1,30 +1,37 @@
 package com.climingo.climingoApi.record.api.response;
 
-import com.climingo.climingoApi.level.domain.Level;
-import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.domain.Record;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class RecordResponse {
 
-    private ShortMemberResponse memberInfo;
+    private final ShortMemberResponse memberInfo;
 
-    private ShortRecordResponse record;
+    private final ShortRecordResponse record;
 
-    private ShortGymResponse gym;
+    private final ShortGymResponse gym;
 
-    private ShortLevelResponse level;
+    private final ShortLevelResponse level;
+
+    @JsonProperty("isEditable")
+    private final boolean editable;
+
+    @JsonProperty("isDeletable")
+    private final boolean deletable;
 
     @Builder
-    public RecordResponse(Member member, Record record, Gym gym,
-                          Level level) {
-        this.memberInfo = new ShortMemberResponse(member.getId(), member.getProfileUrl(), member.getNickname());
+    public RecordResponse(Member requestMember, Record record) {
+        Member recordMember = record.getMember();
+        this.memberInfo = new ShortMemberResponse(recordMember.getId(), recordMember.getProfileUrl(), recordMember.getNickname());
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
-        this.gym = new ShortGymResponse(gym.getId(), gym.getName());
-        this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
+        this.gym = new ShortGymResponse(record.getGym());
+        this.level = new ShortLevelResponse(record.getLevel());
+        this.editable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
+        this.deletable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
     }
 
 }

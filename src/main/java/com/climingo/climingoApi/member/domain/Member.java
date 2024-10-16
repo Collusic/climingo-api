@@ -6,6 +6,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,6 +50,10 @@ public class Member {
     @Column(nullable = true, length = 50)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE", nullable = false)
+    private UserRole role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Gym homeGym;
 
@@ -59,7 +65,7 @@ public class Member {
 
     @Builder
     public Member(Long id, String authId, String providerType, String nickname, String profileUrl, String email,
-                  Gym homeGym, PhysicalInfo physicalInfo, List<Record> records) {
+                  Gym homeGym, PhysicalInfo physicalInfo, List<Record> records, UserRole role) {
         this.id = id;
         this.authId = authId;
         this.providerType = providerType;
@@ -69,13 +75,31 @@ public class Member {
         this.homeGym = homeGym;
         this.physicalInfo = physicalInfo;
         this.records = records;
+        this.role = role;
+        if (this.role == null) {
+            this.role = UserRole.USER;
+        }
+    }
+
+    public static Member createGuest() {
+        return Member.builder()
+            .role(UserRole.GUEST)
+            .build();
     }
 
     public boolean isSameMember(Long memberId) {
-        return this.id.equals(memberId);
+        return this.id != null && this.id.equals(memberId);
     }
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public boolean isSameMember(Member member) {
+        return this.isSameMember(member.getId());
+    }
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
     }
 }

@@ -71,4 +71,8 @@ public class Record extends BaseTimeEntity {
     public boolean isSameMember(Member member) {
         return this.member.isSameMember(member.getId());
     }
+
+    public boolean isEditable(Member member) {
+        return isSameMember(member) || member.isAdmin();
+    }
 }

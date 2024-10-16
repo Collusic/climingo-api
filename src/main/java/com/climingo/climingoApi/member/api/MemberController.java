@@ -1,6 +1,6 @@
 package com.climingo.climingoApi.member.api;
 
-import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.member.api.request.UpdateNicknameRequest;
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.application.MemberService;
@@ -21,7 +21,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/members")
-    public ResponseEntity<MemberInfoResponse> findMyInfo(@LoginMember Member loginMember) {
+    public ResponseEntity<MemberInfoResponse> findMyInfo(@RequestMember Member loginMember) {
         MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(loginMember.getId());
         return ResponseEntity.ok().body(memberInfoResponse);
     }
@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @PatchMapping("/members/{memberId}/nickname")
-    public ResponseEntity<Void> updateNickname(@LoginMember Member member, @PathVariable(value = "memberId") Long memberId,
+    public ResponseEntity<Void> updateNickname(@RequestMember Member member, @PathVariable(value = "memberId") Long memberId,
                                                @RequestBody @Valid UpdateNicknameRequest request) {
         memberService.updateNickname(member, memberId, request.getNickname());
         return ResponseEntity.ok().build();

@@ -1,20 +1,20 @@
 package com.climingo.climingoApi.record.api.response;
 
+import com.climingo.climingoApi.level.domain.Level;
 import lombok.Getter;
 
 @Getter
 public class ShortLevelResponse {
 
-    private Long levelId;
+    private final Long levelId;
 
-    private String colorNameKo;
+    private final String colorNameKo;
 
-    private String colorNameEn;
+    private final String colorNameEn;
 
-    public ShortLevelResponse(Long levelId, String colorNameKo, String colorNameEn) {
-        this.levelId = levelId;
-        this.colorNameKo = colorNameKo;
-        this.colorNameEn = colorNameEn;
+    public ShortLevelResponse(Level level) {
+        this.levelId = level.getId();
+        this.colorNameKo = level.getColorNameKo();
+        this.colorNameEn = level.getColorNameEn();
     }
-
 }

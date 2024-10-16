@@ -18,9 +18,9 @@ public class AuthTokenService {
     private final AuthTokenRepository authTokenRepository;
 
     @Transactional
-    public TokenResponse issue(Long memberId, String authId, String providerType, String nickname) {
-        String accessToken = JwtUtil.createAccessToken(memberId, authId, providerType, nickname);
-        String refreshToken = JwtUtil.createRefreshToken(memberId, authId, providerType, nickname);
+    public TokenResponse issue(Long memberId, String authId, String providerType, String nickname, String role) {
+        String accessToken = JwtUtil.createToken(memberId, authId, providerType, nickname, role, false);
+        String refreshToken = JwtUtil.createToken(memberId, authId, providerType, nickname, role, true);
 
         Optional<AuthToken> tokenInfo = authTokenRepository.findById(memberId);
         AuthToken authToken = AuthToken.of(memberId, accessToken, refreshToken);
