@@ -1,9 +1,8 @@
 package com.climingo.climingoApi.record.api.response;
 
-import com.climingo.climingoApi.level.domain.Level;
-import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.domain.Record;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,9 +17,11 @@ public class RecordResponse {
 
     private final ShortLevelResponse level;
 
-    private final boolean isEditable;
+    @JsonProperty("isEditable")
+    private final boolean editable;
 
-    private final boolean isDeletable;
+    @JsonProperty("isDeletable")
+    private final boolean deletable;
 
     @Builder
     public RecordResponse(Member requestMember, Record record) {
@@ -29,8 +30,8 @@ public class RecordResponse {
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
         this.gym = new ShortGymResponse(record.getGym());
         this.level = new ShortLevelResponse(record.getLevel());
-        this.isEditable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
-        this.isDeletable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
+        this.editable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
+        this.deletable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();
     }
 
 }

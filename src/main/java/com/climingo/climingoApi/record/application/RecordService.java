@@ -104,9 +104,7 @@ public class RecordService {
         Record record = recordRepository.findByIdWithMember(recordId)
                                         .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
-        RecordResponse recordResponse = new RecordResponse(member, record);
-
-        return recordResponse;
+        return new RecordResponse(member, record);
     }
 
     @Transactional(readOnly = true)
