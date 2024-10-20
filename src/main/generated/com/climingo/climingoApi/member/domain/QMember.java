@@ -40,6 +40,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<com.climingo.climingoApi.record.domain.Record, com.climingo.climingoApi.record.domain.QRecord> records = this.<com.climingo.climingoApi.record.domain.Record, com.climingo.climingoApi.record.domain.QRecord>createList("records", com.climingo.climingoApi.record.domain.Record.class, com.climingo.climingoApi.record.domain.QRecord.class, PathInits.DIRECT2);
 
+    public final EnumPath<UserRole> role = createEnum("role", UserRole.class);
+
     public QMember(String variable) {
         this(Member.class, forVariable(variable), INITS);
     }

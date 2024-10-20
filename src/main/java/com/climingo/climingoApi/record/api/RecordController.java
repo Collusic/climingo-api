@@ -1,6 +1,6 @@
 package com.climingo.climingoApi.record.api;
 
-import com.climingo.climingoApi.global.auth.LoginMember;
+import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
@@ -32,34 +32,36 @@ public class RecordController {
 
     @PostMapping("/records")
     public ResponseEntity<Map<String, Long>> create(
-            @LoginMember Member loginMember,
+            @RequestMember Member member,
             @RequestBody RecordCreateRequest request) throws IOException {
 
-        Record record = recordService.createRecord(loginMember, request);
+        Record record = recordService.createRecord(member, request);
         return ResponseEntity.ok().body(Map.of("recordId", record.getId()));
     }
 
     @PatchMapping("/records/{recordId}")
     public ResponseEntity<Long> update(
-            @LoginMember Member loginMember,
+            @RequestMember Member member,
             @PathVariable("recordId") Long recordId,
             @ModelAttribute RecordUpdateRequest request) {
 
-        Record record = recordService.updateRecord(loginMember, recordId, request);
+        Record record = recordService.updateRecord(member, recordId, request);
         return ResponseEntity.ok().body(record.getId());
     }
 
     @DeleteMapping("/records/{recordId}")
     public ResponseEntity<Void> delete(
-            @LoginMember Member loginMember,
+            @RequestMember Member member,
             @PathVariable("recordId") Long recordId) {
-        recordService.deleteRecord(loginMember, recordId);
+        recordService.deleteRecord(member, recordId);
         return ResponseEntity.ok(null);
     }
 
     @GetMapping("/records/{recordId}")
-    public ResponseEntity<RecordResponse> find(@PathVariable("recordId") Long recordId) {
-        RecordResponse recordResponse = recordService.findById(recordId);
+    public ResponseEntity<RecordResponse> find(
+            @RequestMember Member member,
+            @PathVariable("recordId") Long recordId) {
+        RecordResponse recordResponse = recordService.readRecord(member, recordId);
         return ResponseEntity.ok().body(recordResponse);
     }
 
@@ -84,10 +86,10 @@ public class RecordController {
     }
 
     @GetMapping("/myRecords")
-    public ResponseEntity<PageDto<MyRecordResponse>> findPageMy(@LoginMember Member loginMember,
+    public ResponseEntity<PageDto<MyRecordResponse>> findPageMy(@RequestMember Member member,
                                                                 @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
                                                                 @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
-        PageDto<MyRecordResponse> pageDto = recordService.findPageMy(loginMember.getId(), page, size);
+        PageDto<MyRecordResponse> pageDto = recordService.findPageMy(member.getId(), page, size);
         return ResponseEntity.ok().body(pageDto);
     }
 

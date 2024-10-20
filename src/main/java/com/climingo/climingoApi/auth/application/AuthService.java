@@ -43,7 +43,7 @@ public class AuthService {
 
         Member member = findRegisteredMember(authId, providerType);
 
-        return authTokenService.issue(member.getId(), authId, providerType, nickname);
+        return authTokenService.issue(member.getId(), authId, providerType, nickname, member.getRole().toString());
     }
 
     private Member findRegisteredMember(String authId, String providerType) {
@@ -79,8 +79,8 @@ public class AuthService {
             signUpRequest.getAuthId().equals(authId);
     }
 
-    public TokenResponse issueToken(Long memberId, String authId, String providerType, String nickname) {
-        return authTokenService.issue(memberId, authId, providerType, nickname);
+    public TokenResponse issueToken(Long memberId, String authId, String providerType, String nickname, String role) {
+        return authTokenService.issue(memberId, authId, providerType, nickname, role);
     }
 
     public MemberInfo findMemberInfo(OAuth2UserInfoResponse userInfo) {
