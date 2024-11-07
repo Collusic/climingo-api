@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoMemberInfoUserInfoResponse implements OAuth2UserInfoResponse {
+public class KakaoUserInfoResponse implements OAuth2UserInfoResponse {
 
     private String sub;
     private String email;

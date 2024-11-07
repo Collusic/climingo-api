@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.auth.domain;
 
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
@@ -17,8 +18,10 @@ public class AuthToken {
     @Id
     private Long memberId;
 
+    @Column(length = 1000)
     private String accessToken;
 
+    @Column(length = 1000)
     private String refreshToken;
 
     public void update(TokenResponse tokenResponse) {

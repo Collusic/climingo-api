@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface KakaoUserInfoApi {
 
     @GetMapping(value = "/v1/oidc/userinfo", consumes = "application/x-www-form-urlencoded;charset=utf-8")
-    KakaoMemberInfoUserInfoResponse requestUserInfo(
+    KakaoUserInfoResponse requestUserInfo(
         @RequestHeader("Content-type") String contentType,
         @RequestHeader("Authorization") String accessToken
     );
