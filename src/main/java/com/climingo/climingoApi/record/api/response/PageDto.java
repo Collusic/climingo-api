@@ -23,6 +23,8 @@ public class PageDto<T> {
 
     private Boolean isEnd;
 
+    private Long nextCursor;
+
     private List<T> contents;
 
 }
