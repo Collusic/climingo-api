@@ -38,6 +38,10 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.701'
     implementation 'net.bramp.ffmpeg:ffmpeg:0.7.0'
 
+    // 모니터링
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
