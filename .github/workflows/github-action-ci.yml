@@ -100,13 +100,20 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Upload docker-compose.yml and prometheus.yml to server
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-compose.yml
+          scp -o StrictHostKeyChecking=no prometheus.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/prometheus.yml
 
       - name: Executing remote SSH commands using ssh-agent
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
           echo "Deploying Docker image with TAG: $TAG"
           docker pull climingo/climingo:$TAG
-          docker stop climingo || true
-          docker rm climingo || true
-          docker run -d --name climingo -p 8080:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e VERSION='$TAG' -e BUILDTIME="$(date)" climingo/climingo:$TAG
+          cd /home/ubuntu
+          docker-compose down || true
+          export TAG=$TAG
+          export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export BUILDTIME="$(date)"
+          docker-compose up -d
           EOF
