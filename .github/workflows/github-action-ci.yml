@@ -100,13 +100,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
       - name: Executing remote SSH commands using ssh-agent
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
           echo "Deploying Docker image with TAG: $TAG"
           docker pull climingo/climingo:$TAG
           ls -la
+          cat docker-compose.yml
           docker-compose down || true
           export TAG=$TAG
           export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
