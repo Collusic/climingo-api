@@ -95,14 +95,14 @@ jobs:
           docker build -t climingo/climingo:$TAG .
           docker push climingo/climingo:$TAG
 
-      - name: Upload docker-compose.yml to server
-        run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-compose.yml
-
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Upload docker-compose.yml to server
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-compose.yml
 
       - name: Executing remote SSH commands using ssh-agent
         run: |
