@@ -110,5 +110,5 @@ jobs:
           export TAG=$TAG
           export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export BUILDTIME="$(date)"
-          docker-compose up -d --build
+          docker-compose up -d
           EOF
