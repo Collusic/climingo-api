@@ -1,17 +1,17 @@
 package com.climingo.climingoApi.record.api.response;
 
+import com.climingo.climingoApi.gym.domain.Gym;
 import lombok.Getter;
 
 @Getter
 public class ShortGymResponse {
 
-    private Long gymId;
+    private final Long gymId;
 
-    private String gymName;
+    private final String gymName;
 
-    public ShortGymResponse(Long gymId, String gymName) {
-        this.gymId = gymId;
-        this.gymName = gymName;
+    public ShortGymResponse(Gym gym) {
+        this.gymId = gym.getId();
+        this.gymName = gym.getName();
     }
-
 }

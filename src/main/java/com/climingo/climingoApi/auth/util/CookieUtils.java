@@ -24,7 +24,7 @@ public class CookieUtils {
         return Arrays.stream(cookies).filter(cookie -> cookie.getName().equals(name)).findAny();
     }
 
-    public static void addCookie(HttpServletRequest request, HttpServletResponse response, String name, String value, int maxAge) {
+    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
 
         ResponseCookie cookie = ResponseCookie.from(name, value)
             .domain(COOKIE_DOMAIN)

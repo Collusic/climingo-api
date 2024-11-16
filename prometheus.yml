@@ -1,0 +1,8 @@
+#global:
+#  scrape_interval: 5s # 메트릭 수집 간격
+
+scrape_configs:
+  - job_name: 'climingo-api'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['ec2-3-35-66-48.ap-northeast-2.compute.amazonaws.com:8080']

@@ -18,8 +18,8 @@ public class MyRecordResponse {
     @Builder
     public MyRecordResponse(Record record, Gym gym, Level level) {
         this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
-        this.gym = new ShortGymResponse(gym.getId(), gym.getName());
-        this.level = new ShortLevelResponse(level.getId(), level.getColorNameKo(), level.getColorNameEn());
+        this.gym = new ShortGymResponse(gym);
+        this.level = new ShortLevelResponse(level);
     }
 
 }

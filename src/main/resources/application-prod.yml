@@ -23,6 +23,13 @@ logging:
 oauth2:
   kakao:
     client_id: ENC(IV5sWrX0xSoSzwpDxxazOvUegIIT00oK/1XZVHd7wOcxQmsHFIgMh43fLFuW0f6F)
+  apple:
+    team-id: ENC(09FhwrSBqt5uAvQ9RMp5hlEzkiKveQ13)
+    client-id: com.climingo.app
+    key:
+      id: ENC(vMblaJ8Ea8c+b1ZODZ5BQEJValMqk3S0)
+      path: ENC(UQVIwN53EBnE0TcwgTT79HYM2KUrEcRDhlx72+W+anbO87WiWJbCSJQKOPqGBNGaze2oi9obarWiRuzW5UdJtLUzNe7icfKNPepJrHZXhVSD5UUO5eHsvbFVeWhVScgeIPxvtbdsk0LMsLH7EbzSuC852HHy0/KQ6j8gJREw/RkyFuHFYJR2VupYASz9jpdabzwA6q9Lh9v7BPqLB2nFzub5xmHMU7HWICvzSHbnTsgXqyQXr7XtvHxQVZN5z4lEAKbk0BB53vm3ammzkxhTo656ZFAgK69n)
+
 
 ffmpeg:
   ffmpeg-path: /usr/bin/ffmpeg
@@ -39,3 +46,15 @@ discord:
 auth:
   cookie:
     domain: climingo.xyz
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 모든 엔드포인트 노출
+  metrics:
+    tags:
+      application: climingo-api # 애플리케이션 태그 이름으로 특정 애플리케이션에 대한 내용만 필터링 가능
+  endpoint:
+    health:
+      show-details: "always"  # Health 상태에 세부 정보 포함
