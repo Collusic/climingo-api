@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   climingo-api:
-    image: climingo/climingo:${TAG} # Spring Boot 애플리케이션 Docker 이미지
+    image: climingo/climingo:${TAG}  # Spring Boot 애플리케이션 Docker 이미지
     container_name: climingo-api
     environment:
       - JASYPT_PASSWORD=${JASYPT_PASSWORD}
@@ -10,5 +10,20 @@ services:
       - BUILDTIME=${BUILDTIME}
     ports:
       - "8080:8080"
+    logging:  # 로그 드라이버 설정 (json-file 기본값 사용)
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  promtail:
+    image: grafana/promtail:2.9.0  # Promtail Docker 이미지
+    container_name: promtail
+    depends_on:
+      - climingo-api  # Spring Boot 애플리케이션이 먼저 실행되도록 설정
     volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro  # 필요하면 호스트 로그 디렉토리 마운트
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Docker 컨테이너 로그 경로
+      - ./promtail-config.yml:/etc/promtail/promtail.yml:ro  # Promtail 설정 파일
+    command:
+      - -config.file=/etc/promtail/promtail.yml  # 설정 파일 위치
