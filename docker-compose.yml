@@ -10,3 +10,5 @@ services:
       - BUILDTIME=${BUILDTIME}
     ports:
       - "8080:8080"
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
