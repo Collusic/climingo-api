@@ -1,0 +1,18 @@
+server:
+  http_listen_port: 9080  # Promtail HTTP 서버 포트
+
+clients:
+  - url: http://ec2-43-200-200-208.ap-northeast-2.compute.amazonaws.com:3100/loki/api/v1/push  # Loki 서버 URL
+
+positions:
+  filename: /tmp/positions.yaml  # 로그 수집 위치 저장 파일
+
+scrape_configs:
+  - job_name: "climingo-api"  # 작업 이름
+    static_configs:
+      - targets:
+          - ec2-3-35-66-48.ap-northeast-2.compute.amazonaws.com  # Promtail 컨테이너가 실행되는 서버
+        labels:
+          job: "climingo-api"      # 로그 구분 태그
+          service: "spring-boot"  # 서비스 이름
+          __path__: /var/lib/docker/containers/*/*-json.log  # Docker 로그 파일 경로
