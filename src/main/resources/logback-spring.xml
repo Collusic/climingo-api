@@ -18,6 +18,10 @@
     </encoder>
   </appender>
 
+  <!-- Spring Boot Actuator stdout 로그 기록하지 않도록 하는 설정 -->
+  <logger name="org.springframework.boot.actuate.metrics" level="off"/>
+  <logger name="org.springframework.metrics" level="off"/>
+
   <!-- 루트 로거에 추가 -->
   <root level="info">
     <appender-ref ref="CONSOLE"/>
