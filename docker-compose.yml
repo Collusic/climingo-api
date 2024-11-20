@@ -19,6 +19,8 @@ services:
   promtail:
     image: grafana/promtail:2.9.0  # Promtail Docker 이미지
     container_name: promtail
+    ports:
+      - "9080:9080"
     depends_on:
       - climingo-api  # Spring Boot 애플리케이션이 먼저 실행되도록 설정
     volumes:
