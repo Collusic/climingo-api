@@ -103,7 +103,7 @@ jobs:
       - name: Upload docker-compose.yml and prometheus.yml to server
         run: |
           scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-compose.yml
-          scp -o StrictHostKeyChecking=no prometheus.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/prometheus.yml
+          scp -o StrictHostKeyChecking=no promtail-config.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/promtail-config.yml
 
       - name: Executing remote SSH commands using ssh-agent
         run: |
