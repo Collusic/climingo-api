@@ -8,6 +8,7 @@ services:
       - JASYPT_PASSWORD=${JASYPT_PASSWORD}
       - VERSION=${TAG}
       - BUILDTIME=${BUILDTIME}
+      - LOGGING_FILE_PATH=/logs # 로그 파일 경로를 환경 변수로 설정
     ports:
       - "8080:8080"
     logging:  # 로그 드라이버 설정 (json-file 기본값 사용)
@@ -24,8 +25,8 @@ services:
     depends_on:
       - climingo-api  # Spring Boot 애플리케이션이 먼저 실행되도록 설정
     volumes:
-      - /var/log:/var/log:ro  # 필요하면 호스트 로그 디렉토리 마운트
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Docker 컨테이너 로그 경로
+      - /var/logs/climingo-api:/logs:ro # 로그 디렉토리를 읽기 전용으로 마운트
       - ./promtail-config.yml:/etc/promtail/promtail.yml:ro  # Promtail 설정 파일
     command:
       - -config.file=/etc/promtail/promtail.yml  # 설정 파일 위치
+    restart: always
