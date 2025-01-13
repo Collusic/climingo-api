@@ -1,5 +1,6 @@
 package com.climingo.climingoApi.member.domain;
 
+import com.climingo.climingoApi.global.domain.BaseTimeEntity;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.record.domain.Record;
 import jakarta.persistence.CascadeType;
@@ -28,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"auth_id", "provider_type"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
