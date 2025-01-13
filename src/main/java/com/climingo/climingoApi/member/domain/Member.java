@@ -45,7 +45,7 @@ public class Member extends BaseTimeEntity {
     @Size(min = 2, max = 16)
     private String nickname;
 
-    @Column(nullable = true, length = 255)
+    @Column(nullable = true, length = 400)
     private String profileUrl;
 
     @Column(nullable = true, length = 50)
