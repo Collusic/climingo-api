@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.auth.domain;
 
 import com.climingo.climingoApi.auth.api.response.TokenResponse;
+import com.climingo.climingoApi.global.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "of")
-public class AuthToken {
+public class AuthToken extends BaseTimeEntity {
 
     @Id
     private Long memberId;
