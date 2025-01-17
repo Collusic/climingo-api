@@ -1,5 +1,6 @@
 package com.climingo.climingoApi.record.domain;
 
+import com.climingo.climingoApi.global.domain.BaseTimeEntity;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.member.domain.Member;
