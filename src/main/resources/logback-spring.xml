@@ -18,9 +18,23 @@
     </encoder>
   </appender>
 
+  <!-- Hibernate SQL 쿼리 로그 설정 -->
+  <logger name="org.hibernate.SQL" level="info" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
+  <!-- Hibernate 파라미터 바인딩 값 로그 설정 -->
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
   <!-- Spring Boot Actuator stdout 로그 기록하지 않도록 하는 설정 -->
-  <logger name="org.springframework.boot.actuate.metrics" level="off"/>
-  <logger name="org.springframework.metrics" level="off"/>
+  <logger name="org.springframework.boot.actuate" level="info" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+
 
   <!-- 루트 로거에 추가 -->
   <root level="info">
