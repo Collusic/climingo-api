@@ -17,14 +17,6 @@ jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
 
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
-
 cloud:
   aws:
     credentials:

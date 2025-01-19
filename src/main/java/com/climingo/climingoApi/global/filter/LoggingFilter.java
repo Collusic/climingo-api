@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -21,13 +23,14 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 public class LoggingFilter extends OncePerRequestFilter {
 
     private static final String MDC_KEY_TRACE_ID = "traceId";
-    private static final String[] LOG_BODY_METHODS = {"POST", "PUT", "PATCH"};
-    private static final String[] HEADER_KEY_LIST = {"Authorization", "transactionUniqueNum"};
-    private static final String[] URI_WITHOUT_LOG = {"swagger", "api-docs", "healthcheck"};
+    private static final String[] LOG_BODY_METHODS = { "POST", "PUT", "PATCH" };
+    private static final String[] HEADER_KEY_LIST = { "Authorization", "transactionUniqueNum" }; // 내가 원하는 header key만 출력되도록 설정
+    private static final String[] URI_WITHOUT_LOG = { "swagger", "api-docs", "healthcheck" };
+    private static final int MAX_BODY_LOG_LENGTH = 1000;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-        FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException {
 
         String traceId = UUID.randomUUID().toString();
         MDC.put(MDC_KEY_TRACE_ID, traceId);
@@ -61,15 +64,21 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     private void logRequest(ContentCachingRequestWrapper request) {
         String method = request.getMethod();
+        String uri = request.getRequestURI();
+        String clientIp = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+        String queryString = request.getQueryString();
 
-        log.info("[REQUEST] {} {}", method, request.getRequestURI());
+        Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(
+                HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        log.info("[REQUEST] Method: {}, URI: {}, Client-IP: {}, User-Agent: {}, QueryString: {}, PathVariables: {}", method, uri, clientIp, userAgent,
+                 (queryString != null ? queryString : ""), (pathVariables != null ? pathVariables : "{}"));
 
         logRequestTargetHeaders(request);
 
-        logRequestQueryString(request);
-
         boolean isMethodAllowed = Arrays.stream(LOG_BODY_METHODS)
-            .anyMatch(target -> target.equalsIgnoreCase(method));
+                                        .anyMatch(target -> target.equalsIgnoreCase(method));
 
         if (!isMethodAllowed) {
             return;
@@ -80,7 +89,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     private void logResponse(ContentCachingResponseWrapper wrappedResponse, long elapsedTime) {
         log.info("[RESPONSE] Status : {}, Processing Time : {}ms", wrappedResponse.getStatus(),
-            elapsedTime);
+                 elapsedTime);
 
         logResponseHeaders(wrappedResponse);
 
@@ -111,19 +120,19 @@ public class LoggingFilter extends OncePerRequestFilter {
         });
     }
 
-    private static void logRequestQueryString(ContentCachingRequestWrapper request) {
-        String queryString = request.getQueryString();
-        if (queryString != null) {
-            log.info("[REQUEST] QueryString : {}", queryString);
-        }
-    }
-
     private String getRequestMessageBody(ContentCachingRequestWrapper wrappedRequest) {
-        return new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8);
+        return truncateBody(new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8));
     }
 
     private String getResponseMessageBody(ContentCachingResponseWrapper wrappedResponse) {
-        return new String(wrappedResponse.getContentAsByteArray(), StandardCharsets.UTF_8);
+        return truncateBody(new String(wrappedResponse.getContentAsByteArray(), StandardCharsets.UTF_8));
+    }
+
+    private String truncateBody(String body) {
+        if (body.length() > MAX_BODY_LOG_LENGTH) {
+            return body.substring(0, MAX_BODY_LOG_LENGTH) + " [TRUNCATED]";
+        }
+        return body;
     }
 
     private void filterAndLogBody(String messageBody, boolean isRequest) {
@@ -138,4 +147,5 @@ public class LoggingFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         return Arrays.stream(URI_WITHOUT_LOG).anyMatch(uri::contains);
     }
+
 }
