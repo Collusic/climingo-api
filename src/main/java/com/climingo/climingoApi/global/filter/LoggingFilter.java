@@ -63,6 +63,27 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
 
     private void logRequest(ContentCachingRequestWrapper request) {
+        logRequestBasicInfo(request);
+        logRequestTargetHeaders(request);
+
+        boolean isMethodAllowed = Arrays.stream(LOG_BODY_METHODS)
+                                        .anyMatch(target -> target.equalsIgnoreCase(request.getMethod()));
+
+        if (!isMethodAllowed) {
+            return;
+        }
+        String body = getRequestMessageBody(request);
+        filterAndLogBody(body);
+    }
+
+    private void logResponse(ContentCachingResponseWrapper wrappedResponse, long elapsedTime) {
+        log.info("[RESPONSE] Status : {}, Processing Time : {}ms", wrappedResponse.getStatus(),
+                 elapsedTime);
+
+        logResponseHeaders(wrappedResponse);
+    }
+
+    private void logRequestBasicInfo(HttpServletRequest request) {
         String method = request.getMethod();
         String uri = request.getRequestURI();
         String clientIp = request.getRemoteAddr();
@@ -74,28 +95,6 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         log.info("[REQUEST] Method: {}, URI: {}, Client-IP: {}, User-Agent: {}, QueryString: {}, PathVariables: {}", method, uri, clientIp, userAgent,
                  (queryString != null ? queryString : ""), (pathVariables != null ? pathVariables : "{}"));
-
-        logRequestTargetHeaders(request);
-
-        boolean isMethodAllowed = Arrays.stream(LOG_BODY_METHODS)
-                                        .anyMatch(target -> target.equalsIgnoreCase(method));
-
-        if (!isMethodAllowed) {
-            return;
-        }
-        String body = getRequestMessageBody(request);
-        filterAndLogBody(body, true);
-    }
-
-    private void logResponse(ContentCachingResponseWrapper wrappedResponse, long elapsedTime) {
-        log.info("[RESPONSE] Status : {}, Processing Time : {}ms", wrappedResponse.getStatus(),
-                 elapsedTime);
-
-        logResponseHeaders(wrappedResponse);
-
-        String responseBody = getResponseMessageBody(wrappedResponse);
-
-        filterAndLogBody(responseBody, false);
     }
 
     private void logRequestTargetHeaders(ContentCachingRequestWrapper wrappedRequest) {
@@ -124,10 +123,6 @@ public class LoggingFilter extends OncePerRequestFilter {
         return truncateBody(new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8));
     }
 
-    private String getResponseMessageBody(ContentCachingResponseWrapper wrappedResponse) {
-        return truncateBody(new String(wrappedResponse.getContentAsByteArray(), StandardCharsets.UTF_8));
-    }
-
     private String truncateBody(String body) {
         if (body.length() > MAX_BODY_LOG_LENGTH) {
             return body.substring(0, MAX_BODY_LOG_LENGTH) + " [TRUNCATED]";
@@ -135,12 +130,12 @@ public class LoggingFilter extends OncePerRequestFilter {
         return body;
     }
 
-    private void filterAndLogBody(String messageBody, boolean isRequest) {
+    private void filterAndLogBody(String messageBody) {
         if (messageBody.isEmpty()) {
             return;
         }
 
-        log.info("[{}] Body : {}", isRequest ? "REQUEST" : "RESPONSE", messageBody);
+        log.info("[REQUEST] Body : {}", messageBody);
     }
 
     private boolean isHealthcheckOrSwaggerRequest(HttpServletRequest request) {
