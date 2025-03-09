@@ -38,7 +38,7 @@ public class Report extends BaseTimeEntity {
         this.status = status;
     }
 
-    public static Report create(ReportReason reason, Long reporterId, Long recordId) {
+    public static Report create(ReportReason reason, Long recordId, Long reporterId) {
         return Report.builder()
                 .reason(reason)
                 .reporterId(reporterId)

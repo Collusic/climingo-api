@@ -2,6 +2,7 @@ package com.climingo.climingoApi.report.application;
 
 import com.climingo.climingoApi.member.domain.MemberRepository;
 import com.climingo.climingoApi.record.application.ReportRecordUsecase;
+import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.report.domain.Report;
 import com.climingo.climingoApi.report.domain.ReportReason;
@@ -28,7 +29,7 @@ public class ReportService implements ReportRecordUsecase {
         reportRepository.save(Report.create(ReportReason.fromCode(reasonCode), recordId, reporterId));
 
         if (reportRepository.countByRecordId(recordId) >= 3) {
-            // TODO 해당 레코드가 3회 이상 신고 시 차단 조치
+            blockRecord(recordId); // 해당 레코드가 3회 이상 신고 시 차단 조치
         }
 
         // TODO 디코 알림
@@ -39,9 +40,18 @@ public class ReportService implements ReportRecordUsecase {
             throw new NoSuchElementException("존재하지 않는 회원입니다.");
         }
 
-        recordRepository.findById(recordId);
-        if (!recordRepository.existsById(reporterId)) {
+        if (!recordRepository.existsById(recordId)) {
             throw new NoSuchElementException("존재하지 않는 기록입니다.");
         }
+
+        if (reportRepository.existsByReporterIdAndRecordId(reporterId, recordId)) {
+            throw new IllegalArgumentException("이미 신고한 기록입니다.");
+        }
+    }
+
+    private void blockRecord(Long recordId) {
+        Record record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
+        record.block();
     }
 }

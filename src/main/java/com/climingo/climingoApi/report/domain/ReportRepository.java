@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
     int countByRecordId(Long recordId);
+
+    boolean existsByReporterIdAndRecordId(Long reporterId, Long recordId);
 }
