@@ -4,6 +4,7 @@ import com.climingo.climingoApi.member.domain.MemberRepository;
 import com.climingo.climingoApi.record.application.ReportRecordUsecase;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
+import com.climingo.climingoApi.report.api.response.ReportResponse;
 import com.climingo.climingoApi.report.domain.Report;
 import com.climingo.climingoApi.report.domain.ReportReason;
 import com.climingo.climingoApi.report.domain.ReportRepository;
@@ -11,11 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class ReportService implements ReportRecordUsecase {
+public class ReportService implements ReportRecordUsecase, ReportQuery {
 
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
@@ -53,5 +55,10 @@ public class ReportService implements ReportRecordUsecase {
         Record record = recordRepository.findById(recordId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
         record.block();
+    }
+
+    @Override
+    public List<ReportResponse> readReports() {
+        return reportRepository.findAll().stream().map(ReportResponse::of).toList();
     }
 }
