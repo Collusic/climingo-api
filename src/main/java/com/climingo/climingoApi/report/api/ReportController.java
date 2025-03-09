@@ -19,10 +19,10 @@ public class ReportController {
     private final ReportQuery reportQuery;
 
     @GetMapping("/reasons")
-    public List<ReportReasonsResponse> readReportReasons() {
-        return Arrays.stream(ReportReason.values())
+    public ResponseEntity<List<ReportReasonsResponse>> readReportReasons() {
+        return ResponseEntity.ok(Arrays.stream(ReportReason.values())
                 .map(reason -> new ReportReasonsResponse(reason.getCode(), reason.getDescription()))
-                .toList();
+                .toList());
     }
 
     @GetMapping
