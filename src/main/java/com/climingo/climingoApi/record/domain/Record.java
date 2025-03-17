@@ -48,6 +48,8 @@ public class Record extends BaseTimeEntity {
 
     private String content;
 
+    private boolean blocked;
+
     @Builder
     public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content) {
         this.id = id;
@@ -57,6 +59,7 @@ public class Record extends BaseTimeEntity {
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.content = content;
+        this.blocked = false;
     }
 
     public void update(Gym gym, Level level, String videoUrl) {
@@ -75,5 +78,9 @@ public class Record extends BaseTimeEntity {
 
     public boolean isEditable(Member member) {
         return isSameMember(member) || member.isAdmin();
+    }
+
+    public void block() {
+        this.blocked = true;
     }
 }
