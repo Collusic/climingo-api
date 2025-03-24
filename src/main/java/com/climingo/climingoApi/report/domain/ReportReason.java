@@ -8,13 +8,12 @@ import java.util.stream.Stream;
 
 @Getter
 public enum ReportReason {
-    IRRELEVANT_CONTENT("01", "서비스와 관련 없는 이미지/내용"),
-    OBSCENE_OR_ABUSIVE("02", "음란, 욕설, 혐오유발, 비방 내용"),
-    ADVERTISING("03", "개인의 광고, 홍보성 내용"),
-    PRIVACY_RISK("04", "개인정보 유출 위험"),
-    SPAM("05", "게시글 도배"),
-    COPYRIGHT_INFRINGEMENT("06", "저작권, 초상권 침해"),
-    OTHER("99", "기타")
+    IRRELEVANT_CONTENT("01", "서비스와 관련 없는 영상입니다."),
+    OBSCENE_OR_ABUSIVE("02", "음란, 욕설, 혐오유발, 비방성 내용입니다."),
+    ADVERTISING("03", "개인의 광고나 홍보성 내용입니다."),
+    PRIVACY_RISK("04", "개인정보 유출의 위험이 있습니다."),
+    SPAM("05", "게시글을 도배했습니다."),
+    COPYRIGHT_INFRINGEMENT("06", "저작권이나 초상권을 침해한 영상입니다."),
     ;
 
     private final String code;
