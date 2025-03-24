@@ -88,6 +88,10 @@ public class Member extends BaseTimeEntity {
             .build();
     }
 
+    public boolean isGuest() {
+        return this.role.equals(UserRole.GUEST);
+    }
+
     public boolean isSameMember(Long memberId) {
         return this.id != null && this.id.equals(memberId);
     }
