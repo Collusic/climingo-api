@@ -51,9 +51,9 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 .innerJoin(record.level, level).fetchJoin()
                 .where(gymIdEq(gymId),
                         levelIdEq(levelId),
-                        memberIdEq(requestMember.getId()),
+                        memberIdEq(memberId),
                         record.blocked.isFalse(),
-                        block.id.isNull())
+                        requestMember.isGuest() ? Expressions.booleanTemplate("true") : block.id.isNull())
                 .orderBy(new OrderSpecifier<>(Order.DESC, record.createdDate))
                 .offset((long) page * size)
                 .limit(size)
