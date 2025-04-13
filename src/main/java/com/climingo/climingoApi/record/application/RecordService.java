@@ -121,8 +121,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public PageDto<RecordResponse> findPage(Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
-        Page<Record> recordPage = recordRepository.findRecordPage(gymId, levelId, memberId, page, size);
+    public PageDto<RecordResponse> findPage(Member requestMember, Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
+        Page<Record> recordPage = recordRepository.findRecordPage(requestMember, gymId, levelId, memberId, page, size);
 
         return PageDto.<RecordResponse>builder()
                       .totalCount(recordPage.getTotalElements())

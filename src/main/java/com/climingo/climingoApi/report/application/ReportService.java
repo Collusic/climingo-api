@@ -5,9 +5,7 @@ import com.climingo.climingoApi.record.application.ReportRecordUsecase;
 import com.climingo.climingoApi.record.domain.Record;
 import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.report.api.response.ReportResponse;
-import com.climingo.climingoApi.report.domain.Report;
-import com.climingo.climingoApi.report.domain.ReportReason;
-import com.climingo.climingoApi.report.domain.ReportRepository;
+import com.climingo.climingoApi.report.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +20,7 @@ public class ReportService implements ReportRecordUsecase, ReportQuery {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
+    private final BlockRepository blockRepository;
 
     @Transactional
     @Override
@@ -33,6 +32,8 @@ public class ReportService implements ReportRecordUsecase, ReportQuery {
         if (reportRepository.countByRecordId(recordId) >= 3) {
             blockRecord(recordId); // 해당 레코드가 3회 이상 신고 시 차단 조치
         }
+
+        blockRepository.save(Block.create(reporterId, recordId));
 
         // TODO 디코 알림
     }
