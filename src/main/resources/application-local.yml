@@ -47,7 +47,7 @@ app:
     time: local_temp_build_time
 
 discord:
-  webhook-url: ENC(UiLVuQ7dNJ9Oq8QfSJ4QrSbNPnpGhBcbOczmOOEtj4EvUKknvuCOdT0Z5hcfU6RLeKsSxg20gBDNn7nQ2/Rp4m4pCpoICFg53CYpUFPzTC6l5KCq9pXM9jQ/uUYh3U41FQM7IK/yMCQI0JN2Y/gGDj7ZNmyIfBRwHMgGOKasVYaLOCsSJCU18A==)
+  webhook-url: ENC(dAoTC+tGjODq5gYu6ockWshjB5QW8UhBG21IBpxKF2VA/cNDU6cHW1v0M5Vl4z4YH8PFdIYMC47PH7g7m2pMRr/hFzpqFHWu0QSPsig1i/qS+n5fXc7lRj4aujLXjW+Ui6Em7xoE11ROkgILUUrfw9OA6OO0YZycbTD6w5/6IxElXs9WrxOMsw==)
 
 auth:
   cookie:
