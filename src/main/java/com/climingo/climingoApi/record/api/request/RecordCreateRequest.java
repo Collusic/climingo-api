@@ -22,7 +22,7 @@ public class RecordCreateRequest {
     @NotNull
     private String videoUrl;
 
-    @NotNull
+//    @NotNull todo: front 개발 완료 후 not null 처리 예정
     private LocalDate climbDate;
 
     public RecordCreateRequest(Long gymId, Long levelId, String videoUrl, LocalDate climbDate) {
