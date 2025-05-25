@@ -23,6 +23,7 @@ import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,12 +66,13 @@ public class RecordServiceTest {
             .id(99999L)
             .role(UserRole.USER)
             .build();
-        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl);
+        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl, LocalDate.now());
 
         Record expected = Record.builder()
             .member(loginMember)
             .videoUrl("http://mock-video-url")
             .thumbnailUrl("http://mock-thumbnail-url")
+            .climbDate(request.getClimbDate())
             .build();
 
         when(gymRepository.findById(anyLong())).thenReturn(Optional.of(mock(Gym.class)));
@@ -82,6 +84,7 @@ public class RecordServiceTest {
         assertEquals(expected.getMember(), actual.getMember());
         assertEquals(expected.getVideoUrl(), actual.getVideoUrl());
         assertEquals(expected.getThumbnailUrl(), actual.getThumbnailUrl());
+        assertEquals(expected.getClimbDate(), actual.getClimbDate());
     }
 
     @Test

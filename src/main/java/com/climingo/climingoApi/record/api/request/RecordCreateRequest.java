@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -20,10 +22,14 @@ public class RecordCreateRequest {
     @NotNull
     private String videoUrl;
 
-    public RecordCreateRequest(Long gymId, Long levelId, String videoUrl) {
+    @NotNull
+    private LocalDate climbDate;
+
+    public RecordCreateRequest(Long gymId, Long levelId, String videoUrl, LocalDate climbDate) {
         this.gymId = gymId;
         this.levelId = levelId;
         this.videoUrl = videoUrl;
+        this.climbDate = climbDate;
     }
 
 }
