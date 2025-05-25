@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @Entity
@@ -46,12 +48,15 @@ public class Record extends BaseTimeEntity {
     @Column(nullable = false, length = 400)
     private String thumbnailUrl;
 
+    @Column(nullable = false)
+    private LocalDate climbDate;
+
     private String content;
 
     private boolean blocked;
 
     @Builder
-    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content) {
+    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDate climbDate) {
         this.id = id;
         this.member = member;
         this.level = level;
@@ -59,6 +64,7 @@ public class Record extends BaseTimeEntity {
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.content = content;
+        this.climbDate = climbDate;
         this.blocked = false;
     }
 
