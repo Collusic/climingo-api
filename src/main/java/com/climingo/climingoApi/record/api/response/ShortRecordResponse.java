@@ -1,25 +1,39 @@
 package com.climingo.climingoApi.record.api.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.climingo.climingoApi.record.domain.Record;
 import lombok.Getter;
 
 @Getter
 public class ShortRecordResponse {
 
-    private Long recordId;
+    private final Long recordId;
 
-    private String videoUrl;
+    private final String videoUrl;
 
-    private String thumbnailUrl;
+    private final String thumbnailUrl;
 
-    private String createTime;
+    private final String createTime;
 
-    public ShortRecordResponse(Long recordId, String videoUrl, String thumbnailUrl, LocalDateTime createTime) {
+    private final String climbDate;
+
+    public ShortRecordResponse(Long recordId, String videoUrl, String thumbnailUrl, LocalDateTime createTime, LocalDate climbDate) {
         this.recordId = recordId;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.createTime = createTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        this.climbDate = createTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 
+    public static ShortRecordResponse from(Record record) {
+        return new ShortRecordResponse(
+                record.getId(),
+                record.getVideoUrl(),
+                record.getThumbnailUrl(),
+                record.getCreatedDate(),
+                record.getClimbDate());
+    }
 }
