@@ -89,4 +89,12 @@ public class Record extends BaseTimeEntity {
     public void block() {
         this.blocked = true;
     }
+
+    public void updateClimbDate(LocalDate climbedDate) {
+        if (climbedDate != null) {
+            this.climbDate = climbedDate;
+            return;
+        }
+        this.climbDate = LocalDate.now();
+    }
 }

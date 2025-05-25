@@ -88,6 +88,7 @@ public class RecordService {
 
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
         record.update(gym, level, null);
+        record.updateClimbDate(request.getClimbDate());
 
         return record;
     }

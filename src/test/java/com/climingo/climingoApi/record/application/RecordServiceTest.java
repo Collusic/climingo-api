@@ -121,6 +121,7 @@ public class RecordServiceTest {
             .level(level2)
             .videoUrl("http://mock-video-url")
             .thumbnailUrl("http://mock-thumbnail-url")
+            .climbDate(LocalDate.now())
             .build();
 
         when(gymRepository.findById(1L)).thenReturn(Optional.of(gym1));
@@ -134,12 +135,13 @@ public class RecordServiceTest {
         Long updatedLevelId = 2L;
         MultipartFile mockVideo = mock(MultipartFile.class);
 
-        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo);
+        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo, LocalDate.now());
         Record actual = recordService.updateRecord(loginMember, 1L, request);
 
         assertEquals(expected.getMember(), actual.getMember());
         assertEquals(2L, actual.getGym().getId());
         assertEquals(2L, actual.getGym().getId());
+        assertEquals(expected.getClimbDate(), actual.getClimbDate());
     }
 
     @Test
@@ -180,7 +182,7 @@ public class RecordServiceTest {
         Long updatedLevelId = 2L;
         MultipartFile mockVideo = mock(MultipartFile.class);
 
-        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo);
+        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo, LocalDate.now());
 
         Throwable exception = assertThrows(ForbiddenException.class,
             () -> recordService.updateRecord(loginMember, 1L, request));
