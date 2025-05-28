@@ -25,6 +25,21 @@ logging:
           descriptor:
             sql: trace
 
+# Swagger springdoc-ui Configuration
+springdoc:
+  packages-to-scan: com.climingo.climingoApi
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: true              # 캐시 사용 여부
+  api-docs:
+    version: OPENAPI_3_1
+  swagger-ui:
+    enabled: true               # Swagger UI 사용여부 : 접근 경로 => <http://localhost:8080/swagger-ui/index.html>
+    path: /swagger-ui.html         # Swagger UI 추가 접근 경로 => <http://localhost:8080/demo-ui.html>
+    tags-sorter: alpha          # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: method    # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+
 cloud:
   aws:
     credentials:
