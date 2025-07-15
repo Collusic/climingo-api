@@ -53,4 +53,12 @@ public class Jjikboul extends BaseTimeEntity {
         this.description = description;
         this.blocked = blocked;
     }
+
+    public boolean isEditable(Member member) {
+        return isSameMember(member) || member.isAdmin();
+    }
+
+    public boolean isSameMember(Member member) {
+        return this.member.isSameMember(member.getId());
+    }
 }

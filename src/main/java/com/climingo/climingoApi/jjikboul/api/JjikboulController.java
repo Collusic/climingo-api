@@ -4,6 +4,7 @@ import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.jjikboul.api.request.JjikboulCreateRequest;
 import com.climingo.climingoApi.jjikboul.api.response.JjikboulCreateResponse;
 import com.climingo.climingoApi.jjikboul.application.JjikboulCreateUseCase;
+import com.climingo.climingoApi.jjikboul.application.JjikboulDeleteUseCase;
 import com.climingo.climingoApi.jjikboul.application.JjikboulQueryUseCase;
 import com.climingo.climingoApi.jjikboul.application.response.JjikboulResponse;
 import com.climingo.climingoApi.member.domain.Member;
@@ -17,6 +18,7 @@ public class JjikboulController {
 
     private final JjikboulCreateUseCase jjikboulCreateUseCase;
     private final JjikboulQueryUseCase jjikboulQueryUseCase;
+    private final JjikboulDeleteUseCase jjikboulDeleteUseCase;
 
     @GetMapping("/jjikbouls/{jjikboulId}")
     public ResponseEntity<JjikboulResponse> getJjikboul(
@@ -34,5 +36,13 @@ public class JjikboulController {
         Long id = jjikboulCreateUseCase.create(member, request);
 
         return ResponseEntity.ok().body(JjikboulCreateResponse.of(id));
+    }
+
+    @DeleteMapping("/jjikbouls/{jjikboulId}")
+    public ResponseEntity<JjikboulResponse> deleteJjikboul(
+            @RequestMember Member member,
+            @PathVariable("jjikboulId") Long customProblemId) {
+        jjikboulDeleteUseCase.deleteJjikboul(member, customProblemId);
+        return ResponseEntity.ok().build();
     }
 }
