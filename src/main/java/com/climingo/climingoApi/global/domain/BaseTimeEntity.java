@@ -1,4 +1,4 @@
-package com.climingo.climingoApi.record.domain;
+package com.climingo.climingoApi.global.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

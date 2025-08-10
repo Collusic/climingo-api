@@ -1,13 +1,8 @@
 package com.climingo.climingoApi.gym.domain;
 
 import com.climingo.climingoApi.level.domain.Level;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.util.List;
 import lombok.Getter;
 
@@ -27,6 +22,7 @@ public class Gym {
 
     @Embedded
     private GeoInfo geoInfo;
-    @OneToMany(mappedBy = "gym")
+
+    @OneToMany(mappedBy = "gym", cascade = CascadeType.REMOVE)
     private List<Level> levels;
 }

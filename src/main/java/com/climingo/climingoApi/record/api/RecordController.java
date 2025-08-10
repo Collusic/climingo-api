@@ -98,13 +98,14 @@ public class RecordController {
     @Parameter(name = "memberId", description = "멤버 id")
     @Parameter(name = "page", description = "페이지(페이지는 0페이지부터 시작)")
     @Parameter(name = "size", description = "한 페이지에 조회할 데이터 개수")
-    public ResponseEntity<PageDto<RecordResponse>> findPage(@RequestParam(value = "gymId", required = false) Long gymId,
+    public ResponseEntity<PageDto<RecordResponse>> findPage(@RequestMember Member member,
+                                                            @RequestParam(value = "gymId", required = false) Long gymId,
                                                             @RequestParam(value = "levelId", required = false) Long levelId,
                                                             @RequestParam(value = "memberId", required = false) Long memberId,
                                                             @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
                                                             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
-        PageDto<RecordResponse> pageDto = recordService.findPage(gymId, levelId, memberId, page, size);// TODO: 예외 global 하게 처리 필요
+        PageDto<RecordResponse> pageDto = recordService.findPage(member, gymId, levelId, memberId, page, size);// TODO: 예외 global 하게 처리 필요
 
         return ResponseEntity.ok().body(pageDto);
     }

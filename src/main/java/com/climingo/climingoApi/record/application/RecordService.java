@@ -16,6 +16,8 @@ import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -46,6 +48,8 @@ public class RecordService {
                                      .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
         String videoUrl = request.getVideoUrl();
+        LocalDate climbedDate = request.getClimbDate() == null ? LocalDate.now(): request.getClimbDate();
+
         String thumbnailImageUrl = "";
         try {
             thumbnailImageUrl = s3Service.uploadThumbnailImageFile(thumbnailExtractor.extractImage(videoUrl));
@@ -61,6 +65,7 @@ public class RecordService {
                               .content(null)
                               .videoUrl(videoUrl)
                               .thumbnailUrl(thumbnailImageUrl)
+                              .climbDate(climbedDate)
                               .build();
 
         return recordRepository.save(record);
@@ -83,6 +88,7 @@ public class RecordService {
 
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
         record.update(gym, level, null);
+        record.updateClimbDate(request.getClimbDate());
 
         return record;
     }
@@ -121,8 +127,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public PageDto<RecordResponse> findPage(Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
-        Page<Record> recordPage = recordRepository.findRecordPage(gymId, levelId, memberId, page, size);
+    public PageDto<RecordResponse> findPage(Member requestMember, Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
+        Page<Record> recordPage = recordRepository.findRecordPage(requestMember, gymId, levelId, memberId, page, size);
 
         return PageDto.<RecordResponse>builder()
                       .totalCount(recordPage.getTotalElements())

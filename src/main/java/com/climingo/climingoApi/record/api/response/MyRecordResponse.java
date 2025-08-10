@@ -17,7 +17,7 @@ public class MyRecordResponse {
 
     @Builder
     public MyRecordResponse(Record record, Gym gym, Level level) {
-        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
+        this.record = ShortRecordResponse.from(record);
         this.gym = new ShortGymResponse(gym);
         this.level = new ShortLevelResponse(level);
     }

@@ -24,6 +24,17 @@ logging:
         type:
           descriptor:
             sql: trace
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(LP+gaYfshtZGVuhqjpe6mxGpxHertlAAl2I9okfDO1k=)
+      secret-key: ENC(A+yYpH/2R8ZnKeYICqeGCokb2ZBxvPyqcvrytCJIG36l7Cpd6/ymT4V2R8VqZ5cLzgFZbXzeYrM=)
+    s3:
+      region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
+      bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
+
+auth:
+  jwt-key: ENC(WOI2z7L6DbSzJX8Fu8sMJKXqcvxQ7drQOnlHp6OM9CE
 
 # Swagger springdoc-ui Configuration
 springdoc:
@@ -39,15 +50,3 @@ springdoc:
     path: /swagger-ui.html         # Swagger UI 추가 접근 경로 => <http://localhost:8080/demo-ui.html>
     tags-sorter: alpha          # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
     operations-sorter: method    # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
-
-cloud:
-  aws:
-    credentials:
-      access-key: ENC(LP+gaYfshtZGVuhqjpe6mxGpxHertlAAl2I9okfDO1k=)
-      secret-key: ENC(A+yYpH/2R8ZnKeYICqeGCokb2ZBxvPyqcvrytCJIG36l7Cpd6/ymT4V2R8VqZ5cLzgFZbXzeYrM=)
-    s3:
-      region: ENC(siDQPdUA9WNDjZJiHReoDOuPdavgY4dl)
-      bucket: ENC(Qrwl8xXU7tVKxLFzJ/aA9AbOEN01/a/1)
-
-auth:
-  jwt-key: ENC(WOI2z7L6DbSzJX8Fu8sMJKXqcvxQ7drQOnlHp6OM9CE=)

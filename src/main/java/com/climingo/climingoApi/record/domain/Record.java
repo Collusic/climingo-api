@@ -1,5 +1,6 @@
 package com.climingo.climingoApi.record.domain;
 
+import com.climingo.climingoApi.global.domain.BaseTimeEntity;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.member.domain.Member;
@@ -16,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -45,10 +48,15 @@ public class Record extends BaseTimeEntity {
     @Column(nullable = false, length = 400)
     private String thumbnailUrl;
 
+    @Column(nullable = false)
+    private LocalDate climbDate;
+
     private String content;
 
+    private boolean blocked;
+
     @Builder
-    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content) {
+    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content, LocalDate climbDate) {
         this.id = id;
         this.member = member;
         this.level = level;
@@ -56,6 +64,8 @@ public class Record extends BaseTimeEntity {
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.content = content;
+        this.climbDate = climbDate;
+        this.blocked = false;
     }
 
     public void update(Gym gym, Level level, String videoUrl) {
@@ -74,5 +84,17 @@ public class Record extends BaseTimeEntity {
 
     public boolean isEditable(Member member) {
         return isSameMember(member) || member.isAdmin();
+    }
+
+    public void block() {
+        this.blocked = true;
+    }
+
+    public void updateClimbDate(LocalDate climbedDate) {
+        if (climbedDate != null) {
+            this.climbDate = climbedDate;
+            return;
+        }
+        this.climbDate = LocalDate.now();
     }
 }
