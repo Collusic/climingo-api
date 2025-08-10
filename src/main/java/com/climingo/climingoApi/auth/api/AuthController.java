@@ -13,6 +13,13 @@ import com.climingo.climingoApi.auth.util.CookieUtils;
 import com.climingo.climingoApi.auth.util.JwtUtil;
 import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.member.domain.Member;
+import feign.Param;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -28,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name="AuthController", description = "회원가입, 로그인 관련 api")
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -37,6 +45,9 @@ public class AuthController {
     private final OAuth2ClientManager oAuth2ClientManager;
 
     @PostMapping("/sign-in")
+    @Operation(summary = "로그인", description = "로그인을 진행합니다.")
+    @Parameter(name="providerType", description = "provider 타입")
+    @Parameter(name="providerToken", description = "provider 유저 정보 조회용 Token")
     public ResponseEntity<SignInUpResponse> signIn(
         @RequestBody @Valid SignInRequest requestBody,
         HttpServletResponse response) {
@@ -55,6 +66,14 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
+    @Operation(summary="회원가입", description = "회원가입을 진행합니다.")
+    @Parameter(name="providerType", description = "provider 타입")
+    @Parameter(name="authId", description = "provider에서 제공 받은 유저식별자")
+    @Parameter(name="nickname", description = "provider에서 제공 받은 닉네임 혹은 직접 입력")
+    @Parameter(name="profileImage", description = "provider에서 제공 받은 profile image url 혹은 직접 입력")
+    @Parameter(name="physicalInfo", description = "유저 신체정보(키, 몸무게, 암리치)")
+    @Parameter(name="homeGymId", description = "홈 짐 id")
+
     public ResponseEntity<SignInUpResponse> signUp(
         @RequestBody @Valid final SignUpRequest requestBody,
         HttpServletResponse response) {
@@ -73,6 +92,10 @@ public class AuthController {
     }
 
     @GetMapping("/auth/members/exist")
+    @Operation(summary="회원등록 여부 확인", description = "회원등록을 확인합니다.")
+    @Parameter(name="providerType", description = "provider 타입")
+    @Parameter(name="code", description = "provider로부터 받은 code")
+    @Parameter(name="redirectUri", description = "provider 앱에 등록해둔 redirect uri")
     public ResponseEntity<CheckMemberResponse> checkMemberEnrolled(
         @RequestParam("providerType") @Pattern(regexp = "^(kakao|apple)$", message = "providerType은 kakao와 apple만 유효합니다.") String providerType,
         @RequestParam("code") @NotNull String code,
@@ -89,6 +112,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/sign-out")
+    @Operation(summary = "로그아웃", description = "로그아웃을 진행합니다.")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, JwtUtil.ACCESS_TOKEN_NAME);
         CookieUtils.deleteCookie(request, response, JwtUtil.REFRESH_TOKEN_NAME);
@@ -97,6 +121,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/delete-member")
+    @Operation(summary="회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
     public ResponseEntity<Void> deleteMember(
         @RequestMember Member member, HttpServletRequest request, HttpServletResponse response) {
 

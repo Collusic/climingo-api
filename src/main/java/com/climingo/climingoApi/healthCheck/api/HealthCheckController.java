@@ -2,6 +2,8 @@ package com.climingo.climingoApi.healthCheck.api;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name="HealthCheckController", description = "관련 api")
 @RestController
 @RequiredArgsConstructor
 public class HealthCheckController {
