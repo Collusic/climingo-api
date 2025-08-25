@@ -3,14 +3,8 @@ package com.climingo.climingoApi.record.domain;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,8 +41,11 @@ public class Record extends BaseTimeEntity {
 
     private String content;
 
+    @Embedded
+    private PhysicalInfo physicalInfo;
+
     @Builder
-    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content) {
+    public Record(Long id, Member member, Level level, Gym gym, String videoUrl, String thumbnailUrl, String content, PhysicalInfo physicalInfo) {
         this.id = id;
         this.member = member;
         this.level = level;
@@ -56,15 +53,18 @@ public class Record extends BaseTimeEntity {
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.content = content;
+        this.physicalInfo = physicalInfo;
     }
 
-    public void update(Gym gym, Level level, String videoUrl) {
+    public void update(Gym gym, Level level, String videoUrl, Member loginMember) {
         if (!gym.getId().equals(this.gym.getId())) {
             this.gym = gym;
         }
         if (!level.getId().equals(this.level.getId())) {
             this.level = level;
         }
+
+        this.physicalInfo = loginMember.getPhysicalInfo();
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
     }
 
