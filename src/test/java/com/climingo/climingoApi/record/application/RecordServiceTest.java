@@ -242,7 +242,7 @@ public class RecordServiceTest {
     void createRecord_success() throws IOException {
         // given
         Member loginMember = Member.builder().id(1L).build();
-        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl");
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl",  LocalDate.now());
 
         when(gymRepository.findById(1L)).thenReturn(Optional.of(mock(Gym.class)));
         when(levelRepository.findById(1L)).thenReturn(Optional.of(mock(Level.class)));
@@ -261,7 +261,7 @@ public class RecordServiceTest {
     void createRecord_gymNotFound() {
         // given
         Member loginMember = Member.builder().id(1L).build();
-        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl");
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl",  LocalDate.now());
 
         when(gymRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -274,7 +274,7 @@ public class RecordServiceTest {
     void createRecord_levelNotFound() {
         // given
         Member loginMember = Member.builder().id(1L).build();
-        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl");
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl", LocalDate.now());
 
         when(gymRepository.findById(1L)).thenReturn(Optional.of(mock(Gym.class)));
         when(levelRepository.findById(1L)).thenReturn(Optional.empty());
@@ -296,7 +296,7 @@ public class RecordServiceTest {
         when(level.getId()).thenReturn(1L);
 
         Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
-        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class));
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
 
         when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
         when(gymRepository.findById(1L)).thenReturn(Optional.of(gym));
@@ -314,7 +314,7 @@ public class RecordServiceTest {
     void updateRecord_recordNotFound() {
         // given
         Member loginMember = Member.builder().id(1L).build();
-        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class));
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
 
         when(recordRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -335,7 +335,7 @@ public class RecordServiceTest {
         when(level.getId()).thenReturn(1L);
 
         Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
-        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class));
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
 
         when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
         when(gymRepository.findById(1L)).thenReturn(Optional.empty());
@@ -357,7 +357,7 @@ public class RecordServiceTest {
         when(level.getId()).thenReturn(1L);
 
         Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
-        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class));
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
 
         when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
         when(gymRepository.findById(1L)).thenReturn(Optional.of(gym));
@@ -381,7 +381,7 @@ public class RecordServiceTest {
         when(level.getId()).thenReturn(1L);
 
         Record record = Record.builder().member(anotherMember).gym(gym).level(level).build();
-        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class));
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
 
         when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
 
