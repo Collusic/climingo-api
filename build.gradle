@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.climingo'
@@ -69,20 +68,4 @@ tasks.named('test') {
 
 clean {
     delete file('src/main/generated')
-}
-
-def querydslDir = layout.buildDirectory.dir("/generated/querydsl")
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
 }
