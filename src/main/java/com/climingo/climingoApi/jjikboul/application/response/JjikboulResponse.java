@@ -5,7 +5,10 @@ import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.record.api.response.ShortGymResponse;
 import com.climingo.climingoApi.record.api.response.ShortLevelResponse;
 import com.climingo.climingoApi.record.api.response.ShortMemberResponse;
+import com.climingo.climingoApi.record.api.response.ShortRecordResponse;
+import com.climingo.climingoApi.record.domain.Record;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 public record JjikboulResponse(
         ShortMemberResponse memberInfo,
