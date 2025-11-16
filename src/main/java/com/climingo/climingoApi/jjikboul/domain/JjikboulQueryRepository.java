@@ -37,8 +37,7 @@ public class JjikboulQueryRepository {
                 .where(gymIdEq(gymId),
                         levelIdEq(levelId),
                         memberIdEq(memberId),
-                        jjikboul.blocked.isFalse(),
-                        requestMember.isGuest() ? Expressions.booleanTemplate("true") : block.id.isNull())
+                        jjikboul.blocked.isFalse())
                 .orderBy(new OrderSpecifier<>(Order.DESC, jjikboul.createdDate))
                 .offset((long) page * size)
                 .limit(size)
@@ -49,8 +48,7 @@ public class JjikboulQueryRepository {
                 .where(gymIdEq(gymId),
                         levelIdEq(levelId),
                         memberIdEq(memberId),
-                        jjikboul.blocked.isFalse(),
-                        block.id.isNull());
+                        jjikboul.blocked.isFalse());
 
         Pageable pageable = PageRequest.of(page, size);
         return PageableExecutionUtils.getPage(jjikbouls, pageable, countQuery::fetchOne);
