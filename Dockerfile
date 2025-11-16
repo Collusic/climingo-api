@@ -1,5 +1,5 @@
 # 사용할 기본 이미지 지정
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:17-jre-alpine
 
 # ffmpeg 설치
 RUN apk add --no-cache ffmpeg
