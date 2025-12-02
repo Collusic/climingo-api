@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(JC3oNwU2JSyKxNYy8Dqrs92EOhvFX+spMRZICKwAn4gN+MSehEI5ouS2oQd1SxPp)
+    url: ENC(ELzhq0/YxyrRypjtoHUo/UOZ+qUg4Rh7KT9TGY1Ego8eUAYNyQE/KTQQpywom0Ydkh6dvYN8HWTUz7Yry72StmeVfgajBt7JQabvp4ULpJtXeQ3tgt29BQKV5I2q+iEn)
     username: ENC(/hDIlwiiOpd1p7Coppl9L4xHYDjkf9cj)
     password: ENC(Toy+1i51hX5nGADpusirW4loTpskgy4o)
   h2:
@@ -10,15 +10,14 @@ spring:
   jpa:
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         format_sql: true
         use_sql_comments: true
 
 logging:
   level:
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
-    com.your.package: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 oauth2:
   kakao:
@@ -41,7 +40,7 @@ app:
     time: ${buildTime}
 
 discord:
-  webhook-url: https://discord.com/api/webhooks/1246451017654997014/cn3094Fmv7VSNvBnZmMoht5M5Z6ufM9Q-fF7j7d_WRkGemJ2vszV-yAhvd065MT-NzfC
+  webhook-url: ENC(X0JkZftnjbpr3pu3c30QHaGKPAi/r+7nl6sK5q49ygGsLfhD6My0wBklFJc3vXCXWOA5N72l8fNvNLXKscu0AMMQdm995Ngxd5CRhaOVLDY81fwNgAb7mK5mNraqa6PmU4AVb7VkpEl5753YKV4PcY+n8a6pnfk1ql9TJmAHyAlp8LdKK1LNVg==)
 
 auth:
   cookie:
