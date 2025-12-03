@@ -33,7 +33,7 @@ oauth2:
       path: ENC(UQVIwN53EBnE0TcwgTT79HYM2KUrEcRDhlx72+W+anbO87WiWJbCSJQKOPqGBNGaze2oi9obarWiRuzW5UdJtLUzNe7icfKNPepJrHZXhVSD5UUO5eHsvbFVeWhVScgeIPxvtbdsk0LMsLH7EbzSuC852HHy0/KQ6j8gJREw/RkyFuHFYJR2VupYASz9jpdabzwA6q9Lh9v7BPqLB2nFzub5xmHMU7HWICvzSHbnTsgXqyQXr7XtvHxQVZN5z4lEAKbk0BB53vm3ammzkxhTo656ZFAgK69n)
 
 ffmpeg:
-    ffmpeg-path: /usr/local/bin/ffmpeg
+    ffmpeg-path: /opt/homebrew/bin/ffmpeg
     ffprobe-path: /usr/local/bin/ffprobe
 
 app:
