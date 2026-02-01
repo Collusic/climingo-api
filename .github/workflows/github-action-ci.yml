@@ -136,5 +136,5 @@ jobs:
           docker pull climingo/climingo:$TAG
           cd ${{ secrets.SANDBOX_DOCKER_COMPOSE_PATH }}
           export TAG=$TAG
-          docker-compose -f docker-compose-sandbox.yml up -d
+          docker-compose -f docker-compose.yml up -d
           EOF
