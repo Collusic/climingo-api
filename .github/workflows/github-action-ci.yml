@@ -87,6 +87,8 @@ jobs:
           docker pull climingo/climingo-sandbox:$TAG
           cd ${{ secrets.SANDBOX_DOCKER_COMPOSE_PATH }}
           export TAG=$TAG
+          export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export BUILDTIME=${{ secrets.BUILDTIME }}
           docker-compose -f docker-compose-sandbox.yml up -d
           EOF
 
@@ -136,5 +138,7 @@ jobs:
           docker pull climingo/climingo:$TAG
           cd ${{ secrets.SANDBOX_DOCKER_COMPOSE_PATH }}
           export TAG=$TAG
+          export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export BUILDTIME=${{ secrets.BUILDTIME }}
           docker-compose -f docker-compose.yml up -d
           EOF
