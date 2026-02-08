@@ -3,11 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - sandbox       # sandbox push → CI + sandbox CD
+      - dev            # dev push → CI + dev CD
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - dev           # dev PR: opened/sync = CI, closed+merged = prod CD
+      - main           # main PR: opened/sync = CI, closed+merged = prod CD
 
 jobs:
 
@@ -17,8 +17,8 @@ jobs:
   ci_job:
     runs-on: ubuntu-latest
     if: |
-        (github.event_name == 'push' && github.ref == 'refs/heads/sandbox') ||
-        (github.event_name == 'pull_request')
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'pull_request')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -46,12 +46,15 @@ jobs:
 
 
   # -----------------------------------
-  # 2) Sandbox 환경 CD (sandbox push 시)
+  # 2) 개발 환경 CD (dev push 시)
   # -----------------------------------
-  deploy_sandbox_job:
+  deploy_dev_job:
     needs: ci_job
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/sandbox'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -71,38 +74,44 @@ jobs:
       - name: Set TAG
         run: echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
 
-      - name: Build & Push Sandbox Docker Image
+      - name: Set build time (KST)
+        run: echo "BUILDTIME=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Build & Push Dev Docker Image
         run: |
-          docker build -t climingo/climingo-sandbox:$TAG .
-          docker push climingo/climingo-sandbox:$TAG
+          docker build -t climingo/climingo-dev:$TAG .
+          docker push climingo/climingo-dev:$TAG
 
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SANDBOX_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Deploy to Sandbox Server
+      - name: Deploy to Dev Server
         run: |
-          ssh -o StrictHostKeyChecking=no singco@${{ secrets.SANDBOX_HOST }} << EOF
-          docker pull climingo/climingo-sandbox:$TAG
-          cd ${{ secrets.SANDBOX_DOCKER_COMPOSE_PATH }}
+          ssh -o StrictHostKeyChecking=no singco@${{ secrets.DEV_HOST }} << EOF
+          docker pull climingo/climingo-dev:$TAG
+          cd ${{ secrets.DEV_DOCKER_COMPOSE_PATH }}
           export TAG=$TAG
-          export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
-          export BUILDTIME=${{ secrets.BUILDTIME }}
-          docker-compose -f docker-compose-sandbox.yml up -d
+          export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
+          export BUILDTIME='$BUILDTIME'
+          docker-compose -f docker-compose-dev.yml up -d
           EOF
 
-
   # -----------------------------------
-  # 3) 운영 환경 CD (PR merge 시)
+  # 3) 운영 환경 CD (main PR merge 시)
   # -----------------------------------
   deploy_prod_job:
     runs-on: ubuntu-latest
     needs: ci_job
     if: |
       github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
       github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'dev'
+      github.event.pull_request.base.ref == 'main'
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -121,6 +130,9 @@ jobs:
 
       - name: Set TAG
         run: echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Set build time (KST)
+        run: echo "BUILDTIME=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
       - name: Build & Push Prod Docker Image
         run: |
@@ -130,15 +142,15 @@ jobs:
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
 
       - name: Deploy to Production Server
         run: |
-          ssh -o StrictHostKeyChecking=no singco@${{ secrets.SANDBOX_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no singco@${{ secrets.PROD_HOST }} << EOF
           docker pull climingo/climingo:$TAG
-          cd ${{ secrets.SANDBOX_DOCKER_COMPOSE_PATH }}
+          cd ${{ secrets.PROD_DOCKER_COMPOSE_PATH }}
           export TAG=$TAG
-          export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
-          export BUILDTIME=${{ secrets.BUILDTIME }}
+          export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
+          export BUILDTIME='$BUILDTIME'
           docker-compose -f docker-compose.yml up -d
           EOF
