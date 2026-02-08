@@ -18,6 +18,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - climingo-network
 
   promtail:
     image: grafana/promtail:2.9.0  # Promtail Docker 이미지
