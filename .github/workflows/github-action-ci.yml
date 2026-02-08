@@ -17,8 +17,8 @@ jobs:
   ci_job:
     runs-on: ubuntu-latest
     if: |
-        (github.event_name == 'push' && github.ref == 'refs/heads/sandbox') ||
-        (github.event_name == 'pull_request')
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'pull_request')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,7 +48,7 @@ jobs:
   # -----------------------------------
   # 2) 개발 환경 CD (dev push 시)
   # -----------------------------------
-  deploy_sandbox_job:
+  deploy_dev_job:
     needs: ci_job
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
@@ -77,7 +77,7 @@ jobs:
       - name: Set build time (KST)
         run: echo "BUILDTIME=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Build & Push Sandbox Docker Image
+      - name: Build & Push Dev Docker Image
         run: |
           docker build -t climingo/climingo-dev:$TAG .
           docker push climingo/climingo-dev:$TAG
@@ -85,9 +85,9 @@ jobs:
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SANDBOX_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Deploy to Sandbox Server
+      - name: Deploy to Dev Server
         run: |
           ssh -o StrictHostKeyChecking=no singco@${{ secrets.DEV_HOST }} << EOF
           docker pull climingo/climingo-dev:$TAG
@@ -142,7 +142,7 @@ jobs:
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
 
       - name: Deploy to Production Server
         run: |
