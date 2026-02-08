@@ -89,14 +89,13 @@ jobs:
 
       - name: Deploy to Dev Server
         run: |
-          ssh -o StrictHostKeyChecking=no singco@${{ secrets.DEV_HOST }} << EOF
-          docker pull climingo/climingo-dev:$TAG
-          cd ${{ secrets.DEV_DOCKER_COMPOSE_PATH }}
-          export TAG=$TAG
-          export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-          export BUILDTIME='$BUILDTIME'
-          docker-compose -f docker-compose-dev.yml up -d
-          EOF
+          ssh -o StrictHostKeyChecking=no singco@${{ secrets.DEV_HOST }} \
+            "cd '${{ secrets.DEV_DOCKER_COMPOSE_PATH }}' && \
+             TAG='${{ github.sha }}' \
+             JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}' \
+             BUILDTIME='$env.BUILDTIME' \
+             docker pull climingo/climingo-dev:'${{ github.sha }}' && \
+             docker compose -f docker-compose-dev.yml up -d"
 
   # -----------------------------------
   # 3) 운영 환경 CD (main PR merge 시)
@@ -146,11 +145,11 @@ jobs:
 
       - name: Deploy to Production Server
         run: |
-          ssh -o StrictHostKeyChecking=no singco@${{ secrets.PROD_HOST }} << EOF
-          docker pull climingo/climingo:$TAG
-          cd ${{ secrets.PROD_DOCKER_COMPOSE_PATH }}
-          export TAG=$TAG
-          export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-          export BUILDTIME='$BUILDTIME'
-          docker-compose -f docker-compose.yml up -d
+          ssh -o StrictHostKeyChecking=no singco@${{ secrets.PROD_HOST }} \
+            "cd '${{ secrets.PROD_DOCKER_COMPOSE_PATH }}' && \
+             TAG='${{ github.sha }}' \
+             JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}' \
+             BUILDTIME='$env.BUILDTIME' \
+             docker pull climingo/climingo-dev:'${{ github.sha }}' && \
+             docker compose -f docker-compose-dev.yml up -d"
           EOF
