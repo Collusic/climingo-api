@@ -25,7 +25,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.9.0  # Promtail Docker 이미지
-    container_name: promtail
+    container_name: promtail-dev
     ports:
       - "9080:9080"
     depends_on:
