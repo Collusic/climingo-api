@@ -1,5 +1,7 @@
 version: '3.8'
 
+name: climingo-dev
+
 services:
   climingo-api:
     image: climingo/climingo-dev:${TAG}  # Spring Boot 애플리케이션 Docker 이미지
