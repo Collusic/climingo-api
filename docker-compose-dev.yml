@@ -3,7 +3,7 @@ version: '3.8'
 services:
   climingo-api:
     image: climingo/climingo-dev:${TAG}  # Spring Boot 애플리케이션 Docker 이미지
-    container_name: climingo-api
+    container_name: climingo-dev-api
     environment:
       - JASYPT_PASSWORD=${JASYPT_PASSWORD}
       - VERSION=${TAG}
