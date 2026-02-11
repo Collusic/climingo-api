@@ -5,6 +5,9 @@ import com.climingo.climingoApi.auth.application.AuthTokenService;
 import com.climingo.climingoApi.global.auth.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.PrintWriter;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -73,6 +76,7 @@ public class SecurityConfig {
                 "Spring security unauthorized...");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             String json = new ObjectMapper().writeValueAsString(fail);
+            setCorsHeaders(request, response);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
             PrintWriter writer = response.getWriter();
@@ -87,12 +91,18 @@ public class SecurityConfig {
                 "Spring security forbidden...");
             response.setStatus(HttpStatus.FORBIDDEN.value());
             String json = new ObjectMapper().writeValueAsString(fail);
+            setCorsHeaders(request, response);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
             PrintWriter writer = response.getWriter();
             writer.write(json);
             writer.flush();
         };
+
+    private void setCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+    }
 
     public record ErrorResponse(HttpStatus status, String message) {
     }

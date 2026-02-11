@@ -43,3 +43,5 @@ out/
 
 ### macOS
 **/.DS_Store
+/LOGGING_FILE_PATH_IS_UNDEFINED/
+/src/main/generated/

@@ -6,7 +6,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class Address {
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String address;
 
     @Column(nullable = true, length = 50)

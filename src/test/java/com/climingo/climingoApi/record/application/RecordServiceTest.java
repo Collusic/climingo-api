@@ -23,6 +23,7 @@ import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,12 +66,13 @@ public class RecordServiceTest {
             .id(99999L)
             .role(UserRole.USER)
             .build();
-        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl);
+        RecordCreateRequest request = new RecordCreateRequest(mockGymId, mockLevelId, mockVideoUrl, LocalDate.now());
 
         Record expected = Record.builder()
             .member(loginMember)
             .videoUrl("http://mock-video-url")
             .thumbnailUrl("http://mock-thumbnail-url")
+            .climbDate(request.getClimbDate())
             .build();
 
         when(gymRepository.findById(anyLong())).thenReturn(Optional.of(mock(Gym.class)));
@@ -82,6 +84,7 @@ public class RecordServiceTest {
         assertEquals(expected.getMember(), actual.getMember());
         assertEquals(expected.getVideoUrl(), actual.getVideoUrl());
         assertEquals(expected.getThumbnailUrl(), actual.getThumbnailUrl());
+        assertEquals(expected.getClimbDate(), actual.getClimbDate());
     }
 
     @Test
@@ -118,6 +121,7 @@ public class RecordServiceTest {
             .level(level2)
             .videoUrl("http://mock-video-url")
             .thumbnailUrl("http://mock-thumbnail-url")
+            .climbDate(LocalDate.now())
             .build();
 
         when(gymRepository.findById(1L)).thenReturn(Optional.of(gym1));
@@ -131,12 +135,13 @@ public class RecordServiceTest {
         Long updatedLevelId = 2L;
         MultipartFile mockVideo = mock(MultipartFile.class);
 
-        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo);
+        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo, LocalDate.now());
         Record actual = recordService.updateRecord(loginMember, 1L, request);
 
         assertEquals(expected.getMember(), actual.getMember());
         assertEquals(2L, actual.getGym().getId());
         assertEquals(2L, actual.getGym().getId());
+        assertEquals(expected.getClimbDate(), actual.getClimbDate());
     }
 
     @Test
@@ -177,7 +182,7 @@ public class RecordServiceTest {
         Long updatedLevelId = 2L;
         MultipartFile mockVideo = mock(MultipartFile.class);
 
-        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo);
+        RecordUpdateRequest request = new RecordUpdateRequest(updatedGymId, updatedLevelId, mockVideo, LocalDate.now());
 
         Throwable exception = assertThrows(ForbiddenException.class,
             () -> recordService.updateRecord(loginMember, 1L, request));
@@ -230,5 +235,157 @@ public class RecordServiceTest {
     @Test
     @DisplayName("기록 조회 테스트 - ")
     void read_test() {
+    }
+
+    @Test
+    @DisplayName("createRecord - 성공")
+    void createRecord_success() throws IOException {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl",  LocalDate.now());
+
+        when(gymRepository.findById(1L)).thenReturn(Optional.of(mock(Gym.class)));
+        when(levelRepository.findById(1L)).thenReturn(Optional.of(mock(Level.class)));
+        when(recordRepository.save(any(Record.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // when
+        Record record = recordService.createRecord(loginMember, request);
+
+        // then
+        assertEquals(loginMember, record.getMember());
+        assertEquals("videoUrl", record.getVideoUrl());
+    }
+
+    @Test
+    @DisplayName("createRecord - Gym이 존재하지 않을 때")
+    void createRecord_gymNotFound() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl",  LocalDate.now());
+
+        when(gymRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(Exception.class, () -> recordService.createRecord(loginMember, request));
+    }
+
+    @Test
+    @DisplayName("createRecord - Level이 존재하지 않을 때")
+    void createRecord_levelNotFound() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+        RecordCreateRequest request = new RecordCreateRequest(1L, 1L, "videoUrl", LocalDate.now());
+
+        when(gymRepository.findById(1L)).thenReturn(Optional.of(mock(Gym.class)));
+        when(levelRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(Exception.class, () -> recordService.createRecord(loginMember, request));
+    }
+
+    @Test
+    @DisplayName("updateRecord - 성공")
+    void updateRecord_success() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+
+        Gym gym = mock(Gym.class);
+        when(gym.getId()).thenReturn(1L);
+
+        Level level = mock(Level.class);
+        when(level.getId()).thenReturn(1L);
+
+        Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
+
+        when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
+        when(gymRepository.findById(1L)).thenReturn(Optional.of(gym));
+        when(levelRepository.findById(1L)).thenReturn(Optional.of(level));
+
+        // when
+        Record updatedRecord = recordService.updateRecord(loginMember, 1L, request);
+
+        // then
+        assertEquals(loginMember, updatedRecord.getMember());
+    }
+
+    @Test
+    @DisplayName("updateRecord - Record가 존재하지 않을 때")
+    void updateRecord_recordNotFound() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
+
+        when(recordRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(Exception.class, () -> recordService.updateRecord(loginMember, 1L, request));
+    }
+
+    @Test
+    @DisplayName("updateRecord - Gym이 존재하지 않을 때")
+    void updateRecord_gymNotFound() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+
+        Gym gym = mock(Gym.class);
+        when(gym.getId()).thenReturn(1L);
+
+        Level level = mock(Level.class);
+        when(level.getId()).thenReturn(1L);
+
+        Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
+
+        when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
+        when(gymRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(Exception.class, () -> recordService.updateRecord(loginMember, 1L, request));
+    }
+
+    @Test
+    @DisplayName("updateRecord - Level이 존재하지 않을 때")
+    void updateRecord_levelNotFound() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+
+        Gym gym = mock(Gym.class);
+        when(gym.getId()).thenReturn(1L);
+
+        Level level = mock(Level.class);
+        when(level.getId()).thenReturn(1L);
+
+        Record record = Record.builder().member(loginMember).gym(gym).level(level).build();
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
+
+        when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
+        when(gymRepository.findById(1L)).thenReturn(Optional.of(gym));
+        when(levelRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(Exception.class, () -> recordService.updateRecord(loginMember, 1L, request));
+    }
+
+    @Test
+    @DisplayName("updateRecord - Forbidden")
+    void updateRecord_forbidden() {
+        // given
+        Member loginMember = Member.builder().id(1L).build();
+        Member anotherMember = Member.builder().id(2L).build();
+
+        Gym gym = mock(Gym.class);
+        when(gym.getId()).thenReturn(1L);
+
+        Level level = mock(Level.class);
+        when(level.getId()).thenReturn(1L);
+
+        Record record = Record.builder().member(anotherMember).gym(gym).level(level).build();
+        RecordUpdateRequest request = new RecordUpdateRequest(1L, 1L, mock(MultipartFile.class), LocalDate.now());
+
+        when(recordRepository.findById(1L)).thenReturn(Optional.of(record));
+
+        // when & then
+        assertThrows(ForbiddenException.class, () -> recordService.updateRecord(loginMember, 1L, request));
     }
 }

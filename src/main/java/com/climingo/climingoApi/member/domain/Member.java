@@ -1,5 +1,6 @@
 package com.climingo.climingoApi.member.domain;
 
+import com.climingo.climingoApi.global.domain.BaseTimeEntity;
 import com.climingo.climingoApi.gym.domain.Gym;
 import com.climingo.climingoApi.record.domain.Record;
 import jakarta.persistence.CascadeType;
@@ -28,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"auth_id", "provider_type"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ public class Member {
     @Size(min = 2, max = 16)
     private String nickname;
 
-    @Column(nullable = true, length = 255)
+    @Column(nullable = true, length = 400)
     private String profileUrl;
 
     @Column(nullable = true, length = 50)
@@ -85,6 +86,10 @@ public class Member {
         return Member.builder()
             .role(UserRole.GUEST)
             .build();
+    }
+
+    public boolean isGuest() {
+        return this.role.equals(UserRole.GUEST);
     }
 
     public boolean isSameMember(Long memberId) {

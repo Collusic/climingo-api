@@ -1,17 +1,15 @@
 package com.climingo.climingoApi.auth.api.request;
 
 import com.climingo.climingoApi.member.domain.PhysicalInfo;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
-@JsonDeserialize(builder = SignUpRequest.SignUpRequestBuilder.class)
 public class SignUpRequest {
 
     @JsonProperty("providerType")
@@ -42,4 +40,26 @@ public class SignUpRequest {
 
     @JsonProperty("physicalInfo")
     private final PhysicalInfo physicalInfo;
+
+    @JsonCreator
+    @Builder
+    public SignUpRequest(
+            @JsonProperty("providerType") String providerType,
+            @JsonProperty("authId") String authId,
+            @JsonProperty("providerToken") String providerToken,
+            @JsonProperty("nickname") String nickname,
+            @JsonProperty("profileUrl") String profileUrl,
+            @JsonProperty("email") String email,
+            @JsonProperty("homeGymId") Long homeGymId,
+            @JsonProperty("physicalInfo") PhysicalInfo physicalInfo
+    ) {
+        this.providerType = providerType;
+        this.authId = authId;
+        this.providerToken = providerToken;
+        this.nickname = nickname;
+        this.profileUrl = profileUrl;
+        this.email = email;
+        this.homeGymId = homeGymId;
+        this.physicalInfo = physicalInfo;
+    }
 }

@@ -43,7 +43,7 @@ app:
     time: ${buildTime}
 
 discord:
-  webhook-url: https://discord.com/api/webhooks/1244136146452090890/xFhaBJYgkEazDUuKGHRwsY3B38PBy0bbKwNZDrOtMyDdMJVvlE1rza6yVcNmJO5I6csg
+  webhook-url: ENC(AU5F7ZCFfWbd9B+G3JXqZLEOfEA9u+tvKjCoJQQjjZyWYkl990YV2Ijn1hh3j8qcA3im+A02HgLz1Zwuz4IV3G1n20JpFyEq2nb8Q4pV/7DZ5LW7iA+PKeA9QMqOy7lTU4iF3ZpQ7vuA0QKpEsvzcfoXs7UrIvYwgs85MFi8mThe4677K4uDtg==)
 
 auth:
   cookie:

@@ -27,7 +27,7 @@ public class RecordResponse {
     public RecordResponse(Member requestMember, Record record) {
         Member recordMember = record.getMember();
         this.memberInfo = new ShortMemberResponse(recordMember.getId(), recordMember.getProfileUrl(), recordMember.getNickname());
-        this.record = new ShortRecordResponse(record.getId(), record.getVideoUrl(), record.getThumbnailUrl(), record.getCreatedDate());
+        this.record = ShortRecordResponse.from(record);
         this.gym = new ShortGymResponse(record.getGym());
         this.level = new ShortLevelResponse(record.getLevel());
         this.editable = requestMember.isSameMember(recordMember) || requestMember.isAdmin();

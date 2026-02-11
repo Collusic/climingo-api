@@ -6,6 +6,7 @@ import com.climingo.climingoApi.gym.domain.GymRepository;
 import com.climingo.climingoApi.level.domain.Level;
 import com.climingo.climingoApi.level.domain.LevelRepository;
 import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
 import com.climingo.climingoApi.record.api.request.RecordCreateRequest;
 import com.climingo.climingoApi.record.api.request.RecordUpdateRequest;
 import com.climingo.climingoApi.record.api.response.MyRecordResponse;
@@ -16,10 +17,13 @@ import com.climingo.climingoApi.record.domain.RecordRepository;
 import com.climingo.climingoApi.upload.S3Service;
 import com.climingo.climingoApi.upload.ThumbnailExtractor;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -40,12 +44,14 @@ public class RecordService {
     @Transactional
     public Record createRecord(Member loginMember, RecordCreateRequest request) {
         Gym gym = gymRepository.findById(request.getGymId())
-                               .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
         Level level = levelRepository.findById(request.getLevelId())
-                                     .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
         String videoUrl = request.getVideoUrl();
+        LocalDate climbedDate = request.getClimbDate() == null ? LocalDate.now(): request.getClimbDate();
+
         String thumbnailImageUrl = "";
         try {
             thumbnailImageUrl = s3Service.uploadThumbnailImageFile(thumbnailExtractor.extractImage(videoUrl));
@@ -54,6 +60,8 @@ public class RecordService {
             // TODO 썸네일 이미지 저장 안되었을 때 처리
         }
 
+        PhysicalInfo physicalInfo = loginMember.getPhysicalInfo();
+
         Record record = Record.builder()
                               .member(loginMember)
                               .gym(gym)
@@ -61,6 +69,8 @@ public class RecordService {
                               .content(null)
                               .videoUrl(videoUrl)
                               .thumbnailUrl(thumbnailImageUrl)
+                              .climbDate(climbedDate)
+                              .physicalInfo(physicalInfo)
                               .build();
 
         return recordRepository.save(record);
@@ -69,20 +79,21 @@ public class RecordService {
     @Transactional
     public Record updateRecord(Member member, Long recordId, RecordUpdateRequest request) {
         Record record = recordRepository.findById(recordId)
-                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
         if (!record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 수정할 수 없음");
         }
 
         Gym gym = gymRepository.findById(request.getGymId())
-                               .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(request.getGymId() + "is not found"));
 
         Level level = levelRepository.findById(request.getLevelId())
-                                     .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(request.getLevelId() + "is not found"));
 
         // TODO: origin 영상 데이터와 updated 영상 데이터가 다른걸 어떻게 알 것인가?
-        record.update(gym, level, null);
+        record.update(gym, level, null, member);
+        record.updateClimbDate(request.getClimbDate());
 
         return record;
     }
@@ -90,7 +101,7 @@ public class RecordService {
     @Transactional
     public void deleteRecord(Member member, Long recordId) {
         Record record = recordRepository.findById(recordId)
-                                        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 기록입니다."));
 
         if (!record.isEditable(member)) {
             throw new ForbiddenException("다른 사용자가 업로드한 record는 삭제할 수 없음");
@@ -102,7 +113,7 @@ public class RecordService {
     @Transactional(readOnly = true)
     public RecordResponse readRecord(Member member, Long recordId) {
         Record record = recordRepository.findByIdWithMember(recordId)
-                                        .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
+                .orElseThrow(() -> new EntityNotFoundException(recordId + "is not found"));
 
         return new RecordResponse(member, record);
     }
@@ -121,17 +132,17 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public PageDto<RecordResponse> findPage(Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
-        Page<Record> recordPage = recordRepository.findRecordPage(gymId, levelId, memberId, page, size);
+    public PageDto<RecordResponse> findPage(Member requestMember, Long gymId, Long levelId, Long memberId, Integer page, Integer size) {
+        Page<Record> recordPage = recordRepository.findRecordPage(requestMember, gymId, levelId, memberId, page, size);
 
         return PageDto.<RecordResponse>builder()
-                      .totalCount(recordPage.getTotalElements())
-                      .resultCount(recordPage.getNumberOfElements())
-                      .totalPage((int) Math.ceil((double) recordPage.getTotalElements() / size))
-                      .page(page)
-                      .isEnd(recordPage.isLast())
-                      .contents(toRecordResponses(recordPage.getContent()))
-                      .build();
+                .totalCount(recordPage.getTotalElements())
+                .resultCount(recordPage.getNumberOfElements())
+                .totalPage((int) Math.ceil((double) recordPage.getTotalElements() / size))
+                .page(page)
+                .isEnd(recordPage.isLast())
+                .contents(toRecordResponses(recordPage.getContent()))
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -139,25 +150,25 @@ public class RecordService {
         Page<Record> myRecordPage = recordRepository.findMyRecordPage(memberId, page, size);
 
         return PageDto.<MyRecordResponse>builder()
-                      .totalCount(myRecordPage.getTotalElements())
-                      .resultCount(myRecordPage.getNumberOfElements())
-                      .totalPage((int) Math.ceil((double) myRecordPage.getTotalElements() / size))
-                      .page(page)
-                      .isEnd(myRecordPage.isLast())
-                      .contents(toMyRecordResponses(myRecordPage.getContent()))
-                      .build();
+                .totalCount(myRecordPage.getTotalElements())
+                .resultCount(myRecordPage.getNumberOfElements())
+                .totalPage((int) Math.ceil((double) myRecordPage.getTotalElements() / size))
+                .page(page)
+                .isEnd(myRecordPage.isLast())
+                .contents(toMyRecordResponses(myRecordPage.getContent()))
+                .build();
     }
 
     private List<RecordResponse> toRecordResponses(List<Record> records) {
         return records.stream()
-                      .map(record -> new RecordResponse(record.getMember(), record))
-                      .collect(Collectors.toList());
+                .map(record -> new RecordResponse(record.getMember(), record))
+                .collect(Collectors.toList());
     }
 
     private List<MyRecordResponse> toMyRecordResponses(List<Record> records) {
         return records.stream()
-                      .map(record -> new MyRecordResponse(record, record.getGym(), record.getLevel()))
-                      .collect(Collectors.toList());
+                .map(record -> new MyRecordResponse(record, record.getGym(), record.getLevel()))
+                .collect(Collectors.toList());
     }
 
 }

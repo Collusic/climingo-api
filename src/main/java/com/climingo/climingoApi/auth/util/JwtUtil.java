@@ -22,12 +22,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    public static final int REFRESH_TOKEN_EXP = 60 * 60 * 24 * 7;
-
     @Value("${auth.jwt-key}")
     private static String KEY;
 
-    public static final int ACCESS_TOKEN_EXP = 60 * 60;
+    public static final int ACCESS_TOKEN_EXP = 60 * 60 * 24 * 365; // todo 만료 기간 임시로 1년 설정해 둠. 추후 변경 필요
+    public static final int REFRESH_TOKEN_EXP = 60 * 60 * 24 * 365; // todo 만료 기간 임시로 1년 설정해 둠. 추후 변경 필요
     public static final String ACCESS_TOKEN_NAME = "accessToken";
     public static final String REFRESH_TOKEN_NAME = "refreshToken";
 

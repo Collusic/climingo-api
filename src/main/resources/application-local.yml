@@ -22,6 +22,11 @@ spring:
     init:
       mode: always
 
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
 oauth2:
   kakao:
     client_id: ENC(1OlukTw7U+1AbNzhNIOLn5Kw7FAdHHDEFgQZbwLHB6C7IjncLII7ZGO1RukxW0Hc)
@@ -42,7 +47,7 @@ app:
     time: local_temp_build_time
 
 discord:
-  webhook-url: https://discord.com/api/webhooks/1246453066535014442/JTLPOUfk-LDtVVYGR6AhWEc3AdEbOIwtxyX2YxTidtC4368SMh_hOeI5v_EU80szroZb
+  webhook-url: ENC(dAoTC+tGjODq5gYu6ockWshjB5QW8UhBG21IBpxKF2VA/cNDU6cHW1v0M5Vl4z4YH8PFdIYMC47PH7g7m2pMRr/hFzpqFHWu0QSPsig1i/qS+n5fXc7lRj4aujLXjW+Ui6Em7xoE11ROkgILUUrfw9OA6OO0YZycbTD6w5/6IxElXs9WrxOMsw==)
 
 auth:
   cookie:
