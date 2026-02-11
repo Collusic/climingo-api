@@ -6,6 +6,7 @@ import com.climingo.climingoApi.auth.application.MemberEnrollService;
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.domain.Member;
 import com.climingo.climingoApi.member.domain.MemberRepository;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,17 @@ public class MemberServiceImpl implements MemberEnrollService, MemberService {
 
     private boolean isDuplicated(String nickname) {
         return memberRepository.existsByNickname(nickname);
+    }
+
+
+    @Override
+    @Transactional
+    public void updatePhysicalInfo(Member member, Long memberId, PhysicalInfo physicalInfo){
+
+
+
+        member.updatePhysicalinfo(physicalInfo);
+        memberRepository.save(member);
     }
 
 }

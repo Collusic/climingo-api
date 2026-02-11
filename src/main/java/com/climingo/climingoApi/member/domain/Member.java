@@ -95,6 +95,16 @@ public class Member {
         this.nickname = nickname;
     }
 
+    // 소수점 관련 처리 로직
+    public boolean isPhysicalinfoDouble(PhysicalInfo physicalInfo){
+
+        return true;
+    }
+
+    public void updatePhysicalinfo(PhysicalInfo physicalInfo){
+        this.physicalInfo = physicalInfo;
+    }
+
     public boolean isSameMember(Member member) {
         return this.isSameMember(member.getId());
     }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Embeddable
 @Getter
 @NoArgsConstructor
@@ -13,11 +15,11 @@ import lombok.NoArgsConstructor;
 public class PhysicalInfo {
 
     @JsonProperty("height")
-    private Double height;
+    private BigDecimal height;
 
     @JsonProperty("weight")
-    private Double weight;
+    private BigDecimal weight;
 
     @JsonProperty("armSpan")
-    private Double armSpan;
+    private BigDecimal armSpan;
 }
