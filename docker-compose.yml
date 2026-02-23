@@ -8,6 +8,7 @@ services:
       - JASYPT_PASSWORD=${JASYPT_PASSWORD}
       - VERSION=${TAG}
       - BUILDTIME=${BUILDTIME}
+      - SPRING_PROFILES_ACTIVE=prod
       - LOGGING_FILE_PATH=/logs/prod # 로그 파일 경로를 환경 변수로 설정
     volumes:
       - ./logs:/logs/prod  # 호스트와 컨테이너 간 로그 파일 공유
