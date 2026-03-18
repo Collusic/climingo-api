@@ -42,7 +42,7 @@ public class MemberController {
         return ResponseEntity.ok().body(memberInfoResponse);
     }
 
-    @PatchMapping("/member/{memberId}")
+    @PatchMapping("/member/{memberId}/physicalInfo")
     public ResponseEntity<Void> updatePhysicalInfo(@RequestMember Member member, @PathVariable(value = "memberId") Long memberId,
                                                                  @RequestBody @Valid UpdatePhysicalinfo request){
         memberService.updatePhysicalInfo(member,memberId,request.getPhysicalInfo());

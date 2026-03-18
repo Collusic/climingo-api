@@ -107,7 +107,11 @@ public class Member extends BaseTimeEntity {
     }
 
     public void updatePhysicalinfo(PhysicalInfo physicalInfo){
-        this.physicalInfo = physicalInfo;
+        if (this.physicalInfo == null) {
+            this.physicalInfo = physicalInfo;
+        } else {
+            this.physicalInfo = this.physicalInfo.merge(physicalInfo);
+        }
     }
 
     public boolean isSameMember(Member member) {

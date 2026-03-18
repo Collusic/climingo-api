@@ -99,8 +99,6 @@ public class MemberServiceImpl implements MemberEnrollService, MemberService {
     @Transactional
     public void updatePhysicalInfo(Member member, Long memberId, PhysicalInfo physicalInfo){
 
-
-
         member.updatePhysicalinfo(physicalInfo);
         memberRepository.save(member);
     }

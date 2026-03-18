@@ -20,7 +20,6 @@ import com.climingo.climingoApi.member.domain.UserRole;
 import com.climingo.climingoApi.message.error.ErrorAlertMessageProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,7 @@ class MemberControllerTest {
                 .nickname("testUser")
                 .email("test@test.com")
                 .profileUrl("http://profile.url")
-                .physicalInfo(new PhysicalInfo(new BigDecimal("175.5"), new BigDecimal("70.0"), new BigDecimal("180.0")))
+                .physicalInfo(new PhysicalInfo(175.5, 70.0, 180.0))
                 .role(UserRole.USER)
                 .build();
 
