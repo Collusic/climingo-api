@@ -1,6 +1,7 @@
 package com.climingo.climingoApi.member.api.response;
 
 import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,7 @@ public class MemberInfoResponse {
     private String email;
     private String profileUrl;
     private String providerType;
+    private PhysicalInfo physicalInfo;
 
     public MemberInfoResponse(Member member) {
         this.memberId = member.getId();
@@ -18,6 +20,7 @@ public class MemberInfoResponse {
         this.email = member.getEmail();
         this.profileUrl = member.getProfileUrl();
         this.providerType = member.getProviderType();
+        this.physicalInfo = member.getPhysicalInfo();
     }
 
 }

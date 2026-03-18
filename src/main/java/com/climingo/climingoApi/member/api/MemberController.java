@@ -2,9 +2,11 @@ package com.climingo.climingoApi.member.api;
 
 import com.climingo.climingoApi.global.auth.RequestMember;
 import com.climingo.climingoApi.member.api.request.UpdateNicknameRequest;
+import com.climingo.climingoApi.member.api.request.UpdatePhysicalinfo;
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.application.MemberService;
 import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +40,14 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> findMemberInfo(@PathVariable(value = "memberId") Long memberId) {
         MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(memberId);
         return ResponseEntity.ok().body(memberInfoResponse);
+    }
+
+    @PatchMapping("/member/{memberId}/physicalInfo")
+    public ResponseEntity<Void> updatePhysicalInfo(@RequestMember Member member, @PathVariable(value = "memberId") Long memberId,
+                                                                 @RequestBody @Valid UpdatePhysicalinfo request){
+        memberService.updatePhysicalInfo(member,memberId,request.getPhysicalInfo());
+        return ResponseEntity.ok().build();
+
     }
 
     @PatchMapping("/members/{memberId}/nickname")

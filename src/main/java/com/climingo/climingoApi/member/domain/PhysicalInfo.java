@@ -20,4 +20,12 @@ public class PhysicalInfo {
 
     @JsonProperty("armSpan")
     private Double armSpan;
+
+    public PhysicalInfo merge(PhysicalInfo update) {
+        return new PhysicalInfo(
+                update.height != null ? update.height : this.height,
+                update.weight != null ? update.weight : this.weight,
+                update.armSpan != null ? update.armSpan : this.armSpan
+        );
+    }
 }

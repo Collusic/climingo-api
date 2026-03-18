@@ -100,6 +100,20 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
+    // 소수점 관련 처리 로직
+    public boolean isPhysicalinfoDouble(PhysicalInfo physicalInfo){
+
+        return true;
+    }
+
+    public void updatePhysicalinfo(PhysicalInfo physicalInfo){
+        if (this.physicalInfo == null) {
+            this.physicalInfo = physicalInfo;
+        } else {
+            this.physicalInfo = this.physicalInfo.merge(physicalInfo);
+        }
+    }
+
     public boolean isSameMember(Member member) {
         return this.isSameMember(member.getId());
     }

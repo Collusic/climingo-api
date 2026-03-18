@@ -2,6 +2,8 @@ package com.climingo.climingoApi.member.application;
 
 import com.climingo.climingoApi.member.api.response.MemberInfoResponse;
 import com.climingo.climingoApi.member.domain.Member;
+import com.climingo.climingoApi.member.domain.PhysicalInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface MemberService {
 
@@ -9,4 +11,5 @@ public interface MemberService {
 
     void updateNickname(Member member, Long memberId, String nickname);
 
+    void updatePhysicalInfo(Member member, Long memberId, PhysicalInfo physicalInfo);
 }
