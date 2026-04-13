@@ -105,7 +105,7 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("PATCH /member/{memberId} - 유효한 요청으로 신체 정보를 업데이트한다")
+    @DisplayName("PATCH /member/{memberId}/physicalInfo - 유효한 요청으로 신체 정보를 업데이트한다")
     void updatePhysicalInfo_success() throws Exception {
         doNothing().when(memberService).updatePhysicalInfo(any(Member.class), eq(1L), any(PhysicalInfo.class));
 
@@ -117,16 +117,16 @@ class MemberControllerTest {
                 ))
         );
 
-        mockMvc.perform(patch("/member/{memberId}", 1L)
+        mockMvc.perform(patch("/member/{memberId}/physicalInfo", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("PATCH /member/{memberId} - physicalInfo 없이 호출 시 400 에러가 발생한다")
+    @DisplayName("PATCH /member/{memberId}/physicalInfo - physicalInfo 없이 호출 시 400 에러가 발생한다")
     void updatePhysicalInfo_missingBody() throws Exception {
-        mockMvc.perform(patch("/member/{memberId}", 1L)
+        mockMvc.perform(patch("/member/{memberId}/physicalInfo", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest());
