@@ -63,6 +63,12 @@ jobs:
           echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
           echo "BUILDTIME=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
+      - uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64
+
+      - uses: docker/setup-buildx-action@v4
+
       - name: Build & Push Dev Image
         run: |
           docker buildx build \
@@ -118,6 +124,12 @@ jobs:
         run: |
           echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
           echo "BUILDTIME=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64
+
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build & Push Prod Image
         run: |
