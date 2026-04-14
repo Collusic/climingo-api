@@ -28,7 +28,6 @@ jobs:
 
       - run: chmod +x ./gradlew
       - run: ./gradlew build
-      - run: ./gradlew test
 
       - uses: actions/upload-artifact@v4
         with:
@@ -77,13 +76,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no singco@${{ secrets.DEV_HOST }} "
             set -e
-            export PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin':\$PATH
             cd '${{ secrets.DEV_DOCKER_COMPOSE_PATH }}'
             export TAG='${{ github.sha }}'
             export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-            export BUILDTIME='$BUILDTIME'
-            docker pull climingo/climingo-dev:${{ github.sha }}
-            docker compose -f docker-compose-dev.yml up -d
+            export BUILDTIME='${{ env.BUILDTIME }}'
+            /Users/singco/.orbstack/bin/docker pull climingo/climingo-dev:${{ github.sha }}
+            /Users/singco/.orbstack/bin/docker compose -f docker-compose-dev.yml up -d
           "
 
   # -----------------------------------
@@ -132,11 +130,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no singco@${{ secrets.PROD_HOST }} "
             set -e
-            export PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin':\$PATH
             cd '${{ secrets.PROD_DOCKER_COMPOSE_PATH }}'
             export TAG='${{ github.sha }}'
             export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-            export BUILDTIME='$BUILDTIME'
-            docker pull climingo/climingo:${{ github.sha }}
-            docker compose -f docker-compose.yml up -d
+            export BUILDTIME='${{ env.BUILDTIME }}'
+            /Users/singco/.orbstack/bin/docker pull climingo/climingo:${{ github.sha }}
+            /Users/singco/.orbstack/bin/docker compose -f docker-compose.yml up -d
           "
