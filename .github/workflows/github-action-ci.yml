@@ -65,7 +65,9 @@ jobs:
 
       - name: Build & Push Dev Image
         run: |
-          docker build -t climingo/climingo-dev:${{ github.sha }} .
+          docker buildx build \
+          --platform linux/arm64 \
+          -t climingo/climingo-dev:${{ github.sha }} .
           docker push climingo/climingo-dev:${{ github.sha }}
 
       - uses: webfactory/ssh-agent@v0.5.3
@@ -79,7 +81,7 @@ jobs:
             cd '${{ secrets.DEV_DOCKER_COMPOSE_PATH }}'
             export TAG='${{ github.sha }}'
             export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-            export BUILDTIME='${{ env.BUILDTIME }}'
+            export BUILDTIME='$BUILDTIME'
             /Users/singco/.orbstack/bin/docker pull climingo/climingo-dev:${{ github.sha }}
             /Users/singco/.orbstack/bin/docker compose -f docker-compose-dev.yml up -d
           "
@@ -119,7 +121,9 @@ jobs:
 
       - name: Build & Push Prod Image
         run: |
-          docker build -t climingo/climingo:${{ github.sha }} .
+          docker buildx build \
+          --platform linux/arm64 \
+          -t climingo/climingo:${{ github.sha }} .
           docker push climingo/climingo:${{ github.sha }}
 
       - uses: webfactory/ssh-agent@v0.5.3
@@ -133,7 +137,7 @@ jobs:
             cd '${{ secrets.PROD_DOCKER_COMPOSE_PATH }}'
             export TAG='${{ github.sha }}'
             export JASYPT_PASSWORD='${{ secrets.JASYPT_PASSWORD }}'
-            export BUILDTIME='${{ env.BUILDTIME }}'
+            export BUILDTIME='$BUILDTIME'
             /Users/singco/.orbstack/bin/docker pull climingo/climingo:${{ github.sha }}
             /Users/singco/.orbstack/bin/docker compose -f docker-compose.yml up -d
           "
